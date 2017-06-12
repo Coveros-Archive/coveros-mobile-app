@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.show();
 
-        // GETs list of
+        // GETs list of post titles and displays in a ListView
 
         StringRequest request = new StringRequest(Request.Method.GET, url, s -> {
                 gson = new Gson();
