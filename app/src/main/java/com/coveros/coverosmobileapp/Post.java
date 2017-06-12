@@ -12,15 +12,23 @@ import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 
+import org.apache.commons.text.StringEscapeUtils;
+
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
+
+
+
 
 
 /**
@@ -55,26 +63,35 @@ public class Post extends AppCompatActivity {
 
         String url = "http://www.coveros.com/wp-json/wp/v2/posts/" + id + "?fields=title,content";
 
-        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-           @Override
-           public void onResponse(String s) {
+        StringRequest request = new StringRequest(Request.Method.GET, url, s -> {
                gson = new Gson();
                mapPost = (Map<String, Object>) gson.fromJson(s, Map.class);
                mapTitle = (Map<String, Object>) mapPost.get("title");
                mapContent = (Map<String, Object>) mapPost.get("content");
 
-               title.setText(mapTitle.get("rendered").toString());
-               content.loadData(mapContent.get("rendered").toString(), "text/html", "UTF-8");
+               title.setText(StringEscapeUtils.unescapeHtml4(mapTitle.get("rendered").toString()));
+               content.loadData(StringEscapeUtils.unescapeHtml4(mapContent.get("rendered").toString()), "text/html; charset=utf-8", "UTF-8");
 
                progressDialog.dismiss();
            }
-        }, new Response.ErrorListener() {
+        , volleyError -> {
+            progressDialog.dismiss();
+            Toast.makeText(Post.this, id, Toast.LENGTH_LONG).show();
+        }) {
             @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                progressDialog.dismiss();
-                Toast.makeText(Post.this, id, Toast.LENGTH_LONG).show();
+            protected Response<String> parseNetworkResponse (NetworkResponse response) {
+                String strUTF8 = null;
+                try {
+                    strUTF8 = new String(response.data, "UTF-8");
+
+                }
+                catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                return Response.success(strUTF8, HttpHeaderParser.parseCacheHeaders(response));
             }
-        });
+        };
+
         RequestQueue rQueue = Volley.newRequestQueue(Post.this);
         rQueue.add(request);
     }

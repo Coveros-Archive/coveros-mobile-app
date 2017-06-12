@@ -37,6 +37,8 @@ import java.util.Map;
 import android.util.Log;
 
 
+import org.apache.commons.text.StringEscapeUtils;
+
 import java.util.function.Function;
 
 public class MainActivity extends AppCompatActivity {
@@ -62,9 +64,7 @@ public class MainActivity extends AppCompatActivity {
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.show();
 
-        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String s) {
+        StringRequest request = new StringRequest(Request.Method.GET, url, s -> {
                 gson = new Gson();
                 list = (List) gson.fromJson(s, List.class);
                 postTitle = new String[list.size()];
@@ -72,16 +72,13 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = 0; i < list.size(); ++i) {
                     mapPost = (Map<String, Object>) list.get(i);
                     mapTitle = (Map<String, Object>) mapPost.get("title");
-                    postTitle[i] = (String) mapTitle.get("rendered");
-                    Log.d("Title: ", postTitle[i]);  // print to debug unicode encoding issue
+                    postTitle[i] = StringEscapeUtils.unescapeHtml4(mapTitle.get("rendered").toString());
                 }
 
                 postList.setAdapter(new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, postTitle));
                 progressDialog.dismiss();
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
+        , volleyError -> {
                 if ((volleyError instanceof TimeoutError) || (volleyError instanceof NoConnectionError)) {
                     Toast.makeText(MainActivity.this,
                             "Timeout error",
@@ -105,22 +102,7 @@ public class MainActivity extends AppCompatActivity {
                             "Parse error",
                             Toast.LENGTH_LONG).show();
                 }
-
-            }
-        }){
-            // trying to figure out unicode encoding...
-           @Override
-            protected Response<String> parseNetworkResponse(NetworkResponse response) {
-               String strUTF8 = null;
-               try {
-                   strUTF8 = new String(response.data, "UTF-8");
-               }
-               catch (UnsupportedEncodingException e) {
-                   e.printStackTrace();
-               }
-               return Response.success(strUTF8, HttpHeaderParser.parseCacheHeaders(response));
-        }
-        };
+        });
 
         RequestQueue rQueue = Volley.newRequestQueue(MainActivity.this);
         rQueue.add(request);
