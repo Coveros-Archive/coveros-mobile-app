@@ -50,15 +50,7 @@ public class PostList extends AbstractPostActivity {
             Gson responseGson = new Gson();
             responseList = (List) responseGson.fromJson(response, List.class);
 
-            String[] postTitles = new String[responseList.size()];
-
-            for (int i = 0; i < responseList.size(); ++i) {
-                mapPost = (Map<String, Object>) responseList.get(i);
-                Map<String, Object> mapTitle = (Map<String, Object>) mapPost.get("title");
-                postTitles[i] = StringEscapeUtils.unescapeHtml4(mapTitle.get("rendered").toString());
-            }
-
-            postList.setAdapter(new ArrayAdapter(PostList.this, android.R.layout.simple_list_item_1, postTitles));
+            postList.setAdapter(new ArrayAdapter(PostList.this, android.R.layout.simple_list_item_1, getPostTitles(responseList)));
 
         }, getErrorListener(PostList.this));
 
@@ -75,6 +67,18 @@ public class PostList extends AbstractPostActivity {
                 }
         );
 
+    }
+
+    private String[] getPostTitles(List responseList) {
+        String [] postTitles = new String[responseList.size()];
+
+        for (int i = 0; i < responseList.size(); i++) {
+            mapPost = (Map<String, Object>) responseList.get(i);
+            Map<String, Object> mapTitle = (Map<String, Object>) mapPost.get("title");
+            postTitles[i] = StringEscapeUtils.unescapeHtml4(mapTitle.get("rendered").toString());
+        }
+
+        return postTitles;
     }
 }
 
