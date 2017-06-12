@@ -1,0 +1,35 @@
+package com.coveros.coverosmobileapp;
+
+import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+
+import com.android.volley.Response;
+
+/**
+ * Provides
+ * Created by Maria Kim on 6/12/2017.
+ */
+
+class AbstractPostActivity extends AppCompatActivity {
+
+    protected Response.ErrorListener getErrorListener(Context context) {
+
+        // creates error message to be displayed to user
+        AlertDialog errorMessage = new AlertDialog.Builder(context).create();
+        errorMessage.setTitle("Error");
+        errorMessage.setMessage("An error occurred.");
+        errorMessage.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        // logs error
+        return volleyError -> Log.e("ERROR: ", volleyError.getMessage());
+    }
+
+}

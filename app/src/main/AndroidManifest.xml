@@ -20,6 +20,12 @@
             android:name=".Post"
             android:label="@string/app_name">
         </activity>
+        <activity
+            android:name=".PostList"
+            android:label="CoverosMobileApp"
+            android:exported="true">
+        </activity>
+
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
