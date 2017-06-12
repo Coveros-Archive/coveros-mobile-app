@@ -15,31 +15,22 @@ import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkError;
-import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
-import com.android.volley.VolleyError;
 
-import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
-import android.util.Log;
+import org.apache.commons.text.StringEscapeUtils;  // to decode decimal unicode in strings received from Wordpress
 
-
-import org.apache.commons.text.StringEscapeUtils;
-
-import java.util.function.Function;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -51,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     Map<String,Object> mapPost;
     Map<String,Object> mapTitle;
     int postID;
-    String postTitle[];
+    String postTitles[];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,29 +50,33 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         postList = (ListView) findViewById(R.id.postList);
+
         progressDialog = new ProgressDialog(MainActivity.this);
         progressDialog.setMessage("Loading...");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.show();
 
+        // GETs list of
+
         StringRequest request = new StringRequest(Request.Method.GET, url, s -> {
                 gson = new Gson();
                 list = (List) gson.fromJson(s, List.class);
-                postTitle = new String[list.size()];
+                postTitles = new String[list.size()];
 
                 for (int i = 0; i < list.size(); ++i) {
                     mapPost = (Map<String, Object>) list.get(i);
                     mapTitle = (Map<String, Object>) mapPost.get("title");
-                    postTitle[i] = StringEscapeUtils.unescapeHtml4(mapTitle.get("rendered").toString());
+                    postTitles[i] = StringEscapeUtils.unescapeHtml4(mapTitle.get("rendered").toString());
                 }
 
-                postList.setAdapter(new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, postTitle));
+                postList.setAdapter(new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, postTitles));
                 progressDialog.dismiss();
             }
         , volleyError -> {
+                // provides more detailed description of thrown error
                 if ((volleyError instanceof TimeoutError) || (volleyError instanceof NoConnectionError)) {
                     Toast.makeText(MainActivity.this,
-                            "Timeout error",
+                            "Timeout or no connection error",
                             Toast.LENGTH_LONG).show();
                 } else if (volleyError instanceof AuthFailureError) {
                     Toast.makeText(MainActivity.this,
