@@ -19,6 +19,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,9 +58,7 @@ public class PostList extends AbstractPostActivity {
         // GETs list of post titles and displays in a ListView
 
         StringRequest request = new StringRequest(Request.Method.GET, url, response -> {
-            Gson responseGson = new Gson();
-            Log.d("Response string", response);
-            responseList = (ArrayList) responseGson.fromJson(response, ArrayList.class);
+            JsonObject responseList = new JsonParser().parse(response).getAsJsonObject();
 
             postList.setAdapter(new ArrayAdapter(PostList.this, android.R.layout.simple_list_item_1, getPostTitles(responseList)));
 
@@ -78,11 +78,11 @@ public class PostList extends AbstractPostActivity {
 
     }
 
-    protected String[] getPostTitles(ArrayList responseList) {
+    protected String[] getPostTitles(JsonObject responseList) {
         String [] postTitles = new String[responseList.size()];
 
         for (int i = 0; i < responseList.size(); i++) {
-            mapPost = (Map<String, Object>) responseList.get(i);
+            mapPost = (Map<String, Object>) responseList[i];
             Log.d("Post Info", Arrays.toString(mapPost.entrySet().toArray()));
             Map<String, Object> mapTitle = (Map<String, Object>) mapPost.get("title");
             postTitles[i] = StringEscapeUtils.unescapeHtml4(mapTitle.get("rendered").toString());

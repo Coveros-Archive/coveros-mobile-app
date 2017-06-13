@@ -4,10 +4,16 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkError;
 import com.android.volley.NoConnectionError;
 import com.android.volley.ParseError;
+import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 
 import org.junit.Rule;
+
+import android.app.Instrumentation;
+import android.content.Intent;
+import android.os.Looper;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 
 import com.google.gson.Gson;
@@ -44,7 +50,15 @@ import android.util.Log;
 @RunWith(AndroidJUnit4.class)
 public class AbstractPostActivityTest {
     @Rule
-    public ActivityTestRule<Post> mPostRule = new ActivityTestRule<>(Post.class);
+    public ActivityTestRule<Post> mPostRule = new ActivityTestRule<Post>(Post.class) {
+        @Override
+        protected Intent getActivityIntent() {
+            Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+            Intent result = new Intent(targetContext, Post.class);
+            result.putExtra("id", "" + 0);
+            return result;
+        }
+    };
 
     NetworkError networkError;
     NoConnectionError noConnectionError;
@@ -61,11 +75,14 @@ public class AbstractPostActivityTest {
 
     @Test
     public void getErrorListener_withAuthFailureError() throws Exception {
-        AuthFailureError authFailureError = new AuthFailureError();
+        AuthFailureError authFailureError = new AuthFailureError("Authorization failure error.");
+
 //        if (post == null) System.out.println("ERROR: POST IS NULL");
 //        if (authFailureError == null) System.out.println("ERROR: AUTHERROR IS NULL");
 
-        mPostRule.getActivity().getErrorListener(mPostRule.getActivity()).onErrorResponse(authFailureError);
+        Looper.prepare();
+        Response.ErrorListener errorListener = mPostRule.getActivity().getErrorListener(mPostRule.getActivity());
+        errorListener.onErrorResponse(authFailureError);
         assertTrue(mPostRule.getActivity().getErrorMessage().isShowing());
 
     }

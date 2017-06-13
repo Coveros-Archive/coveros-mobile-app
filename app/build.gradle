@@ -39,7 +39,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
     // adding for testing Wordpress integration
-    compile 'com.google.code.gson:gson:2.2.+'
+    compile 'com.google.code.gson:gson:2.7'
     compile 'com.android.volley:volley:1.0.0'
 
     // decoding decimal unicode received from Wordpress
