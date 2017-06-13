@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'jacoco'
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco-android'
-apply plugin: 'org.sonarqube' version '2.5'
+
 
 
 android {
