@@ -1,8 +1,10 @@
+plugins {
+    id "org.sonarqube" version "2.5"
+}
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco'
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco-android'
-
 
 
 android {
