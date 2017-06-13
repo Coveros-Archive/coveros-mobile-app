@@ -16,11 +16,20 @@ public class ExampleUnitTest {
     }
 
     @Test
-    public void check_WebsiteAddressName() throws Exception {
+    public void check_GetWebsiteAddressName() throws Exception {
         String savedUrl = new String();
         MainActivity ma = new MainActivity();
         savedUrl = ma.getWebName();
         assertEquals("https://www.coveros.com", savedUrl);
+    }
+
+    @Test
+    public void check_SetWebsiteAddressName() throws Exception {
+        //This website automatically redirects
+        //Tests redirecting of links (Browser or WebView Access)
+        String savedUrl = "http://www.html5rocks.com/";
+        MainActivity ma = new MainActivity();
+        ma.setWebName(savedUrl);
     }
 
     @Test
