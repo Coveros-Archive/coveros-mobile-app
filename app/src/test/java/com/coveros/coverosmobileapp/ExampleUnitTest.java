@@ -14,4 +14,33 @@ public class ExampleUnitTest {
     public void addition_isCorrect() throws Exception {
         assertEquals(4, 2 + 2);
     }
+
+    @Test
+    public void check_WebsiteAddressName() throws Exception {
+        String savedUrl = new String();
+        MainActivity ma = new MainActivity();
+        savedUrl = ma.getWebName();
+        assertEquals("https://www.coveros.com", savedUrl);
+    }
+
+    @Test
+    public void check_WebViewClientUsed() throws Exception {
+
+    }
+
+    @Test
+    public void check_NoInternetError() throws Exception {
+
+    }
+
+    @Test
+    public void check_NoServerConnection() throws Exception {
+
+        //How can I test this?
+    }
+
+    @Test
+    public void check_WebViewAfterRedirecting() throws Exception {
+
+    }
 }

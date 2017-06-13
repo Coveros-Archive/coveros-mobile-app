@@ -12,14 +12,23 @@ public class NoErrorWebViewClient extends WebViewClient{
 
     @Override
     public void onReceivedError(WebView view, int errorCode, String description, String failingUrl){
-        Log.e(String.valueOf(errorCode), description);
+        Log.d(String.valueOf(errorCode), description);
 
-        //ERROR: Host Look Up
-        if(errorCode == -2){
+        //ERROR: Timeout
+        if(errorCode == -8){
             String summary = "<html><body style='background: black;'><p style='color: blue;'>" +
                     "Coveros\nSorry, we cannot currently retrieve the requested information." +
-                    "</p></body></html>";
-            view.loadData(summary, "text/html", null);
+                    "Please try again.</p></body></html>";
+            view.loadData(summary, "ERROR_TIMEOUT", null);
+            return;
+        }
+
+        //ERROR: CONNECT (SERVER)
+        if(errorCode == -6){
+            String summary = "<html><body style='background: black;'><p style='color: blue;'>" +
+                    "Coveros\nSorry, we cannot currently retrieve the requested information." +
+                    "Please try again.</p></body></html>";
+            view.loadData(summary, "ERROR_CONNECT", null);
             return;
         }
 

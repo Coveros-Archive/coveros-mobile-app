@@ -2,6 +2,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.coveros.coverosmobileapp">
 
+    //Get Permission for main activity to use the internet and load web pages
+    <uses-permission
+        android:name="android.permission.INTERNET" />
+
+    //Check if the device has a network connection
+    <uses-permission
+        android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    //Collecting Metadata
+    <meta-data
+        android:name="android.webkit.WebView.MetricsOptOut"
+        android:value="true" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
