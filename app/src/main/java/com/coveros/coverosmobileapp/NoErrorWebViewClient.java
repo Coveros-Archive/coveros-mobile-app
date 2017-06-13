@@ -32,6 +32,15 @@ public class NoErrorWebViewClient extends WebViewClient{
             return;
         }
 
+        //ERROR: INTERNET DISCONNECTED
+        if(errorCode == 106){
+            String summary = "<html><body style='background: black;'><p style='color: blue;'>" +
+                    "Coveros\nSorry, we cannot currently retrieve the requested information." +
+                    "Please try again.</p></body></html>";
+            view.loadData(summary, "INTERNET_DISCONNECTED", null);
+            return;
+        }
+
         //Default Behavior
         super.onReceivedError(view, errorCode, description, failingUrl);
     }
