@@ -59,4 +59,8 @@ public class Post extends AbstractPostActivity {
         RequestQueue rQueue = Volley.newRequestQueue(Post.this);
         rQueue.add(request);
     }
+
+    public String toString() {
+        return "Post";
+    }
 }

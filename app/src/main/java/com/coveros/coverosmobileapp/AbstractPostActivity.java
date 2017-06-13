@@ -15,21 +15,29 @@ import com.android.volley.Response;
 
 class AbstractPostActivity extends AppCompatActivity {
 
+    AlertDialog errorMessage;
+
     protected Response.ErrorListener getErrorListener(Context context) {
 
-        // creates error message to be displayed to user
-        AlertDialog errorMessage = new AlertDialog.Builder(context).create();
-        errorMessage.setTitle("Error");
-        errorMessage.setMessage("An error occurred.");
-        errorMessage.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-
         // logs error
-        return volleyError -> Log.e("ERROR: ", volleyError.getMessage());
+        return volleyError -> {
+            // creates error message to be displayed to user
+            errorMessage = new AlertDialog.Builder(context).create();
+            errorMessage.setTitle("Error");
+            errorMessage.setMessage("An error occurred.");
+            errorMessage.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+            Log.e("ERROR: ", volleyError.getMessage());
+        };
+    }
+
+    protected AlertDialog getErrorMessage() {
+        return errorMessage;
     }
 
 }
