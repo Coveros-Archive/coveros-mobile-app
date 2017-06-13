@@ -1,5 +1,7 @@
 package com.coveros.coverosmobileapp;
 
+import android.webkit.WebView;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -25,20 +27,40 @@ public class ExampleUnitTest {
 
     @Test
     public void check_SetWebsiteAddressName() throws Exception {
-        //This website automatically redirects
         //Tests redirecting of links (Browser or WebView Access)
         String savedUrl = "http://www.html5rocks.com/";
         MainActivity ma = new MainActivity();
         ma.setWebName(savedUrl);
+        assertEquals("http://www.html5rocks.com/", ma.getWebName());
     }
 
     @Test
     public void check_WebViewClientUsed() throws Exception {
+        String answer = new String();
+        MainActivity ma = new MainActivity();
+        WebView br = ma.getBrowser();
+        assertEquals("WebViewClient", answer);
+    }
+
+    @Test
+    public void check_BrowserUsed() throws Exception {
 
     }
 
     @Test
-    public void check_NoInternetError() throws Exception {
+    public void check_BrowserOrWebViewUsed_1() throws Exception {
+        //Browser used
+
+    }
+
+    @Test
+    public void check_BrowserOrWebViewUsed_2() throws Exception {
+        //WebView Client used
+
+    }
+
+    @Test
+    public void check_isOnline() throws Exception {
 
     }
 

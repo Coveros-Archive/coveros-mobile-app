@@ -1,30 +1,24 @@
 package com.coveros.coverosmobileapp;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.provider.SyncStateContract;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Html;
-import android.util.Log;
-import android.view.Window;
 import android.webkit.*;
-import android.widget.TableLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-import java.util.function.Function;
+//import java.util.function.Function;
 
 public class MainActivity extends AppCompatActivity {
 
     private String webName;
+    private WebView browser;
 
     public MainActivity(){
         webName = "https://www.coveros.com";
+        WebView browser;
     }
 
     public String getWebName(){
@@ -35,7 +29,13 @@ public class MainActivity extends AppCompatActivity {
         webName = website;
     }
 
-    private WebView browser;
+    public WebView getBrowser(){
+        return browser;
+    }
+
+    public void setBrowser(WebView br){
+        browser = br;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,18 +106,20 @@ public class MainActivity extends AppCompatActivity {
     //Alert Dialog
     private void alertView(){
 
-        //Initilize Alert Dialog menu
+        //Initilize Alert Dialog menu & Cancel only if pressed on button
         AlertDialog dialog = new AlertDialog.Builder(MainActivity.this).create();
+        dialog.setCanceledOnTouchOutside(false);
 
         //Create Strings for Title, messsage, and button
-        String title = "Coveros";
+        String title = "Alert";
         String message = "Sorry, we cannot currently retrieve the requested information.";
-        String button = "Please Try Again.";
+        String button = "Please Reconnect";
 
         //Setters & Toast Message after click "Please Try Again" (onClick)
         dialog.setTitle(title);
         dialog.setMessage(message);
-        dialog.setButton(dialog.BUTTON_NEUTRAL, button, new DialogInterface.OnClickListener(){
+        dialog.setButton(AlertDialog.BUTTON_NEUTRAL, button, new DialogInterface.OnClickListener(){
+            //Text Message on the bottom after clicking the button
             public void onClick(DialogInterface dialog, int which){
                 Toast.makeText(getApplicationContext(), "Thank You", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
