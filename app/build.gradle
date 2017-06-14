@@ -6,6 +6,7 @@ apply plugin: 'jacoco'
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco-android'
 
+
 def flavor = "develop"
 def Flavor = "Develop"
 sonarqube {
