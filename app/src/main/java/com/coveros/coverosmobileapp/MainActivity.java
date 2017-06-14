@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.webkit.*;
+import android.widget.TextView;
 import android.widget.Toast;
 //import java.util.function.Function;
 
@@ -114,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         //Create Strings for Title, messsage, and button
         String title = "Alert";
         String message = "Sorry, we cannot currently retrieve the requested information.";
-        String button1 = "Exit & Reconnect";
+        String button1 = "Exit And Reconnect";
         String button2 = "Reload App";
 
         //Setters (title, default message, button 1 -> Exit, button2 -> Reload)
@@ -138,5 +139,7 @@ public class MainActivity extends AppCompatActivity {
         });
         //Show dialog and make text changes (font color, size, etc.)
         dialog.show();
+        TextView tv = (TextView) dialog.findViewById(R.id.text_view_alertTitle);
+        tv.setTextSize(40);
     }
 }

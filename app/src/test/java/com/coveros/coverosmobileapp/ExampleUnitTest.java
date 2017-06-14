@@ -1,6 +1,8 @@
 package com.coveros.coverosmobileapp;
 
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import org.junit.Test;
 
@@ -17,9 +19,10 @@ public class ExampleUnitTest {
         assertEquals(4, 2 + 2);
     }
 
+    //MainActivity.java Tests
     @Test
     public void check_GetWebsiteAddressName() throws Exception {
-        String savedUrl = new String();
+        String savedUrl;
         MainActivity ma = new MainActivity();
         savedUrl = ma.getWebName();
         assertEquals("https://www.coveros.com", savedUrl);
@@ -36,17 +39,38 @@ public class ExampleUnitTest {
 
     @Test
     public void check_WebViewClientUsed() throws Exception {
-        String answer = new String();
+        String answer;
         MainActivity ma = new MainActivity();
-        WebView br = ma.getBrowser();
-        assertEquals("WebViewClient", answer);
+        WebViewClient br = new NoErrorWebViewClient();
+        if(br instanceof NoErrorWebViewClient){
+            answer = "NoErrorWebViewClient";
+        }
+        else if(br instanceof WebViewClient){
+            answer = "WebViewClient";
+        }
+        else{
+            //Default string answer
+            answer = "null";
+        }
+        assertEquals("NoErrorWebViewClient", answer);
     }
 
     @Test
     public void check_BrowserUsed() throws Exception {
-        String answer = new String();
+        String answer;
         MainActivity ma = new MainActivity();
-        WebView wv = ma.getBrowser();
+        WebViewClient wv = new WebViewClient();
+        if(wv instanceof NoErrorWebViewClient){
+            answer = "NoErrorWebViewClient";
+        }
+        else if(wv instanceof WebViewClient){
+            answer = "WebViewClient";
+        }
+        else{
+            //Default string answer
+            answer = "null";
+        }
+        assertEquals("WebViewClient", answer);
     }
 
     @Test
@@ -74,6 +98,62 @@ public class ExampleUnitTest {
 
     @Test
     public void check_WebViewAfterRedirecting() throws Exception {
+
+    }
+
+    @Test
+    public void check_onBackPressed_1(){
+
+    }
+
+    @Test
+    public void check_onBackPressed_2(){
+
+
+    }
+
+    @Test
+    public void check_onBackPressed_3(){
+
+
+    }
+
+    @Test
+    public void check_alertView_1(){
+
+
+    }
+
+    @Test
+    public void check_alertView_2(){
+
+
+    }
+
+    @Test
+    public void check_alertView_3(){
+
+    }
+
+    @Test
+    public void check_alertView_4(){
+
+
+    }
+
+    //NoErrorWebViewClient.java Tests
+    public void check_ErrorTesting_1(){
+
+
+    }
+
+    public void check_ErrorTesting_2(){
+
+
+    }
+
+    public void check_ErrorTesting_3(){
+
 
     }
 }
