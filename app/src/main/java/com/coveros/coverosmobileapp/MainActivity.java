@@ -8,7 +8,6 @@ import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.webkit.*;
-import android.widget.TextView;
 import android.widget.Toast;
 //import java.util.function.Function;
 
@@ -53,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
             webSettings.setJavaScriptEnabled(true);
 
             //Force Links and redirects to open in WebView instead of a browser
-            browser.setWebViewClient(new NoErrorWebViewClient());
+            browser.setWebViewClient(new WebViewClient());
 
             //URL for Coveros
             //Can be changed by either using setWebName or changing value in constructor
@@ -69,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 webSettings.setJavaScriptEnabled(true);
 
                 //Force Links and redirects to open in WebView instead of a browser
-                browser.setWebViewClient(new NoErrorWebViewClient());
+                browser.setWebViewClient(new WebViewClient());
 
                 //AlertDialog
                 alertView();
@@ -132,14 +131,12 @@ public class MainActivity extends AppCompatActivity {
         dialog.setButton(AlertDialog.BUTTON_NEGATIVE, button2, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getApplicationContext(), "Attempting to Reload App", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Loading App", Toast.LENGTH_LONG).show();
                 dialog.dismiss();
                 recreate();
             }
         });
         //Show dialog and make text changes (font color, size, etc.)
         dialog.show();
-        TextView tv = (TextView) dialog.findViewById(R.id.text_view_alertTitle);
-        tv.setTextSize(40);
     }
 }
