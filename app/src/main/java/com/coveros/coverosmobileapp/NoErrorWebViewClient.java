@@ -1,6 +1,9 @@
 package com.coveros.coverosmobileapp;
 
+import android.annotation.TargetApi;
 import android.util.Log;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -11,11 +14,11 @@ import android.webkit.WebViewClient;
 public class NoErrorWebViewClient extends WebViewClient{
 
     @Override
-    public void onReceivedError(WebView view, int errorCode, String description, String failingUrl){
-        Log.d(String.valueOf(errorCode), description);
+    public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error){
+        Log.d(request.getUrl().toString(), error.getDescription().toString());
 
         //ERROR: Timeout
-        if(errorCode == -8){
+        if(error.getErrorCode() == -8){
             String summary = "<html><body style='background: black;'><p style='color: blue;'>" +
                     "Coveros\nSorry, we cannot currently retrieve the requested information." +
                     "Please try again.</p></body></html>";
@@ -24,7 +27,7 @@ public class NoErrorWebViewClient extends WebViewClient{
         }
 
         //ERROR: CONNECT (SERVER)
-        if(errorCode == -6){
+        if(error.getErrorCode() == -6){
             String summary = "<html><body style='background: black;'><p style='color: blue;'>" +
                     "Coveros\nSorry, we cannot currently retrieve the requested information." +
                     "Please try again.</p></body></html>";
@@ -33,7 +36,7 @@ public class NoErrorWebViewClient extends WebViewClient{
         }
 
         //ERROR: INTERNET DISCONNECTED
-        if(errorCode == 106){
+        if(error.getErrorCode() == 106){
             String summary = "<html><body style='background: black;'><p style='color: blue;'>" +
                     "Coveros\nSorry, we cannot currently retrieve the requested information." +
                     "Please try again.</p></body></html>";
@@ -42,6 +45,6 @@ public class NoErrorWebViewClient extends WebViewClient{
         }
 
         //Default Behavior
-        super.onReceivedError(view, errorCode, description, failingUrl);
+        super.onReceivedError(view, request, error);
     }
 }
