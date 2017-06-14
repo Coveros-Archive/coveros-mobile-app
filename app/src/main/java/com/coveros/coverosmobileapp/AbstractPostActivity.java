@@ -33,10 +33,6 @@ class AbstractPostActivity extends AppCompatActivity {
                         }
                     });
             errorMessage.show();
-            if (errorMessage.isShowing()) {
-                Log.d("Error message", "Is showing!!!!!!!!!!!!");
-            }
-
             Log.e("Volley error", ""+ volleyError.networkResponse.statusCode);
 
         };

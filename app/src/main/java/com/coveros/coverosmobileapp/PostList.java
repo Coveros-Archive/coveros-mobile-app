@@ -38,6 +38,8 @@ public class PostList extends AbstractPostActivity {
     AlertDialog errorMessage;
     ListView postList;
 
+    private boolean isInFront;
+
     public PostList() {
     }
 
@@ -86,6 +88,24 @@ public class PostList extends AbstractPostActivity {
 
     protected AlertDialog getErrorMessage() {
         return errorMessage;
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isInFront = true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isInFront = true;
+    }
+
+
+    public boolean getIsInFront() {
+        return isInFront;
     }
 }
 

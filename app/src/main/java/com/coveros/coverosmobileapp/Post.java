@@ -30,6 +30,8 @@ public class Post extends AbstractPostActivity {
     TextView title;
     WebView content;
 
+    private boolean isInFront;
+
     /**
      * When post is created (through selection), GETs data for post via Wordpress' REST API and displays title and content.
      * @param savedInstanceState
@@ -59,5 +61,21 @@ public class Post extends AbstractPostActivity {
 
         RequestQueue rQueue = Volley.newRequestQueue(Post.this);
         rQueue.add(request);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isInFront = true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isInFront = true;
+    }
+
+    public boolean getIsInFront() {
+        return isInFront;
     }
 }
