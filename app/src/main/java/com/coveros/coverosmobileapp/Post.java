@@ -11,7 +11,9 @@ import com.android.volley.RequestQueue;
 
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import org.apache.commons.text.StringEscapeUtils;
 
@@ -43,24 +45,19 @@ public class Post extends AbstractPostActivity {
         title = (TextView) findViewById(R.id.title);
         content = (WebView) findViewById(R.id.content);
 
-        String url = "http://www.coveros.com/wp-json/wp/v2/posts/" + id + "?fields=title,content";
+        String url = "https://www.dev.secureci.com/wp-json/wp/v2/posts/" + id + "?fields=title,content";
 
         StringRequest request = new StringRequest(Request.Method.GET, url, response -> {
-            Gson responseGson = new Gson();
-            Map<String, Object> mapPost = (Map<String, Object>) responseGson.fromJson(response, Map.class);
-            Map<String, Object> mapTitle = (Map<String, Object>) mapPost.get("title");
-            Map<String, Object> mapContent = (Map<String, Object>) mapPost.get("content");
+            JsonObject post = new JsonParser().parse(response).getAsJsonObject();
+            JsonObject titleText = post.get("title").getAsJsonObject();
+            JsonObject contentText = post.get("content").getAsJsonObject();
 
-            title.setText(StringEscapeUtils.unescapeHtml4(mapTitle.get("rendered").toString()));
-            content.loadData(StringEscapeUtils.unescapeHtml4(mapContent.get("rendered").toString()), "text/html; charset=utf-8", "UTF-8");
+            title.setText(StringEscapeUtils.unescapeHtml3(titleText.get("rendered").getAsString()));
+            content.loadData(StringEscapeUtils.unescapeHtml3(contentText.get("rendered").getAsString()), "text/html; charset=utf-8", "UTF-8");
         }
         , getErrorListener(Post.this));
 
         RequestQueue rQueue = Volley.newRequestQueue(Post.this);
         rQueue.add(request);
-    }
-
-    public String toString() {
-        return "Post";
     }
 }

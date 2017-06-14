@@ -32,7 +32,8 @@ class AbstractPostActivity extends AppCompatActivity {
                         }
                     });
 
-            Log.e("ERROR: ", volleyError.getMessage());
+            Log.e("Volley error", ""+ volleyError.networkResponse.statusCode);
+
         };
     }
 

@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,14 +17,10 @@ import com.android.volley.RequestQueue;
 
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
+
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.text.StringEscapeUtils;  // to decode decimal unicode in strings received from Wordpress
 
@@ -36,20 +31,20 @@ import org.apache.commons.text.StringEscapeUtils;  // to decode decimal unicode 
  */
 public class PostList extends AbstractPostActivity {
 
-    final static String url = "http://www.coveros.com/wp-json/wp/v2/posts?fields=id,title";
-    ArrayList responseList;
-    Map<String, Object> mapPost;
+    final static String url = "https://www.dev.secureci.com/wp-json/wp/v2/posts?fields=id,title";
+
+    JsonArray responseList;
 
     AlertDialog errorMessage;
-
     ListView postList;
-    int postId;
 
     public PostList() {
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.post_list);
 
@@ -58,8 +53,7 @@ public class PostList extends AbstractPostActivity {
         // GETs list of post titles and displays in a ListView
 
         StringRequest request = new StringRequest(Request.Method.GET, url, response -> {
-            JsonObject responseList = new JsonParser().parse(response).getAsJsonObject();
-
+            responseList = new JsonParser().parse(response).getAsJsonArray();
             postList.setAdapter(new ArrayAdapter(PostList.this, android.R.layout.simple_list_item_1, getPostTitles(responseList)));
 
         }, getErrorListener(PostList.this));
@@ -68,8 +62,8 @@ public class PostList extends AbstractPostActivity {
         rQueue.add(request);
 
         postList.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
-            mapPost = (Map<String, Object>) responseList.get(position);
-            postId = ((Double) mapPost.get("id")).intValue();
+            JsonObject post = (JsonObject) responseList.get(position);
+            int postId =  post.get("id").getAsInt();
 
             Intent intent = new Intent(getApplicationContext(), Post.class);
             intent.putExtra("id", "" + postId);
@@ -78,21 +72,16 @@ public class PostList extends AbstractPostActivity {
 
     }
 
-    protected String[] getPostTitles(JsonObject responseList) {
+    protected String[] getPostTitles(JsonArray responseList) {
         String [] postTitles = new String[responseList.size()];
+        JsonObject title;
 
         for (int i = 0; i < responseList.size(); i++) {
-            mapPost = (Map<String, Object>) responseList[i];
-            Log.d("Post Info", Arrays.toString(mapPost.entrySet().toArray()));
-            Map<String, Object> mapTitle = (Map<String, Object>) mapPost.get("title");
-            postTitles[i] = StringEscapeUtils.unescapeHtml4(mapTitle.get("rendered").toString());
+            title = (JsonObject) responseList.get(i).getAsJsonObject().get("title");
+            postTitles[i] = StringEscapeUtils.unescapeHtml4(title.get("rendered").getAsString());
         }
 
         return postTitles;
-    }
-
-    protected void setErrorMessage(AlertDialog errorMessage) {
-        this.errorMessage = errorMessage;
     }
 
     protected AlertDialog getErrorMessage() {
