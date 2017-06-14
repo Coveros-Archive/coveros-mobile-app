@@ -45,7 +45,7 @@ public class Post extends AbstractPostActivity {
         title = (TextView) findViewById(R.id.title);
         content = (WebView) findViewById(R.id.content);
 
-        String url = "https://www.dev.secureci.com/wp-json/wp/v2/posts/" + id + "?fields=title,content";
+        String url = "https://www.dev.secureci.com/wp-json/wp/v2/posts/" + id + "fields=title,content";
 
         StringRequest request = new StringRequest(Request.Method.GET, url, response -> {
             JsonObject post = new JsonParser().parse(response).getAsJsonObject();

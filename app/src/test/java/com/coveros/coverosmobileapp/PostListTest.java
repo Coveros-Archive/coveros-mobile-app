@@ -1,6 +1,8 @@
 package com.coveros.coverosmobileapp;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -26,15 +28,12 @@ public class PostListTest {
     }
 
     @Test
-    public void getPostTitles_withValidResponse() throws Exception {
+    public void getPostTitles_withResponse() throws Exception {
         String[] expectedTitles = {"How to Write Unit Tests", "\u201CAgile Development\u201D"};
-        Gson gson = new Gson();
-        String validResponse = "[{\"title\": {\"rendered\": \"How to Write Unit Tests\"}},{\"title\": {\"rendered\": \"&#8220;Agile Development&#8221;\"}}]";
-        String[] input = gson.fromJson(validResponse, String[].class);
-        assertArrayEquals("Post titles should be correctly extracted and formatted from JSON response.", expectedTitles, postList.getPostTitles(input));
+        String response = "[{\"title\": {\"rendered\": \"How to Write Unit Tests\"}},{\"title\": {\"rendered\": \"&#8220;Agile Development&#8221;\"}}]";
+        JsonArray responseJsonArray = new JsonParser().parse(response).getAsJsonArray();
+        assertArrayEquals("Post titles should be correctly extracted and formatted from JSON response.", expectedTitles, postList.getPostTitles(responseJsonArray));
     }
 
 
 }
-
-//onresponse listener .apply()

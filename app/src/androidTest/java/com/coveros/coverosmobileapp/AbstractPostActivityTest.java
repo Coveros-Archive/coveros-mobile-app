@@ -76,7 +76,13 @@ public class AbstractPostActivityTest {
     @Test
     public void getErrorListener_withAuthFailureError() throws Exception {
         AuthFailureError authFailureError = new AuthFailureError("Authorization failure error.");
-
+        if (authFailureError == null) {
+            System.out.println("AuthFailureError is null.");
+            return;
+        }
+        else {
+            System.out.println("AuthFailureError code: " + authFailureError.networkResponse.statusCode);
+        }
 //        if (post == null) System.out.println("ERROR: POST IS NULL");
 //        if (authFailureError == null) System.out.println("ERROR: AUTHERROR IS NULL");
 

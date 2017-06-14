@@ -19,7 +19,7 @@ class AbstractPostActivity extends AppCompatActivity {
 
     protected Response.ErrorListener getErrorListener(Context context) {
 
-        // logs error
+       // logs error
         return volleyError -> {
             // creates error message to be displayed to user
             errorMessage = new AlertDialog.Builder(context).create();
@@ -29,8 +29,13 @@ class AbstractPostActivity extends AppCompatActivity {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
+                            finish();
                         }
                     });
+            errorMessage.show();
+            if (errorMessage.isShowing()) {
+                Log.d("Error message", "Is showing!!!!!!!!!!!!");
+            }
 
             Log.e("Volley error", ""+ volleyError.networkResponse.statusCode);
 
