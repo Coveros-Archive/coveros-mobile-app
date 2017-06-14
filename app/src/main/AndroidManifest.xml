@@ -2,15 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.coveros.coverosmobileapp">
 
-    //Get Permission for main activity to use the internet and load web pages
+    <!-- Get Permission for main activity to use the internet and load web pages -->
     <uses-permission
         android:name="android.permission.INTERNET" />
 
-    //Check if the device has a network connection
+    <!-- Check if the device has a network connection -->
     <uses-permission
         android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    //Collecting Metadata
+    <!-- Collecting Metadata -->
     <meta-data
         android:name="android.webkit.WebView.MetricsOptOut"
         android:value="true" />

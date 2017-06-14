@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 //Force Links and redirects to open in WebView instead of a browser
                 browser.setWebViewClient(new NoErrorWebViewClient());
 
+                //AlertDialog
                 alertView();
             }
             catch(Exception e){
@@ -113,17 +114,26 @@ public class MainActivity extends AppCompatActivity {
         //Create Strings for Title, messsage, and button
         String title = "Alert";
         String message = "Sorry, we cannot currently retrieve the requested information.";
-        String button = "Please Reconnect";
+        String button1 = "Exit & Reconnect";
+        String button2 = "Reload App";
 
-        //Setters & Toast Message after click "Please Try Again" (onClick)
+        //Setters (title, default message, button 1 -> Exit, button2 -> Reload)
         dialog.setTitle(title);
         dialog.setMessage(message);
-        dialog.setButton(AlertDialog.BUTTON_NEUTRAL, button, new DialogInterface.OnClickListener(){
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, button1, new DialogInterface.OnClickListener(){
             //Text Message on the bottom after clicking the button
             public void onClick(DialogInterface dialog, int which){
                 Toast.makeText(getApplicationContext(), "Thank You", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
                 finish();
+            }
+        });
+        dialog.setButton(AlertDialog.BUTTON_NEGATIVE, button2, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(getApplicationContext(), "Attempting to Reload App", Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+                recreate();
             }
         });
         //Show dialog and make text changes (font color, size, etc.)

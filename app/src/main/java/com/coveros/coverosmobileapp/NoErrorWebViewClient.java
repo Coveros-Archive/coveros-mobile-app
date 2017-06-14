@@ -1,6 +1,5 @@
 package com.coveros.coverosmobileapp;
 
-import android.annotation.TargetApi;
 import android.util.Log;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;

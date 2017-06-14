@@ -44,7 +44,9 @@ public class ExampleUnitTest {
 
     @Test
     public void check_BrowserUsed() throws Exception {
-
+        String answer = new String();
+        MainActivity ma = new MainActivity();
+        WebView wv = ma.getBrowser();
     }
 
     @Test
