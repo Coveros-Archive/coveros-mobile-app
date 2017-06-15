@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.webkit.*;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 //import java.util.function.Function;
 
@@ -17,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private String webName;
     private WebView browser;
     private String currentUrl;
+    private ProgressBar spinner;
 
     public MainActivity(){
         webName = "https://www.coveros.com";
@@ -51,13 +53,14 @@ public class MainActivity extends AppCompatActivity {
                 public void onPageStarted(WebView view, String url, Bitmap fav){
                     super.onPageStarted(view, url, fav);
                 }
-
                 @Override
                 public void onPageFinished(WebView view, String url) {
                     setWebName(url);
                     super.onPageFinished(view, url);
                 }
         });
+        browser.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+        browser.setScrollbarFadingEnabled(false);
     }
 
     @Override
@@ -121,8 +124,9 @@ public class MainActivity extends AppCompatActivity {
         //Create Strings for Title, messsage, and button
         String title = "Alert";
         String message = "Sorry, we cannot currently retrieve the requested information.";
-        String button1 = "Exit And Reconnect";
+        String button1 = "Exit App";
         String button2 = "Reload App";
+        String button3 = "OK";
 
         //Setters (title, default message, button 1 -> Exit, button2 -> Reload)
         dialog.setTitle(title);
@@ -135,12 +139,18 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
-        dialog.setButton(AlertDialog.BUTTON_NEGATIVE, button2, new DialogInterface.OnClickListener() {
+        dialog.setButton(AlertDialog.BUTTON_NEUTRAL, button2, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Toast.makeText(getApplicationContext(), "Loading App", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
                 recreate();
+            }
+        });
+        dialog.setButton(AlertDialog.BUTTON_NEGATIVE, button3, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which){
+                dialog.dismiss();
             }
         });
         //Show dialog and make text changes (font color, size, etc.)
