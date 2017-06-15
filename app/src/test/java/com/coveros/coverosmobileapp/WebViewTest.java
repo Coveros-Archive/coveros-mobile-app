@@ -1,6 +1,7 @@
 package com.coveros.coverosmobileapp;
 
 import android.webkit.WebChromeClient;
+import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import org.junit.Test;
@@ -22,12 +23,25 @@ public class WebViewTest {
         assertEquals("https://www.coveros.com", savedUrl);
     }
 
+    public void check_GetWebsiteURL() throws Exception {
+        MainActivity ma = new MainActivity();
+        String savedUrl = ma.getWebName();
+        String getUrl = ma.getBrowser().getUrl();
+        assertEquals(savedUrl, getUrl);
+    }
+
     @Test
     public void check_SetWebsiteAddressName() throws Exception {
         String savedUrl = "http://www.html5rocks.com/";
         MainActivity ma = new MainActivity();
         ma.setWebName(savedUrl);
         assertEquals("http://www.html5rocks.com/", ma.getWebName());
+    }
+
+    @Test
+    public void check_NotEqualRedirectingLinks() throws Exception {
+        String answer = "https://wwww.html5rocks.com/en/";
+        MainActivity ma = new MainActivity();
     }
 
     @Test
@@ -55,7 +69,7 @@ public class WebViewTest {
         else{
             answer = "WebChromeClient";
         }
-        assertNotEquals("WebViewClient", answer);
+        assertEquals("WebViewClient", answer);
     }
 
     @Test
