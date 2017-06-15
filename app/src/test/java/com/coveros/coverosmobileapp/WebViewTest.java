@@ -15,6 +15,10 @@ import static org.junit.Assert.*;
 public class WebViewTest {
 
     //MainActivity.java Tests
+
+    /*
+    Check on Getter for WebName()
+     */
     @Test
     public void check_GetWebsiteAddressName() throws Exception {
         String savedUrl;
@@ -23,13 +27,9 @@ public class WebViewTest {
         assertEquals("https://www.coveros.com", savedUrl);
     }
 
-    public void check_GetWebsiteURL() throws Exception {
-        MainActivity ma = new MainActivity();
-        String savedUrl = ma.getWebName();
-        String getUrl = ma.getBrowser().getUrl();
-        assertEquals(savedUrl, getUrl);
-    }
-
+    /*
+    Check on Setter for WebName()
+     */
     @Test
     public void check_SetWebsiteAddressName() throws Exception {
         String savedUrl = "http://www.html5rocks.com/";
@@ -38,51 +38,23 @@ public class WebViewTest {
         assertEquals("http://www.html5rocks.com/", ma.getWebName());
     }
 
-    @Test
-    public void check_NotEqualRedirectingLinks() throws Exception {
-        String answer = "https://wwww.html5rocks.com/en/";
-        MainActivity ma = new MainActivity();
-    }
-
+    /*
+    Check if WebViewClient is used
+     */
     @Test
     public void check_WebViewClientUsed() throws Exception {
-        String answer;
         MainActivity ma = new MainActivity();
         WebViewClient br = new WebViewClient();
-        if(br instanceof WebViewClient){
-            answer = "WebViewClient";
-        }
-        else{
-            answer = "WebChromeClient";
-        }
-        assertEquals("WebViewClient", answer);
+        assertEquals("android.webkit.WebViewClient@6a6824be", br.toString());
     }
 
+    /*
+    Check if browser is used
+     */
     @Test
-    public void check_BrowserUsed_1() throws Exception {
-        String answer;
+    public void check_BrowserUsed() throws Exception {
         MainActivity ma = new MainActivity();
         WebViewClient wv = new WebViewClient();
-        if(wv instanceof WebViewClient){
-            answer = "WebViewClient";
-        }
-        else{
-            answer = "WebChromeClient";
-        }
-        assertEquals("WebViewClient", answer);
-    }
-
-    @Test
-    public void check_BrowserUsed_2() throws Exception{
-        String answer;
-        MainActivity ma = new MainActivity();
-        WebChromeClient wcc = new WebChromeClient();
-        if(wcc instanceof WebChromeClient){
-            answer = "WebChromeClient";
-        }
-        else{
-            answer = "WebViewClient";
-        }
-        assertEquals("WebChromeClient", answer);
+        assertNotEquals("android.webkit.WebChromeClient@6a6824be", wv.toString());
     }
 }

@@ -9,7 +9,6 @@ import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.webkit.*;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 //import java.util.function.Function;
 
@@ -17,8 +16,6 @@ public class MainActivity extends AppCompatActivity {
 
     private String webName;
     private WebView browser;
-    private String currentUrl;
-    private ProgressBar spinner;
 
     public MainActivity(){
         webName = "https://www.coveros.com";
@@ -58,9 +55,10 @@ public class MainActivity extends AppCompatActivity {
                     setWebName(url);
                     super.onPageFinished(view, url);
                 }
+                public String toString(){
+                    return "WebViewClient";
+                }
         });
-        browser.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-        browser.setScrollbarFadingEnabled(false);
     }
 
     @Override
