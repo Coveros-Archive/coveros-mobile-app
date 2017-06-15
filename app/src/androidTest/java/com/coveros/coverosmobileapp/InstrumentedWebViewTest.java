@@ -37,22 +37,21 @@ public class InstrumentedWebViewTest{
     public void check_testRun() throws Exception{
         Intent intent = new Intent(Intent.ACTION_PICK);
         MainActivity newMain = mMainActivity.launchActivity(intent);
-
     }
 
     @Test
     public void check_isOnlineTrue() throws Exception {
         Intent intent = new Intent(Intent.ACTION_PICK);
         MainActivity newMain = mMainActivity.launchActivity(intent);
-        newMain.isOnline();
+        boolean theTruth = newMain.isOnline();
+        assertEquals(true,theTruth);
     }
 
     @Test
     public void check_isOnlineFalse() throws Exception {
         Intent intent = new Intent(Intent.ACTION_PICK);
         MainActivity newMain = mMainActivity.launchActivity(intent);
-        //Change Internet connectivity\
-
+        //Change Internet connectivity
 
         newMain.isOnline();
     }

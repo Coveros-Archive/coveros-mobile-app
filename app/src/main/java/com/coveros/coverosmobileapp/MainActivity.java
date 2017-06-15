@@ -10,6 +10,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.webkit.*;
 import android.widget.Toast;
+
+import java.net.InetAddress;
+import java.net.URL;
+import java.net.URLConnection;
 //import java.util.function.Function;
 
 public class MainActivity extends AppCompatActivity {
@@ -111,6 +115,21 @@ public class MainActivity extends AppCompatActivity {
         //Otherwise, must be connected
         return true;
     }
+
+    public boolean isConnectedToServer(String url, int timeout){
+        try{
+            URL myURL = new URL(url);
+            URLConnection connection = myURL.openConnection();
+            connection.setConnectTimeout(timeout);
+            connection.connect();
+            return true;
+        }
+        catch(Exception e){
+            //Handle any exceptions
+            return false;
+        }
+    }
+
 
     //Alert Dialog
     private void alertView(){
