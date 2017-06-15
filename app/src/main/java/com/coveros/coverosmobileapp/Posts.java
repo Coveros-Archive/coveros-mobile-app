@@ -69,16 +69,18 @@ public class Posts extends AbstractPostActivity {
         RequestQueue rQueue = Volley.newRequestQueue(Posts.this);
         rQueue.add(request);
 
-        postsListView.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
-            JsonObject post = (JsonObject) responseList.get(position);
-            int postId =  post.get("id").getAsInt();
+        postsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                JsonObject post = (JsonObject) responseList.get(position);
+                int postId = post.get("id").getAsInt();
 
-            Intent intent = new Intent(getApplicationContext(), Post.class);
-            intent.putExtra("id", "" + postId);
-            currentPostIntent = intent;
-            startActivity(intent);
+                Intent intent = new Intent(getApplicationContext(), Post.class);
+                intent.putExtra("id", "" + postId);
+                currentPostIntent = intent;
+                startActivity(intent);
+            }
         });
-
     }
 
 
