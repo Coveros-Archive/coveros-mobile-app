@@ -1,5 +1,6 @@
 package com.coveros.coverosmobileapp;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 // importing tools for WordPress integration
@@ -24,23 +25,27 @@ import com.google.gson.JsonParser;
 
 import org.apache.commons.text.StringEscapeUtils;  // to decode decimal unicode in strings received from Wordpress
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
+
 /**
  * Created by Maria Kim on 6/9/2017
  * Creates ListView that displays list of titles of blog posts.
  * Reference: https://www.simplifiedcoding.net/wordpress-to-android-app-tutorial/
  */
-public class PostList extends AbstractPostActivity {
+public class Posts extends AbstractPostActivity {
 
     final static String url = "https://www.dev.secureci.com/wp-jsonwp/v2/posts?fields=id,title";
 
     JsonArray responseList;
 
-    AlertDialog errorMessage;
-    ListView postList;
+    ListView postsListView;
+
+    Intent currentPostIntent;
 
     private boolean isInFront;
 
-    public PostList() {
+    public Posts() {
     }
 
     @Override
@@ -50,29 +55,31 @@ public class PostList extends AbstractPostActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.post_list);
 
-        postList = (ListView) findViewById(R.id.postList);
+        postsListView = (ListView) findViewById(R.id.postList);
 
         // GETs list of post titles and displays in a ListView
 
         StringRequest request = new StringRequest(Request.Method.GET, url, response -> {
             responseList = new JsonParser().parse(response).getAsJsonArray();
-            postList.setAdapter(new ArrayAdapter(PostList.this, android.R.layout.simple_list_item_1, getPostTitles(responseList)));
+            postsListView.setAdapter(new ArrayAdapter(Posts.this, android.R.layout.simple_list_item_1, getPostTitles(responseList)));
 
-        }, getErrorListener(PostList.this));
+        }, getErrorListener(Posts.this));
 
-        RequestQueue rQueue = Volley.newRequestQueue(PostList.this);
+        RequestQueue rQueue = Volley.newRequestQueue(Posts.this);
         rQueue.add(request);
 
-        postList.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
+        postsListView.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
             JsonObject post = (JsonObject) responseList.get(position);
             int postId =  post.get("id").getAsInt();
 
             Intent intent = new Intent(getApplicationContext(), Post.class);
             intent.putExtra("id", "" + postId);
+            currentPostIntent = intent;
             startActivity(intent);
         });
 
     }
+
 
     protected String[] getPostTitles(JsonArray responseList) {
         String [] postTitles = new String[responseList.size()];
@@ -86,26 +93,34 @@ public class PostList extends AbstractPostActivity {
         return postTitles;
     }
 
-    protected AlertDialog getErrorMessage() {
-        return errorMessage;
+    protected Intent getCurrentPostIntent() {
+        return currentPostIntent;
     }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        isInFront = true;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        isInFront = true;
-    }
-
 
     public boolean getIsInFront() {
         return isInFront;
+    }
+
+    public ListView getPostsListView() { return postsListView; }
+
+    public static Activity getActivity() throws Exception {
+        Class activityThreadClass = Class.forName("android.app.ActivityThread");
+        Object activityThread = activityThreadClass.getMethod("currentActivityThread").invoke(null);
+        Field activitiesField = activityThreadClass.getDeclaredField("mActivities");
+        activitiesField.setAccessible(true);
+        HashMap activities = (HashMap) activitiesField.get(activityThread);
+        for(Object activityRecord:activities.values()){
+            Class activityRecordClass = activityRecord.getClass();
+            Field pausedField = activityRecordClass.getDeclaredField("paused");
+            pausedField.setAccessible(true);
+            if(!pausedField.getBoolean(activityRecord)) {
+                Field activityField = activityRecordClass.getDeclaredField("activity");
+                activityField.setAccessible(true);
+                Activity activity = (Activity) activityField.get(activityRecord);
+                return activity;
+            }
+        }
+        return new Activity();
     }
 }
 

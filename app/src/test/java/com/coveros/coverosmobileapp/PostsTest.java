@@ -19,13 +19,13 @@ import static org.junit.Assert.assertArrayEquals;
  */
 
 
-public class PostListTest {
+public class PostsTest {
 
-    PostList postList;
+    Posts posts;
 
     @Before
     public void setUp() {
-        postList = new PostList();
+        posts = new Posts();
     }
 
     @Test
@@ -33,8 +33,9 @@ public class PostListTest {
         String[] expectedTitles = {"How to Write Unit Tests", "\u201CAgile Development\u201D"};
         String response = "[{\"title\": {\"rendered\": \"How to Write Unit Tests\"}},{\"title\": {\"rendered\": \"&#8220;Agile Development&#8221;\"}}]";
         JsonArray responseJsonArray = new JsonParser().parse(response).getAsJsonArray();
-        assertArrayEquals("Post titles should be correctly extracted and formatted from JSON response.", expectedTitles, postList.getPostTitles(responseJsonArray));
+        assertArrayEquals("Post titles should be correctly extracted and formatted from JSON response.", expectedTitles, posts.getPostTitles(responseJsonArray));
     }
+
 
 
 

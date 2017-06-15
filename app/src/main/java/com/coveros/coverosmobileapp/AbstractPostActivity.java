@@ -33,6 +33,7 @@ class AbstractPostActivity extends AppCompatActivity {
                         }
                     });
             errorMessage.show();
+
             Log.e("Volley error", ""+ volleyError.networkResponse.statusCode);
 
         };
@@ -41,5 +42,6 @@ class AbstractPostActivity extends AppCompatActivity {
     protected AlertDialog getErrorMessage() {
         return errorMessage;
     }
+
 
 }

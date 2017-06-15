@@ -30,7 +30,9 @@ public class Post extends AbstractPostActivity {
     TextView title;
     WebView content;
 
-    private boolean isInFront;
+    private boolean isActive;
+
+    private String id;
 
     /**
      * When post is created (through selection), GETs data for post via Wordpress' REST API and displays title and content.
@@ -42,7 +44,7 @@ public class Post extends AbstractPostActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.post);
 
-        final String id = getIntent().getExtras().getString("id");
+        id = getIntent().getExtras().getString("id");
 
         title = (TextView) findViewById(R.id.title);
         content = (WebView) findViewById(R.id.content);
@@ -63,19 +65,35 @@ public class Post extends AbstractPostActivity {
         rQueue.add(request);
     }
 
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        isActive = true;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        isActive = false;
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        isInFront = true;
+        isActive = true;
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        isInFront = true;
+        isActive = false;
     }
 
-    public boolean getIsInFront() {
-        return isInFront;
+    public boolean getIsActive() {
+        return isActive;
     }
 }
