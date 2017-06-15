@@ -31,7 +31,7 @@ import org.apache.commons.text.StringEscapeUtils;  // to decode decimal unicode 
  */
 public class PostList extends AbstractPostActivity {
 
-    final static String url = "https://www.dev.secureci.com/wp-json/wp/v2/posts?fields=id,title";
+    final static String url = "https://www.dev.secureci.com/wp-jsonwp/v2/posts?fields=id,title";
 
     JsonArray responseList;
 

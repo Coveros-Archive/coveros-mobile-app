@@ -18,6 +18,7 @@ import static org.junit.Assert.assertArrayEquals;
  * Created by Maria Kim on 6/12/2017.
  */
 
+
 public class PostListTest {
 
     PostList postList;
