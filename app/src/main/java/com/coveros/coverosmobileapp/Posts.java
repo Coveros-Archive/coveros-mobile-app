@@ -15,6 +15,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 
 
+import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -56,10 +57,13 @@ public class Posts extends AbstractPostActivity {
 
         // GETs list of post titles and displays in a ListView
 
-        StringRequest request = new StringRequest(Request.Method.GET, url, response -> {
+        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
             responseList = new JsonParser().parse(response).getAsJsonArray();
             postsListView.setAdapter(new ArrayAdapter(Posts.this, android.R.layout.simple_list_item_1, getPostTitles(responseList)));
 
+            }
         }, getErrorListener(Posts.this));
 
         RequestQueue rQueue = Volley.newRequestQueue(Posts.this);

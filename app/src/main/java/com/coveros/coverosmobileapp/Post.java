@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 
+import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -51,15 +52,17 @@ public class Post extends AbstractPostActivity {
 
         String url = "https://www.dev.secureci.com/wp-json/wp/v2/posts/" + id + "?fields=title,content";
 
-        StringRequest request = new StringRequest(Request.Method.GET, url, response -> {
-            JsonObject post = new JsonParser().parse(response).getAsJsonObject();
-            JsonObject titleText = post.get("title").getAsJsonObject();
-            JsonObject contentText = post.get("content").getAsJsonObject();
+        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JsonObject post = new JsonParser().parse(response).getAsJsonObject();
+                JsonObject titleText = post.get("title").getAsJsonObject();
+                JsonObject contentText = post.get("content").getAsJsonObject();
 
-            title.setText(StringEscapeUtils.unescapeHtml3(titleText.get("rendered").getAsString()));
-            content.loadData(StringEscapeUtils.unescapeHtml3(contentText.get("rendered").getAsString()), "text/html; charset=utf-8", "UTF-8");
-        }
-        , getErrorListener(Post.this));
+                title.setText(StringEscapeUtils.unescapeHtml3(titleText.get("rendered").getAsString()));
+                content.loadData(StringEscapeUtils.unescapeHtml3(contentText.get("rendered").getAsString()), "text/html; charset=utf-8", "UTF-8");
+            }
+        }, getErrorListener(Post.this));
 
         RequestQueue rQueue = Volley.newRequestQueue(Post.this);
         rQueue.add(request);
