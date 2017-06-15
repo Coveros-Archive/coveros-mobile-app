@@ -1,7 +1,12 @@
 package com.coveros.coverosmobileapp;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.webkit.WebView;
 
 import android.widget.TextView;
@@ -10,6 +15,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -27,7 +33,9 @@ import java.util.Map;
  * Reference: https://www.simplifiedcoding.net/wordpress-to-android-app-tutorial/
  */
 
-public class Post extends AbstractPostActivity {
+public class Post extends AppCompatActivity implements InterfacePostActivity {
+
+    static AlertDialog errorMessage;
     TextView title;
     WebView content;
 
@@ -72,31 +80,34 @@ public class Post extends AbstractPostActivity {
         return id;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        isActive = true;
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        isActive = false;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        isActive = true;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        isActive = false;
-    }
 
     public boolean getIsActive() {
         return isActive;
     }
+
+    static Response.ErrorListener getErrorListener(final Context context) {
+        Response.ErrorListener responseListener = new Response.ErrorListener() {
+            // logs error
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                // creates error message to be displayed to user
+                errorMessage = new AlertDialog.Builder(context).create();
+                errorMessage.setTitle("Error");
+                errorMessage.setMessage("An error occurred.");
+                errorMessage.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                finish();
+                            }
+                        });
+                errorMessage.show();
+
+                Log.e("Volley error", "" + volleyError.networkResponse.statusCode);
+            }
+        };
+        return responseListener;
+    }
+
+
 }

@@ -1,6 +1,7 @@
 package com.coveros.coverosmobileapp;
 
 import android.app.Activity;
+import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 
@@ -38,7 +39,7 @@ import java.util.List;
  * Creates ListView that displays list of titles of blog posts.
  * Reference: https://www.simplifiedcoding.net/wordpress-to-android-app-tutorial/
  */
-public class Posts extends AbstractPostActivity {
+public class PostListView extends AbstractPostActivity {
 
     JsonArray responseList;
     ListView postsListView;
