@@ -6,11 +6,7 @@ package com.coveros.coverosmobileapp;
 
 public class Sonar {
     public static boolean num(int a, int b){
-                if(a > b || a == b){
-                        return true;
-                    }
-                else{
-                        return false;
-        }
+
+            return a > b || a == b;
             }
 }
