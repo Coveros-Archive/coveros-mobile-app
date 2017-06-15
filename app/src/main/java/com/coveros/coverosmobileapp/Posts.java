@@ -6,7 +6,6 @@ import android.os.Bundle;
 // importing tools for WordPress integration
 
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -35,12 +34,10 @@ import java.util.HashMap;
  */
 public class Posts extends AbstractPostActivity {
 
-    final static String url = "https://www.dev.secureci.com/wp-jsonwp/v2/posts?fields=id,title";
+    final static String url = "https://www.dev.secureci.com/wp-json/wp/v2/posts?per_page=10?fields=id,title";
 
     JsonArray responseList;
-
     ListView postsListView;
-
     Intent currentPostIntent;
 
     private boolean isInFront;
@@ -53,7 +50,7 @@ public class Posts extends AbstractPostActivity {
 
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.post_list);
+        setContentView(R.layout.posts);
 
         postsListView = (ListView) findViewById(R.id.postList);
 

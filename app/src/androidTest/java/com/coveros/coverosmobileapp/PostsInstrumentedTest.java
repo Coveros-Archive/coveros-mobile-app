@@ -86,6 +86,12 @@ public class PostsInstrumentedTest {
         postsListView.setItemChecked(position, true);
     }
 
+    /**
+     *  Gets current running activity.
+     *  Source: https://androidreclib.wordpress.com/2014/11/22/getting-the-current-activity/
+     * @return
+     * @throws Exception
+     */
     public static Activity getActivity() throws Exception {
         Class activityThreadClass = Class.forName("android.app.ActivityThread");
         Object activityThread = activityThreadClass.getMethod("currentActivityThread").invoke(null);
@@ -105,4 +111,6 @@ public class PostsInstrumentedTest {
         }
         return null;
     }
+
+
 }

@@ -21,7 +21,7 @@ import java.util.HashMap;
 import static junit.framework.Assert.assertTrue;
 
 /**
- * Created by maria on 6/15/2017.
+ * Created by Maria on 6/15/2017.
  */
 
 @RunWith(AndroidJUnit4.class)
