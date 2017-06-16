@@ -71,7 +71,6 @@ public class PostList extends ListActivity {
         setContentView(R.layout.post_list);
 
         postListView = getListView();
-//        postListView.setStackFromBottom(true);
 
         // GETs list of post titles and displays in a ListView
 
@@ -101,22 +100,15 @@ public class PostList extends ListActivity {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (postListView.getAdapter() != null) {
-                    Log.d("POSTLISTVIEW", "NOT NULL");
                     if (first) {
                         if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount != 0) {
-                            Log.d("NOTICE", "SCROLLED TO BOTTOM");
                             addPosts();
-                            Log.d("Offset: ", "" + offset);
                         }
                     }
                     else {
-                        Log.d("NOTICE", "Not first!");
                         if (postListView.getAdapter().getCount() == previousPostListViewSize + postsPerPage) {
-                            Log.d("NOTICE", "POSTS HAVE INCREMENTED BY EXACTLY 10");
                             if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount != 0) {
-                                Log.d("NOTICE", "SCROLLED TO BOTTOM");
                                 addPosts();
-                                Log.d("Offset: ", "" + offset);
                                 previousPostListViewSize = postListView.getAdapter().getCount();
                             }
                         }
@@ -128,10 +120,9 @@ public class PostList extends ListActivity {
 
     protected void addPosts() {
 
-        url = "https://www.dev.secureci.com/wp-json/wp/v2/posts?per_page=" + postsPerPage + "&fields=id,title,date&offset=" + offset;
+        url = "https://www.dev.secureci.com/wp-json/wp/v2/posts?per_page=" + postsPerPage + "&fields=id,title,date,author&offset=" + offset;
         first = false;
 
-        Log.d("URL", url);
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -139,9 +130,7 @@ public class PostList extends ListActivity {
                 JsonArray newResponseList = new JsonParser().parse(response).getAsJsonArray();
                 responseList.addAll(newResponseList);
                 postsAdapter.addAll(getPostTitles(newResponseList));
-                Log.d("POST TITLES", postTitles.toString());
                 postsAdapter.notifyDataSetChanged();
-                Log.d("NOTICE","RESPONSE RECEIVED");
             }
         }, getErrorListener(PostList.this));
         RequestQueue rQueue = Volley.newRequestQueue(PostList.this);
@@ -179,6 +168,7 @@ public class PostList extends ListActivity {
         }
         return new Activity();
     }
+
     private Response.ErrorListener getErrorListener(final Context context) {
         Response.ErrorListener responseListener = new Response.ErrorListener() {
             // logs error
@@ -210,6 +200,7 @@ public class PostList extends ListActivity {
         };
         return responseListener;
     }
+
     private Response.Listener<String> getListener() {
         Response.Listener<String> listener= new Response.Listener<String>() {
             @Override
