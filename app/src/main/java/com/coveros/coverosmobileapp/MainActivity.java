@@ -8,7 +8,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.webkit.*;
 import android.widget.Toast;
@@ -86,12 +85,6 @@ public class MainActivity extends AppCompatActivity {
             webSettings.setJavaScriptEnabled(true);
             //Can be changed by either using setWebName or changing value in constructor
             browser.loadUrl(webName);
-
-            OrientationChangeData data = (OrientationChangeData) getLastNonConfigurationInstance();
-            if(data != null){
-                hasToRestoreState = true;
-                progressToRestore = data.mProgress;
-            }
         }
         else{
             try{
