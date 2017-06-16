@@ -60,7 +60,7 @@ public class PostsInstrumentedTest {
 
         int position = 0;
 
-        // get ListView of posts and "select" first item
+        // get ListView of post_list and "select" first item
         Posts posts = mPostsRule.getActivity();
         posts.runOnUiThread(new Runnable() {
             public void run() {

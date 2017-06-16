@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.webkit.WebView;
 
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -29,11 +30,11 @@ import java.util.Map;
 
 /**
  * Created by Maria Kim on 6/9/2017.
- * Creates and displays a single blog post when it is selected from the list of blog posts.
+ * Creates and displays a single blog post when it is selected from the list of blog post_list.
  * Reference: https://www.simplifiedcoding.net/wordpress-to-android-app-tutorial/
  */
 
-public class Post extends AppCompatActivity implements InterfacePostActivity {
+public class Post extends AppCompatActivity {
 
     static AlertDialog errorMessage;
     TextView title;
@@ -58,19 +59,9 @@ public class Post extends AppCompatActivity implements InterfacePostActivity {
         title = (TextView) findViewById(R.id.title);
         content = (WebView) findViewById(R.id.content);
 
-        String url = "https://www.dev.secureci.com/wp-json/wp/v2/posts/" + id + "?fields=title,content";
+        String url = "https://www.dev.secureci.com/wp-json/wp/v2/posts/" + id + "?fields=author,title,date,content";
 
-        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                JsonObject post = new JsonParser().parse(response).getAsJsonObject();
-                JsonObject titleText = post.get("title").getAsJsonObject();
-                JsonObject contentText = post.get("content").getAsJsonObject();
-
-                title.setText(StringEscapeUtils.unescapeHtml3(titleText.get("rendered").getAsString()));
-                content.loadData(StringEscapeUtils.unescapeHtml3(contentText.get("rendered").getAsString()), "text/html; charset=utf-8", "UTF-8");
-            }
-        }, getErrorListener(Post.this));
+        StringRequest request = new StringRequest(Request.Method.GET, url, getListener(), getErrorListener(Post.this));
 
         RequestQueue rQueue = Volley.newRequestQueue(Post.this);
         rQueue.add(request);
@@ -85,7 +76,7 @@ public class Post extends AppCompatActivity implements InterfacePostActivity {
         return isActive;
     }
 
-    static Response.ErrorListener getErrorListener(final Context context) {
+    private Response.ErrorListener getErrorListener(final Context context) {
         Response.ErrorListener responseListener = new Response.ErrorListener() {
             // logs error
             @Override
@@ -107,6 +98,20 @@ public class Post extends AppCompatActivity implements InterfacePostActivity {
             }
         };
         return responseListener;
+    }
+    private Response.Listener<String> getListener() {
+        Response.Listener<String> listener= new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JsonObject post = new JsonParser().parse(response).getAsJsonObject();
+                JsonObject titleText = post.get("title").getAsJsonObject();
+                JsonObject contentText = post.get("content").getAsJsonObject();
+
+                title.setText(StringEscapeUtils.unescapeHtml3(titleText.get("rendered").getAsString()));
+                content.loadData(StringEscapeUtils.unescapeHtml3(contentText.get("rendered").getAsString()), "text/html; charset=utf-8", "UTF-8");
+            }
+        };
+        return listener;
     }
 
 
