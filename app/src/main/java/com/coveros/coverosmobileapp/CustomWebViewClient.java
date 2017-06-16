@@ -22,4 +22,9 @@ public class CustomWebViewClient extends WebViewClient{
         }
         return true;
     }
+
+    @Override
+    public void onPageFinished(WebView view, String url){
+
+    }
 }

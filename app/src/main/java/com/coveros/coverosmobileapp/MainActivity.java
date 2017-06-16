@@ -8,6 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.webkit.*;
 import android.widget.Toast;
@@ -16,11 +17,12 @@ import java.net.URLConnection;
 //import java.util.function.Function;
 
 public class MainActivity extends AppCompatActivity {
-
+    //MainActivity
     private String webName;
     private WebView browser;
     private WebViewClient wvc;
     private WebChromeClient wcc;
+    //Alerts
     private AlertDialog dialog;
 
     public MainActivity(){
@@ -46,8 +48,9 @@ public class MainActivity extends AppCompatActivity {
     public WebViewClient getWebViewClient(){ return wvc; }
 
     public WebChromeClient getWebChromeClient() { return wcc; }
+
     /*
-     * On Creation of App
+     * On Creation/Declaration of App/Activity
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +86,12 @@ public class MainActivity extends AppCompatActivity {
             webSettings.setJavaScriptEnabled(true);
             //Can be changed by either using setWebName or changing value in constructor
             browser.loadUrl(webName);
+
+            OrientationChangeData data = (OrientationChangeData) getLastNonConfigurationInstance();
+            if(data != null){
+                hasToRestoreState = true;
+                progressToRestore = data.mProgress;
+            }
         }
         else{
             try{
@@ -203,5 +212,19 @@ public class MainActivity extends AppCompatActivity {
         });
         //Show dialog and make text changes (font color, size, etc.)
         dialog.show();
+    }
+
+    /*
+     * Purpose: Saving Scrolled position on Web Pages and coming back to for later viewing(onPause)
+     * Calculates Scrolling Percentage to return to precisely same location
+     * on webpage. Previously onResume after onPause results in user being
+     * pushed to the top of a webpage, losing track of where/what they were
+     * looking at
+     */
+    private float calculateProgression(WebView content){
+          float contentHeight = content.getContentHeight();
+          float currentScrollPosition = content.getScrollY();
+          float percentWebview = currentScrollPosition / contentHeight;
+          return percentWebview;
     }
 }
