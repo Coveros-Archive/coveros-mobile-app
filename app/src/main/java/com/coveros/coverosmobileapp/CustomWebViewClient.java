@@ -1,7 +1,6 @@
 package com.coveros.coverosmobileapp;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -22,8 +21,5 @@ public class CustomWebViewClient extends WebViewClient{
             view.getContext().startActivity(i);
         }
         return true;
-    }
-    public String toString(){
-        return "WebViewClient";
     }
 }
