@@ -6,12 +6,12 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.webkit.*;
 import android.widget.Toast;
-
-import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLConnection;
 //import java.util.function.Function;
@@ -20,10 +20,15 @@ public class MainActivity extends AppCompatActivity {
 
     private String webName;
     private WebView browser;
+    private WebViewClient wvc;
+    private WebChromeClient wcc;
+    private final String regex;
+    private AlertDialog dialog;
 
     public MainActivity(){
         webName = "https://www.coveros.com";
-        WebView browser;
+        regex = "coveros[.]com";
+        wvc = new WebViewClient();
     }
 
     public String getWebName(){
@@ -34,22 +39,33 @@ public class MainActivity extends AppCompatActivity {
         webName = website;
     }
 
-    public WebView getBrowser(){
+    public WebView getWebViewBrowser(){
         return browser;
     }
 
-    public void setBrowser(WebView br){
+    public void setWebViewBrowser(WebView br){
         browser = br;
     }
+
+    public WebViewClient getWebViewClient(){ return wvc; }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //Link WebView varaible with activity_main_webview for Web View Access
+        MainActivity main = new MainActivity();
+        //Link WebView variable with activity_main_webview for Web View Access
         browser = (WebView) findViewById(R.id.activity_main_webview);
-        //Force Links and redirects to open in WebView instead of a browser
-        browser.setWebViewClient(new WebViewClient(){
+        main.setWebViewBrowser(browser);
+        //Links open in WebView with coveros regex check
+        browser.setWebViewClient(new WebViewClient() {
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest req) {
+                    final Uri uri = req.getUrl();
+                    view.loadUrl(uri.toString());
+                    return true;
+                }
+
                 @Override
                 public void onPageStarted(WebView view, String url, Bitmap fav){
                     super.onPageStarted(view, url, fav);
@@ -67,12 +83,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStart(){
-        //Phone is online
+        //Phone is online & Connected to a server
         if(isOnline()){
             //Enable Javascript (Plugins)
             WebSettings webSettings = browser.getSettings();
             webSettings.setJavaScriptEnabled(true);
-            //URL for Coveros
             //Can be changed by either using setWebName or changing value in constructor
             browser.loadUrl(webName);
         }
@@ -86,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
             }
             catch(Exception e){
                 //Save logs if necessary
-                //Log.d(Constants.TAG, "Show Dialog: " + e.getMessage());
+                Log.d("Error: ", "Show Dialog: " + e.getMessage());
             }
         }
         super.onStart();
@@ -130,12 +145,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public AlertDialog getDialog(){
+        return dialog;
+    }
 
     //Alert Dialog
     private void alertView(){
 
-        //Initilize Alert Dialog menu & Cancel only if pressed on button
-        AlertDialog dialog = new AlertDialog.Builder(MainActivity.this).create();
+        //Init Alert Dialog menu & Cancel only if pressed on button
+        dialog = new AlertDialog.Builder(MainActivity.this).create();
         dialog.setCanceledOnTouchOutside(false);
 
         //Create Strings for Title, messsage, and button
