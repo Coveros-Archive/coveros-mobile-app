@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,13 +21,12 @@ public class MainActivity extends AppCompatActivity {
     private WebView browser;
     private WebViewClient wvc;
     private WebChromeClient wcc;
-    private final String regex;
     private AlertDialog dialog;
 
     public MainActivity(){
         webName = "https://www.coveros.com";
-        regex = "coveros[.]com";
         wvc = new WebViewClient();
+        wcc = new WebChromeClient();
     }
 
     public String getWebName(){
@@ -39,9 +37,7 @@ public class MainActivity extends AppCompatActivity {
         webName = website;
     }
 
-    public WebView getWebViewBrowser(){
-        return browser;
-    }
+    public WebView getWebViewBrowser(){ return browser; }
 
     public void setWebViewBrowser(WebView br){
         browser = br;
@@ -49,6 +45,10 @@ public class MainActivity extends AppCompatActivity {
 
     public WebViewClient getWebViewClient(){ return wvc; }
 
+    public WebChromeClient getWebChromeClient() { return wcc; }
+    /*
+     * On Creation of App
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,30 +57,23 @@ public class MainActivity extends AppCompatActivity {
         //Link WebView variable with activity_main_webview for Web View Access
         browser = (WebView) findViewById(R.id.activity_main_webview);
         main.setWebViewBrowser(browser);
-        //Links open in WebView with coveros regex check
-        browser.setWebViewClient(new WebViewClient() {
-                @Override
-                public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest req) {
-                    final Uri uri = req.getUrl();
-                    view.loadUrl(uri.toString());
-                    return true;
-                }
-
-                @Override
-                public void onPageStarted(WebView view, String url, Bitmap fav){
-                    super.onPageStarted(view, url, fav);
-                }
-                @Override
-                public void onPageFinished(WebView view, String url) {
-                    setWebName(url);
-                    super.onPageFinished(view, url);
-                }
-                public String toString(){
-                    return "WebViewClient";
-                }
+        //Links open in WebView with Coveros regex check
+        browser.setWebViewClient(new CustomWebViewClient(){
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap fav){
+                super.onPageStarted(view, url, fav);
+            }
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                setWebName(url);
+                super.onPageFinished(view, url);
+            }
         });
     }
 
+    /*
+     * On App StartUp
+     */
     @Override
     protected void onStart(){
         //Phone is online & Connected to a server
@@ -107,6 +100,9 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
     }
 
+    /*
+     * Back button is pressed in the app. Default implementation
+     */
     @Override
     public void onBackPressed(){
         if(browser.canGoBack()){
@@ -117,6 +113,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /*
+     * Checks if the user is connected to the Internet
+     */
     public boolean isOnline(){
         //Get Connectivity Manager and network info
         ConnectivityManager conMgr = (ConnectivityManager)
@@ -131,6 +130,9 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /*
+     * Checks if the user is connected to a valid server. Still needs testing
+     */
     public boolean isConnectedToServer(String url, int timeout){
         try{
             URL myURL = new URL(url);
@@ -145,11 +147,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /*
+     * Get AlertDialog box
+     */
     public AlertDialog getDialog(){
         return dialog;
     }
 
-    //Alert Dialog
+    /*
+     * Provides AlertDialog box if an error occurs in internet connectivity
+     * Three options:   Reload App (Reload's Activity, NOT THE ENTIRE APP)
+     *                  Exit App (Quits the Activity and closes the app)
+     *                  OK (Closes the AlertDialog box but keeps the app open)
+     *
+     * OK option provided to immediately close the dialog box if the user's wifi loads
+     *      the Coveros website in the background
+     */
     private void alertView(){
 
         //Init Alert Dialog menu & Cancel only if pressed on button
