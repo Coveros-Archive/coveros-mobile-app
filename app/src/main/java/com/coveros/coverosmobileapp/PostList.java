@@ -28,6 +28,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -46,10 +47,10 @@ import java.util.List;
 public class PostList extends ListActivity {
 
     JsonArray responseList;
-    List<String> postTitles = new ArrayList<>();
+    List<PostMetaData> posts = new ArrayList<>();
 
     ListView postListView;
-    ArrayAdapter postsAdapter;
+    PostListAdapter postsAdapter;
 
     int postsPerPage = 10;
     int offset = 0;
@@ -106,6 +107,7 @@ public class PostList extends ListActivity {
                         }
                     }
                     else {
+                        // ensures new posts are loaded only once per time the bottom is reached (i.e. if the user continuously scrolls to the bottom, more than "postsPerPage" posts will not be loaded
                         if (postListView.getAdapter().getCount() == previousPostListViewSize + postsPerPage) {
                             if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount != 0) {
                                 addPosts();
@@ -129,24 +131,12 @@ public class PostList extends ListActivity {
                 offset = offset + postsPerPage;
                 JsonArray newResponseList = new JsonParser().parse(response).getAsJsonArray();
                 responseList.addAll(newResponseList);
-                postsAdapter.addAll(getPostTitles(newResponseList));
+                postsAdapter.addAll(posts);
                 postsAdapter.notifyDataSetChanged();
             }
         }, getErrorListener(PostList.this));
         RequestQueue rQueue = Volley.newRequestQueue(PostList.this);
         rQueue.add(request);
-    }
-
-    protected List getPostTitles(JsonArray responseList) {
-        List<String> postTitles = new ArrayList<>();
-        JsonObject title;
-
-        for (int i = 0; i < responseList.size(); i++) {
-            title = (JsonObject) responseList.get(i).getAsJsonObject().get("title");
-            postTitles.add(StringEscapeUtils.unescapeHtml4(title.get("rendered").getAsString()));
-        }
-
-        return postTitles;
     }
 
     public static Activity getActivity() throws Exception {
@@ -206,8 +196,15 @@ public class PostList extends ListActivity {
             @Override
             public void onResponse(String response) {
                 responseList = new JsonParser().parse(response).getAsJsonArray();
-                postTitles.addAll(getPostTitles(responseList));
-                postsAdapter = new ArrayAdapter(PostList.this, android.R.layout.simple_list_item_1, getPostTitles(responseList));
+                try {
+                    for (JsonElement responseJson : responseList) {
+                        posts.add(new PostMetaData((JsonObject) responseJson));
+                    }
+                }
+                catch (Exception e) {
+                    Log.e("Error", e.toString());
+                }
+                postsAdapter = new PostListAdapter(PostList.this, R.layout.post_list_text, posts);
                 postListView.setAdapter(postsAdapter);
                 offset = offset + postsPerPage;
                 previousPostListViewSize = postListView.getAdapter().getCount();
@@ -215,6 +212,7 @@ public class PostList extends ListActivity {
         };
         return listener;
     }
+
 }
 
 

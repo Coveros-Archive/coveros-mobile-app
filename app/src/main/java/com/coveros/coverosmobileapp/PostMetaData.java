@@ -19,6 +19,8 @@ import com.google.gson.JsonParser;
 import org.apache.commons.text.StringEscapeUtils;
 import org.mockito.internal.exceptions.ExceptionIncludingMockitoWarnings;
 
+import java.text.DateFormat;
+
 import static com.coveros.coverosmobileapp.PostList.getActivity;
 
 /**
@@ -26,17 +28,22 @@ import static com.coveros.coverosmobileapp.PostList.getActivity;
  */
 
 public class PostMetaData {
-    String title, author, date;
     AlertDialog errorMessage;
+
+    String heading, subheading;
+    String author;
 
 
     public PostMetaData(JsonObject postJson) throws Exception {
-        title = postJson.get("title").getAsJsonObject().get("rendered").getAsString();
-        getAuthor(postJson.get("id").getAsInt());
-        date = postJson.get("date").getAsString();
+        String title = postJson.get("title").getAsJsonObject().get("rendered").getAsString();
+        retrieveAuthor(postJson.get("id").getAsInt()); // I don't like this as a void method, but leaving for now
+        String date = postJson.get("date").getAsString();
+        heading = StringEscapeUtils.unescapeHtml4(title);
+        subheading = StringEscapeUtils.unescapeHtml4(author + "\t" + DateFormat.getDateInstance().format(date));
+
     }
 
-    public void getAuthor(int id) throws Exception{
+    public void retrieveAuthor(int id) throws Exception {
 
         String url = "https://www.dev.secureci.com/wp-json/wp/v2/users/" + id + "&fields=name";
 
@@ -71,9 +78,10 @@ public class PostMetaData {
         return responseListener;
     }
 
-    public String getTitle() { return title; }
-    public String getAuthor() {return author; }
-    public String getDate() { return date; }
+    public String getHeading() { return heading; }
+    public String getSubheading() { return subheading; }
+
+
 
 
 }
