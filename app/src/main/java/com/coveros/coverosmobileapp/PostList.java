@@ -201,7 +201,7 @@ public class PostList extends ListActivity {
                 responseList = new JsonParser().parse(response).getAsJsonArray();
                 try {
                     for (JsonElement responseJson : responseList) {
-                        posts.add(new PostMetaData((JsonObject) responseJson));
+                        posts.add(new PostMetaData((JsonObject) responseJson, PostList.this));
                     }
                 }
                 catch (Exception e) {
