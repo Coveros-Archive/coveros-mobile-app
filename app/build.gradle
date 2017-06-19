@@ -7,7 +7,7 @@ apply plugin: 'jacoco-android'
 
 sonarqube {
     properties {
-        property "sonar.host.url", "http://localhost:9000"
+        property "sonar.host.url", sonarUrl
         property "sonar.projectKey", "coveros_mobile_app"
         property "sonar.projectName", "Coveros Mobile App"
         property "sonar.projectVersion", AppVersion
