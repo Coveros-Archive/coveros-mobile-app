@@ -31,14 +31,6 @@ public class CustomWebViewClient extends WebViewClient {
     @SuppressWarnings("deprecation")
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        /*
-        Pre-check for internet
-        if(!weAreConnected){
-            view.loadUrl("");
-            return false;
-        }
-        */
-        //If passed the check, check website address
         if (url.contains("coveros.com")) {
             view.loadUrl(url);
         } else {

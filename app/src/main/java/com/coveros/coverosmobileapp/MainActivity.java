@@ -182,9 +182,9 @@ public class MainActivity extends AppCompatActivity {
      * looking at
      */
     private float calculateProgression(WebView content){
-          float contentHeight = content.getContentHeight();
-          float currentScrollPosition = content.getScrollY();
-          float percentWebview = currentScrollPosition / contentHeight;
-          return percentWebview;
+        float contentHeight = content.getContentHeight();
+        float currentScrollPosition = content.getScrollY();
+        float percentWebview = currentScrollPosition / contentHeight;
+        return percentWebview;
     }
 }

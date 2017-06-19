@@ -83,7 +83,7 @@ public class InstrumentedWebViewTest{
     }
 
     @Test
-    //Check Alert strings
+    //Check Alert Dialog runs
     public void check_alertView_1() throws Exception{
         Intent intent = new Intent(Intent.ACTION_PICK);
         MainActivity newMain = mMainActivity.launchActivity(intent);
