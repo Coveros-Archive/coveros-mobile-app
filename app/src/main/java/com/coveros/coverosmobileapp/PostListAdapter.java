@@ -14,13 +14,13 @@ import java.util.List;
  * Created by MariaKim on 6/18/17.
  */
 
-public class PostListAdapter extends ArrayAdapter<PostMetaData> {
+public class PostListAdapter extends ArrayAdapter<Post> {
 
     static Context context;
     static int layoutResourceId;
-    List<PostMetaData> data = null;
+    List<Post> data = null;
 
-    public PostListAdapter(Context context, int layoutResourceId, List<PostMetaData> data) {
+    public PostListAdapter(Context context, int layoutResourceId, List<Post> data) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
@@ -48,7 +48,7 @@ public class PostListAdapter extends ArrayAdapter<PostMetaData> {
             holder = (PostViewHolder) row.getTag();
         }
 
-        PostMetaData post = data.get(position);
+        Post post = data.get(position);
         holder.heading.setText(post.getHeading());
         holder.subheading.setText(post.getSubheading());
 

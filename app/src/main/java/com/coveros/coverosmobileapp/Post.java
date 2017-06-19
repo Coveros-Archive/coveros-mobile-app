@@ -2,119 +2,95 @@ package com.coveros.coverosmobileapp;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Bundle;
-
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.webkit.WebView;
 
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
-
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import org.apache.commons.text.StringEscapeUtils;
+import org.json.JSONObject;
+import org.mockito.internal.exceptions.ExceptionIncludingMockitoWarnings;
 
-import java.util.Map;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
+import static com.coveros.coverosmobileapp.PostList.getActivity;
 
 /**
- * Created by Maria Kim on 6/9/2017.
- * Creates and displays a single blog post when it is selected from the list of blog post_list.
- * Reference: https://www.simplifiedcoding.net/wordpress-to-android-app-tutorial/
+ * Created by maria on 6/16/2017.
  */
 
-public class Post extends AppCompatActivity {
+public class Post {
 
-    static AlertDialog errorMessage;
-    TextView title;
-    WebView content;
+    String title, date, heading, subheading;
+    Author author;
 
-    private boolean isActive;
 
-    private String id;
+    public Post(String title, String date, Author author) throws Exception {
+        this.title = title;
+        try {
+            this.date = formatDate(date);
+        } catch (ParseException e) {
+            Log.e("Parse exception", e.toString());
+        }
+        this.author = author;
 
-    /**
-     * When post is created (through selection), GETs data for post via Wordpress' REST API and displays title and content.
-     * @param savedInstanceState
-     */
+        heading = StringEscapeUtils.unescapeHtml4(title);
+        subheading = StringEscapeUtils.unescapeHtml4(author + "\t" + date);
+    }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.post);
+    private String formatDate(String date) throws ParseException {
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH);
+        Date parsedDate = dateFormatter.parse(date);
+        SimpleDateFormat datePrint = new SimpleDateFormat("MMM d, yyyy");
+        return datePrint.format(parsedDate);
+    }
 
-        id = getIntent().getExtras().getString("id");
+    public static void retrieveAuthor(final PostList.VolleyCallback callback, int id, Context context) throws Exception {
 
-        title = (TextView) findViewById(R.id.title);
-        content = (WebView) findViewById(R.id.content);
+        String url = "https://www.dev.secureci.com/wp-json/wp/v2/users/" + id;
+        Log.d("AUTHOR ID", Integer.toString(id));
 
-        String url = "https://www.dev.secureci.com/wp-json/wp/v2/posts/" + id + "?fields=author,title,date,content";
+        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JsonObject authorJson = new JsonParser().parse(response).getAsJsonObject();
+                callback.onSuccess(authorJson);
 
-        StringRequest request = new StringRequest(Request.Method.GET, url, getListener(), getErrorListener(Post.this));
-
-        RequestQueue rQueue = Volley.newRequestQueue(Post.this);
+//                Log.d("Author: ", authorName);
+            }
+        }, getErrorListener());
+        RequestQueue rQueue = Volley.newRequestQueue(context);
         rQueue.add(request);
     }
 
-    public String getId() {
-        return id;
-    }
 
+    public String getHeading() { return heading; }
+    public String getSubheading() { return subheading; }
 
-    public boolean getIsActive() {
-        return isActive;
-    }
-
-    private Response.ErrorListener getErrorListener(final Context context) {
-        Response.ErrorListener responseListener = new Response.ErrorListener() {
-            // logs error
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                // creates error message to be displayed to user
-                errorMessage = new AlertDialog.Builder(context).create();
-                errorMessage.setTitle("Error");
-                errorMessage.setMessage("An error occurred.");
-                errorMessage.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                finish();
-                            }
-                        });
-                errorMessage.show();
-
-                Log.e("Volley error", "" + volleyError.networkResponse.statusCode);
-            }
-        };
-        return responseListener;
-    }
-    private Response.Listener<String> getListener() {
-        Response.Listener<String> listener= new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                JsonObject post = new JsonParser().parse(response).getAsJsonObject();
-                JsonObject titleText = post.get("title").getAsJsonObject();
-                JsonObject contentText = post.get("content").getAsJsonObject();
-
-                title.setText(StringEscapeUtils.unescapeHtml3(titleText.get("rendered").getAsString()));
-                content.loadData(StringEscapeUtils.unescapeHtml3(contentText.get("rendered").getAsString()), "text/html; charset=utf-8", "UTF-8");
-            }
-        };
-        return listener;
+    public String toString() {
+        return "Heading: " + heading + "\nSubheading: " + subheading;
     }
 
 
 
 
 }
+
