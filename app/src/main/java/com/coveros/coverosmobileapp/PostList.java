@@ -57,8 +57,10 @@ public class PostList extends ListActivity {
 
     final int postsPerPage = 10;
     int postsOffset = 0;
+
+    int numOfAuthors = 100;  // number of users that will be returned by the REST call... so if someday Coveros has over 100 employees, this needs to be changed
     final String postsUrl = "https://www.dev.secureci.com/wp-json/wp/v2/posts?per_page=" + postsPerPage + "&order=desc&orderby=date&fields=id,title,date,author&offset=" + postsOffset;
-    final String authorsUrl = "https://www.dev.secureci.com/wp-json/wp/v2/users?orderby=id";
+    final String authorsUrl = "https://www.dev.secureci.com/wp-json/wp/v2/users?orderby=id&per_page=" + numOfAuthors;
 
     public PostList() {
     }
@@ -182,9 +184,10 @@ public class PostList extends ListActivity {
                     JsonObject postJson = (JsonObject) post;
                     String title = postJson.get("title").getAsJsonObject().get("rendered").getAsString();
                     String date = postJson.get("date").getAsString();
-                    int author = postJson.get("author").getAsInt();
+                    int authorId = postJson.get("author").getAsInt();
+                    Log.d("Author id", "" + authorId);
                     int id = postJson.get("id").getAsInt();
-                    posts.add(new Post(title, date, authors.get(author), id));
+                    posts.add(new Post(title, date, authors.get(authorId), id));
                     Log.d("REQUEST NOTICE", "POST REQUEST RESPONDED");
                 }
                 postListCallback.onSuccess(true);

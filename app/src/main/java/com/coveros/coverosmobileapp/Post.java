@@ -42,7 +42,7 @@ public class Post {
         this.id = id;
 
         heading = StringEscapeUtils.unescapeHtml4(this.title);
-        subheading = StringEscapeUtils.unescapeHtml4(this.author + "\t" + this.date);
+        subheading = StringEscapeUtils.unescapeHtml4(this.author + "\n" + this.date);
     }
 
     private String formatDate(String date) throws ParseException {
