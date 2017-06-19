@@ -82,9 +82,6 @@ public class MainActivity extends AppCompatActivity {
         }
         else{
             try{
-                //Enable Javascript (Plugins)
-                WebSettings webSettings = browser.getSettings();
-                webSettings.setJavaScriptEnabled(true);
                 //AlertDialog
                 alertView();
             }

@@ -18,5 +18,3 @@ allprojects {
         jcenter()
     }
 }
-
-
