@@ -5,8 +5,8 @@ package com.coveros.coverosmobileapp;
  */
 
 public class Sonar {
-    public static boolean num(int a, int b){
+    public static boolean num(int x, int y){
 
-            return a > b || a == b;
+            return x > y || x == y;
             }
 }

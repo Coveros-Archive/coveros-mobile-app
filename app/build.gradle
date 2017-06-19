@@ -1,41 +1,30 @@
-
 plugins {
     id "org.sonarqube" version "2.5"
 }
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco'
-apply plugin: 'com.android.application'
 apply plugin: 'jacoco-android'
 
-def flavor = "develop"
-def Flavor = "Develop"
 sonarqube {
     properties {
-
         property "sonar.host.url", "http://localhost:9000"
         property "sonar.projectKey", "coveros_mobile_app"
         property "sonar.projectName", "Coveros Mobile App"
         property "sonar.projectVersion", AppVersion
-        property "sonar.junit.reportsPath", "$buildDir/aggregatedReports/tests"
+        property "sonar.jacoco.itReportPath", "$buildDir/aggregatedReports/coverage/InstrumentedCoverage.exec"
+        property "sonar.junit.reportsPath", "$buildDir/aggregatedReports/tests" //created directory in the copyFiles task
         property "sonar.sourceEncoding", "UTF-8"
         property "sonar.sources", "src/main/java/com/coveros/coverosmobileapp," +
                 " build/test-results/testDebugUnitTest" // first defines where the java files are, the second where the xml files are
-
         property "sonar.tests", "src/test, src/androidTest" // where the tests are located
-
-
         property "sonar.scm.provider", "git"
-
         property "sonar.jacoco.reportPath", "$buildDir/jacoco/testDebugUnitTest.exec" // path to coverage reports
         property "sonar.java.coveragePlugin", "jacoco"
-        property "sonar.android.lint.report", "build/reports-${flavor}Debug.xml" // path to lint reports
     }
 }
 
-
-
+//created to put files for testing in one directory
 task copyFiles {
-
     copy {
         from "$buildDir/test-results/testDebugUnitTest"
         into "$buildDir/aggregatedReports/tests"
@@ -44,6 +33,14 @@ task copyFiles {
         from "$buildDir/outputs/androidTest-results/connected"
         into "$buildDir/aggregatedReports/tests"
     }
+    copy {
+        from "$buildDir/outputs/code-coverage/connected"
+        into "$buildDir/aggregatedReports/coverage"
+        rename {
+            fileName ->
+            "IntrumentedCoverage.exec"
+        }
+    }
 }
 
 //App version to track differences
@@ -51,7 +48,6 @@ def APP_VERSION = "1.0.0"
 ext.set('AppVersion', APP_VERSION)
 
 android {
-    
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
     defaultConfig {
@@ -70,23 +66,18 @@ android {
         debug {
             testCoverageEnabled true
         }
-
-
         release {
             testCoverageEnabled false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
 }
-
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
-
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
