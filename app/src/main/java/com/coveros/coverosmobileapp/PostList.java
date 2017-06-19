@@ -53,6 +53,8 @@ public class PostList extends ListActivity {
     int currentListSize;
     boolean first = true; // do I need this?
 
+    AlertDialog errorMessage;
+
     final int postsPerPage = 10;
     final int postsOffset = 0;
     final String postsUrl = "https://www.dev.secureci.com/wp-json/wp/v2/posts?per_page=" + postsPerPage + "&order=desc&orderby=date&fields=id,title,date,author&offset=" + postsOffset;
@@ -69,6 +71,18 @@ public class PostList extends ListActivity {
 
         postListView = getListView();
 
+        // constructing errorMessage dialog for activity
+        errorMessage = new AlertDialog.Builder(PostList.this).create();
+        errorMessage.setTitle("Error");
+        errorMessage.setMessage("An error occurred.");
+        errorMessage.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        finish();
+                    }
+                });
+
         // creates List of Authors
         StringRequest usersRequest = new StringRequest(Request.Method.GET, authorsUrl, new Response.Listener<String>() {
             @Override
@@ -76,38 +90,15 @@ public class PostList extends ListActivity {
                 JsonArray authorsJson = new JsonParser().parse(response).getAsJsonArray();
                 for (JsonElement author : authorsJson) {
                     JsonObject authorJson = (JsonObject) author;
-                    Integer id = new Integer(authorJson.get("id").getAsInt());
+                    Integer id = authorJson.get("id").getAsInt();
                     String name = authorJson.get("name").getAsString();
                     authors.put(id, new Author(authorJson.get("name").getAsString()));
                 }
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                // creates error message to be displayed to user
-                AlertDialog errorMessage = new AlertDialog.Builder(PostList.this).create();
-                errorMessage.setTitle("Error");
-                errorMessage.setMessage("An error occurred.");
-                errorMessage.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                finish();
-                            }
-                        });
-                errorMessage.show();
-                NetworkResponse errorNetworkResponse = volleyError.networkResponse;
-                String errorData = "";
-                try {
-                    if (errorNetworkResponse != null && errorNetworkResponse.data != null) {
-                        errorData = new String(errorNetworkResponse.data, "UTF-8");
-                    }
-                } catch(Exception e) {
-                    Log.e("Volley error", e.toString());
-                }
-                Log.e("Volley error", errorData);
-            }
-        });
+        }, getErrorListener());
+
+        RequestQueue rQueue = Volley.newRequestQueue(PostList.this);
+        rQueue.add(usersRequest);
 
         // creates List of Posts
         StringRequest postsRequest = new StringRequest(Request.Method.GET, postsUrl, new Response.Listener<String>() {
@@ -116,26 +107,15 @@ public class PostList extends ListActivity {
                 JsonArray postsJson = new JsonParser().parse(response).getAsJsonArray();
                 for (JsonElement post : postsJson) {
                     JsonObject postJson = (JsonObject) post;
-
-                    Post post = new Post()
+                    String title = postJson.get("title").getAsJsonObject().get("rendered").getAsString();
+                    String date = postJson.get("date").getAsString();
+                    Integer id = postJson.get("id").getAsInt();
+                    posts.add(new Post(title, date, authors.get(id)));
                 }
             }
+        }, getErrorListener());
 
-        }, getErrorListener(PostList.this));
-
-
-
-
-
-        title = postJson.get("title").getAsJsonObject().get("rendered").getAsString();
-        String author = postJson.get("author").getAsString();
-        String author = authorName;
-        String date = postJson.get("date").getAsString();
-
-        RequestQueue rQueue = Volley.newRequestQueue(PostList.this);
         rQueue.add(postsRequest);
-
-//        Log.d("PostMetaData: ", posts.get(0).toString());
 
         postListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -256,22 +236,14 @@ public class PostList extends ListActivity {
         return new Activity();
     }
 
-    private Response.ErrorListener getErrorListener(final Context context) {
+    /**
+     * Logs error and displays errorMessage dialog.
+     */
+    private Response.ErrorListener getErrorListener() {
         Response.ErrorListener responseListener = new Response.ErrorListener() {
-            // logs error
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                // creates error message to be displayed to user
-                errorMessage = new AlertDialog.Builder(context).create();
-                errorMessage.setTitle("Error");
-                errorMessage.setMessage("An error occurred.");
-                errorMessage.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                finish();
-                            }
-                        });
+                // displays errorMessage
                 errorMessage.show();
                 NetworkResponse errorNetworkResponse = volleyError.networkResponse;
                 String errorData = "";

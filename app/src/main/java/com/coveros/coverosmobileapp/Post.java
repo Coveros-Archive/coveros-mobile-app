@@ -43,7 +43,7 @@ public class Post {
     Author author;
 
 
-    public Post(String title, String date, Author author) throws Exception {
+    public Post(String title, String date, Author author) {
         this.title = title;
         try {
             this.date = formatDate(date);
