@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.webkit.*;
 import android.widget.Toast;
+
 import java.net.URL;
 import java.net.URLConnection;
 //import java.util.function.Function;
@@ -19,15 +20,11 @@ public class MainActivity extends AppCompatActivity {
     //MainActivity
     private String webName;
     private WebView browser;
-    private WebViewClient wvc;
-    private WebChromeClient wcc;
     //Alerts
     private AlertDialog dialog;
 
     public MainActivity(){
         webName = "https://www.coveros.com";
-        wvc = new WebViewClient();
-        wcc = new WebChromeClient();
     }
 
     public String getWebName(){
@@ -44,9 +41,9 @@ public class MainActivity extends AppCompatActivity {
         browser = br;
     }
 
-    public WebViewClient getWebViewClient(){ return wvc; }
-
-    public WebChromeClient getWebChromeClient() { return wcc; }
+    public AlertDialog getDialog(){
+        return dialog;
+    }
 
     /*
      * On Creation/Declaration of App/Activity
@@ -150,13 +147,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /*
-     * Get AlertDialog box
-     */
-    public AlertDialog getDialog(){
-        return dialog;
-    }
-
-    /*
      * Provides AlertDialog box if an error occurs in internet connectivity
      * Three options:   Reload App (Reload's Activity, NOT THE ENTIRE APP)
      *                  Exit App (Quits the Activity and closes the app)
@@ -171,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
         dialog = new AlertDialog.Builder(MainActivity.this).create();
         dialog.setCanceledOnTouchOutside(false);
 
-        //Create Strings for Title, messsage, and button
+        //Create Strings for Title, messsage, and buttons
         String title = "Alert";
         String message = "Sorry, we cannot currently retrieve the requested information.";
         String button1 = "Exit App";

@@ -1,25 +1,31 @@
 package com.coveros.coverosmobileapp;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Instrumentation;
 import android.content.Intent;
 import android.os.Looper;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.ServiceTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.RootMatchers.isDialog;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withTagKey;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
 import static org.junit.Assert.*;
 
 /**
  * Created by EPainter on 6/14/2017.
  */
-
-
 
 @RunWith(AndroidJUnit4.class)
 public class InstrumentedWebViewTest{
@@ -29,7 +35,13 @@ public class InstrumentedWebViewTest{
         Looper.prepare();
     }
 
+    @Rule
     public ActivityTestRule<MainActivity> mMainActivity = new ActivityTestRule<MainActivity>(MainActivity.class);
+
+    @Rule
+    public final ServiceTestRule mServiceRule = new ServiceTestRule();
+
+    AlertDialog mAlertDialog;
 
     @Test
     public void check_testRun() throws Exception{
@@ -50,28 +62,36 @@ public class InstrumentedWebViewTest{
         Intent intent = new Intent(Intent.ACTION_PICK);
         MainActivity newMain = mMainActivity.launchActivity(intent);
         //Change Internet connectivity
-
-        newMain.isOnline();
+        boolean theTruth = newMain.isOnline();
+        assertNotEquals(false, theTruth);
     }
 
     @Test
-    public void check_NoServerConnection() throws Exception {
-
-        //How can I test this?
+    public void check_AlertShowingWithInternet(){
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        MainActivity newMain = mMainActivity.launchActivity(intent);
+        mAlertDialog = new AlertDialog.Builder(mMainActivity.getActivity()).create();
+        boolean workingAsIntended;
+        if(mAlertDialog.isShowing()){
+            workingAsIntended = false;
+            mAlertDialog.dismiss();
+        }
+        else{
+            workingAsIntended= true;
+        }
+        assertEquals(true,workingAsIntended);
     }
 
     @Test
+    //Check Alert strings
     public void check_alertView_1() throws Exception{
-        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(MainActivity.class.getName(), null, false);
-        MainActivity myAct = (MainActivity) monitor.waitForActivity();
-        AlertDialog alert = myAct.getDialog();
-
-        //Assert that alertDialog box can be opened
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        MainActivity newMain = mMainActivity.launchActivity(intent);
+        mAlertDialog = new AlertDialog.Builder(mMainActivity.getActivity()).create();
     }
 
     @Test
     public void check_alertView_2() throws Exception{
-
 
         //Assert that alert button.POSITIVE works (Exit App)
     }
