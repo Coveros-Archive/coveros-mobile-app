@@ -49,6 +49,8 @@ public class PostListAdapter extends ArrayAdapter<PostMetaData> {
         }
 
         PostMetaData post = data.get(position);
+        holder.heading.setText(post.getHeading());
+        holder.subheading.setText(post.getSubheading());
 
         return row;
 

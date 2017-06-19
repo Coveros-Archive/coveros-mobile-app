@@ -31,55 +31,66 @@ public class PostMetaData {
     AlertDialog errorMessage;
 
     String heading, subheading;
-    String author;
+//    String author;
 
 
     public PostMetaData(JsonObject postJson) throws Exception {
         String title = postJson.get("title").getAsJsonObject().get("rendered").getAsString();
-        retrieveAuthor(postJson.get("id").getAsInt()); // I don't like this as a void method, but leaving for now
+        Log.d("checking author json", Integer.toString((postJson.get("author").getAsInt())));
+//        retrieveAuthor(postJson.get("author").getAsInt()); // I don't like this as a void method, but leaving for now
+        String author = postJson.get("author").getAsString();
         String date = postJson.get("date").getAsString();
         heading = StringEscapeUtils.unescapeHtml4(title);
-        subheading = StringEscapeUtils.unescapeHtml4(author + "\t" + DateFormat.getDateInstance().format(date));
+        Log.d("HEADING: ", heading);
+//        subheading = StringEscapeUtils.unescapeHtml4(author + "\t" + DateFormat.getDateInstance().format(date));
+        subheading = StringEscapeUtils.unescapeHtml4(author + "\t" + date);
+        Log.d("SUBHEADING", subheading);
 
     }
 
-    public void retrieveAuthor(int id) throws Exception {
+//    public void retrieveAuthor(int id) throws Exception {
+//
+//        String url = "https://www.dev.secureci.com/wp-json/wp/v2/users/" + id;
+//        Log.d("AUTHOR ID", Integer.toString(id));
+//
+//        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//                JsonObject authorJson = new JsonParser().parse(response).getAsJsonObject();
+//                author = authorJson.get("name").getAsString();
+//                Log.d("Author: ", author);
+//            }
+//        }, getErrorListener());
+//        RequestQueue rQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
+//        rQueue.add(request);
+//    }
 
-        String url = "https://www.dev.secureci.com/wp-json/wp/v2/users/" + id + "&fields=name";
-
-        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                JsonObject authorJson = new JsonParser().parse(response).getAsJsonObject();
-                author = authorJson.get("name").getAsString();
-            }
-        }, getErrorListener());
-        RequestQueue rQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
-        rQueue.add(request);
-    }
-
-    private Response.ErrorListener getErrorListener() {
-        Response.ErrorListener responseListener = new Response.ErrorListener() {
-            // logs error
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                NetworkResponse errorNetworkResponse = volleyError.networkResponse;
-                String errorData = "";
-                try {
-                    if (errorNetworkResponse != null && errorNetworkResponse.data != null) {
-                        errorData = new String(errorNetworkResponse.data, "UTF-8");
-                    }
-                } catch(Exception e) {
-                    Log.e("Error", e.toString());
-                }
-                Log.e("Volley error", errorData);
-            }
-        };
-        return responseListener;
-    }
+//    private Response.ErrorListener getErrorListener() {
+//        Response.ErrorListener responseListener = new Response.ErrorListener() {
+//            // logs error
+//            @Override
+//            public void onErrorResponse(VolleyError volleyError) {
+//                NetworkResponse errorNetworkResponse = volleyError.networkResponse;
+//                String errorData = "";
+//                try {
+//                    if (errorNetworkResponse != null && errorNetworkResponse.data != null) {
+//                        errorData = new String(errorNetworkResponse.data, "UTF-8");
+//                    }
+//                } catch(Exception e) {
+//                    Log.e("Error", e.toString());
+//                }
+//                Log.e("Volley error", errorData);
+//            }
+//        };
+//        return responseListener;
+//    }
 
     public String getHeading() { return heading; }
     public String getSubheading() { return subheading; }
+
+    public String toString() {
+        return "Heading: " + heading + "\nSubheading: " + subheading;
+    }
 
 
 

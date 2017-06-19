@@ -9,6 +9,7 @@ import android.os.Bundle;
 // importing tools for WordPress integration
 
 import android.content.Intent;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
@@ -80,6 +81,7 @@ public class PostList extends ListActivity {
         RequestQueue rQueue = Volley.newRequestQueue(PostList.this);
         rQueue.add(request);
 
+//        Log.d("PostMetaData: ", posts.get(0).toString());
 
         postListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -139,6 +141,7 @@ public class PostList extends ListActivity {
         rQueue.add(request);
     }
 
+    @VisibleForTesting
     public static Activity getActivity() throws Exception {
         Class activityThreadClass = Class.forName("android.app.ActivityThread");
         Object activityThread = activityThreadClass.getMethod("currentActivityThread").invoke(null);
