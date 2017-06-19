@@ -48,6 +48,7 @@ public class CustomWebViewClient extends WebViewClient {
     @Override
     public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
         Log.e(TAG, "Error occurred while loading the web page at URL: " + request.getUrl().toString());
+        //Load Blank Page - Could use html substitute error page here
         view.loadUrl("");
         super.onReceivedError(view, request, error);
     }
