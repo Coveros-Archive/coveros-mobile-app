@@ -34,6 +34,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import org.apache.commons.text.StringEscapeUtils;  // to decode decimal unicode in strings received from Wordpress
+import org.json.JSONException;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -132,7 +133,36 @@ public class PostList extends ListActivity {
             public void onResponse(String response) {
                 offset = offset + postsPerPage;
                 JsonArray newResponseList = new JsonParser().parse(response).getAsJsonArray();
-                responseList.addAll(newResponseList);
+//                responseList.addAll(newResponseList);
+                try {
+                    for (JsonElement responseJson : newResponseList) {
+                        final JsonObject responseJsonObject = (JsonObject) responseJson;
+                        PostMetaData.retrieveAuthor(new VolleyCallback() {
+                            String author;
+                            @Override
+                            public void onSuccess(JsonObject result) {
+                                try {
+                                    author = result.get("name").getAsString();
+                                    Log.d("NAME: ", author);
+                                    PostMetaData pmd = new PostMetaData((JsonObject) responseJsonObject, PostList.this, author);
+                                    Log.d("POST META DATA ", pmd.toString());
+                                    posts.add(pmd);
+                                    postsAdapter = new PostListAdapter(PostList.this, R.layout.post_list_text, posts);
+                                    postListView.setAdapter(postsAdapter);
+                                    offset = offset + postsPerPage;
+                                    previousPostListViewSize = postListView.getAdapter().getCount();
+
+                                } catch (Exception e) {
+                                    Log.e("ERROR", e.getMessage(), e);
+                                }
+                            }
+                        }, responseJsonObject.get("author").getAsInt(), PostList.this);
+                    }
+                }
+                catch (Exception e) {
+                    Log.e("Error", e.toString());
+                }
+
                 postsAdapter.addAll(posts);
                 postsAdapter.notifyDataSetChanged();
             }
@@ -201,19 +231,40 @@ public class PostList extends ListActivity {
                 responseList = new JsonParser().parse(response).getAsJsonArray();
                 try {
                     for (JsonElement responseJson : responseList) {
-                        posts.add(new PostMetaData((JsonObject) responseJson, PostList.this));
+                        final JsonObject responseJsonObject = (JsonObject) responseJson;
+                        PostMetaData.retrieveAuthor(new VolleyCallback() {
+                            String author;
+                            @Override
+                            public void onSuccess(JsonObject result) {
+                                try {
+                                    author = result.get("name").getAsString();
+                                    Log.d("NAME: ", author);
+                                    PostMetaData pmd = new PostMetaData((JsonObject) responseJsonObject, PostList.this, author);
+                                    Log.d("POST META DATA ", pmd.toString());
+                                    posts.add(pmd);
+                                    postsAdapter = new PostListAdapter(PostList.this, R.layout.post_list_text, posts);
+                                    postListView.setAdapter(postsAdapter);
+                                    offset = offset + postsPerPage;
+                                    previousPostListViewSize = postListView.getAdapter().getCount();
+
+                                } catch (Exception e) {
+                                    Log.e("ERROR", e.getMessage(), e);
+                                }
+                            }
+                        }, responseJsonObject.get("author").getAsInt(), PostList.this);
                     }
                 }
                 catch (Exception e) {
                     Log.e("Error", e.toString());
                 }
-                postsAdapter = new PostListAdapter(PostList.this, R.layout.post_list_text, posts);
-                postListView.setAdapter(postsAdapter);
-                offset = offset + postsPerPage;
-                previousPostListViewSize = postListView.getAdapter().getCount();
+
             }
         };
         return listener;
+    }
+
+    public interface VolleyCallback {
+        void onSuccess(JsonObject result);
     }
 
 }

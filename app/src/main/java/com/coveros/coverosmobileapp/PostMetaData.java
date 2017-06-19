@@ -43,10 +43,10 @@ public class PostMetaData {
     String author;
 
 
-    public PostMetaData(JsonObject postJson, Context context) throws Exception {
+    public PostMetaData(JsonObject postJson, Context context, String authorName) throws Exception {
         String title = postJson.get("title").getAsJsonObject().get("rendered").getAsString();
-        retrieveAuthor(postJson.get("author").getAsInt(), context); // I don't like this as a void method, but leaving for now
 //        String author = postJson.get("author").getAsString();
+        String author = authorName;
         String date = postJson.get("date").getAsString();
         heading = StringEscapeUtils.unescapeHtml4(title);
 
@@ -57,25 +57,25 @@ public class PostMetaData {
 
     }
 
-    public void retrieveAuthor(int id, Context context) throws Exception {
+    public static void retrieveAuthor(final PostList.VolleyCallback callback, int id, Context context) throws Exception {
 
         String url = "https://www.dev.secureci.com/wp-json/wp/v2/users/" + id;
         Log.d("AUTHOR ID", Integer.toString(id));
-
 
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 JsonObject authorJson = new JsonParser().parse(response).getAsJsonObject();
-                author = authorJson.get("name").getAsString();
-                Log.d("Author: ", author);
+                callback.onSuccess(authorJson);
+
+//                Log.d("Author: ", authorName);
             }
         }, getErrorListener());
         RequestQueue rQueue = Volley.newRequestQueue(context);
         rQueue.add(request);
     }
 
-    private Response.ErrorListener getErrorListener() {
+    private static Response.ErrorListener getErrorListener() {
         Response.ErrorListener responseListener = new Response.ErrorListener() {
             // logs error
             @Override
