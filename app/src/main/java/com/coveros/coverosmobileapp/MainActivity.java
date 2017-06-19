@@ -11,9 +11,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.webkit.*;
 import android.widget.Toast;
-
-import java.net.URL;
-import java.net.URLConnection;
 //import java.util.function.Function;
 
 public class MainActivity extends AppCompatActivity {
@@ -127,23 +124,6 @@ public class MainActivity extends AppCompatActivity {
         }
         //Otherwise, must be connected
         return true;
-    }
-
-    /*
-     * Checks if the user is connected to a valid server. Still needs testing
-     */
-    public boolean isConnectedToServer(String url, int timeout){
-        try{
-            URL myURL = new URL(url);
-            URLConnection connection = myURL.openConnection();
-            connection.setConnectTimeout(timeout);
-            connection.connect();
-            return true;
-        }
-        catch(Exception e){
-            //Handle any exceptions
-            return false;
-        }
     }
 
     /*
