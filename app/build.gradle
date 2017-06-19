@@ -38,7 +38,7 @@ task copyFiles {
         into "$buildDir/aggregatedReports/coverage"
         rename {
             fileName ->
-            "IntrumentedCoverage.exec"
+            "InstrumentedCoverage.exec"
         }
     }
 }
