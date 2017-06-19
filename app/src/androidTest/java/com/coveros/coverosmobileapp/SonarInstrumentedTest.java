@@ -12,14 +12,14 @@ import static org.junit.Assert.assertTrue;
 public class SonarInstrumentedTest {
     @Test
     public void aIsLessThanB(){
-        assertFalse(Sonar.num(6,7));
+        assertFalse(SonarInstrumented.num(6,7));
     }
     @Test
     public void aIsGreaterThanB(){
-        assertTrue(Sonar.num(7,6));
+        assertTrue(SonarInstrumented.num(7,6));
     }
     @Test
     public void aIsEqualtoB(){
-        assertTrue(Sonar.num(6,6));
+        assertTrue(SonarInstrumented.num(6,6));
     }
 }
