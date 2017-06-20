@@ -19,7 +19,6 @@ import java.util.ArrayList;
 
 public class PostRead extends AppCompatActivity {
 
-    AlertDialog errorMessage;
     TextView heading, subheading;
     WebView content;
     final int HEADING = 0;
@@ -41,18 +40,6 @@ public class PostRead extends AppCompatActivity {
         ArrayList<String> post = getIntent().getStringArrayListExtra("postData");
 
         String position = post.get(POSITION);
-
-        // constructing errorMessage dialog for activity
-        errorMessage = new AlertDialog.Builder(PostRead.this).create();
-        errorMessage.setTitle("Error");
-        errorMessage.setMessage("An error occurred.");
-        errorMessage.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        finish();
-                    }
-                });
 
         heading = (TextView) findViewById(R.id.heading);
         subheading = (TextView) findViewById(R.id.subheading);
