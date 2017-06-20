@@ -13,8 +13,8 @@ import static org.junit.Assert.*;
  */
 
 public class WebViewTest {
-    /*
-    Check on Getter for WebName()
+    /**
+     * Check on Getter for WebName()
      */
     @Test
     public void check_GetWebsiteAddressName() throws Exception {
@@ -24,8 +24,8 @@ public class WebViewTest {
         assertEquals("https://www.coveros.com", savedUrl);
     }
 
-    /*
-    Check on Setter for WebName()
+    /**
+     * Check on Setter for WebName()
      */
     @Test
     public void check_SetWebsiteAddressName() throws Exception {
@@ -33,25 +33,5 @@ public class WebViewTest {
         MainActivity ma = new MainActivity();
         ma.setWebName(savedUrl);
         assertEquals("http://www.html5rocks.com/", ma.getWebName());
-    }
-
-    /*
-    Check if WebViewClient is used
-     */
-    @Test
-    public void check_WebViewClientUsed() throws Exception {
-        MainActivity ma = new MainActivity();
-        WebViewClient br = new WebViewClient();
-        assertEquals("android.webkit.WebViewClient@6a6824be", br.toString());
-    }
-
-    /*
-    Check if browser is used
-     */
-    @Test
-    public void check_BrowserUsed() throws Exception {
-        MainActivity ma = new MainActivity();
-        WebViewClient wv = new WebViewClient();
-        assertNotEquals("android.webkit.WebChromeClient@6a6824be", wv.toString());
     }
 }
