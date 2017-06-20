@@ -45,6 +45,9 @@ public class InstrumentedWebViewTest{
 
     AlertDialog mAlertDialog;
 
+    /*
+     * Test if MainActivity Will run with custom intent
+     */
     @Test
     public void check_testRun() throws Exception{
         Intent intent = new Intent(Intent.ACTION_PICK);
@@ -53,6 +56,9 @@ public class InstrumentedWebViewTest{
 
     //isOnline tests -> INTERNET IS CURRENTLY CONNECTED
     //MUST MANUALLY SWITCH OFF INTERNET IN EMULATOR FOR CHANGES
+    /*
+     * Checks if the app/device is connected to the internet
+     */
     @Test
     public void check_isOnlineTrue() throws Exception {
         Intent intent = new Intent(Intent.ACTION_PICK);
@@ -60,10 +66,14 @@ public class InstrumentedWebViewTest{
         boolean theTruth = newMain.isOnline();
         if(newMain.isOnline()){ theTruth = true; }
         else { theTruth = false; }
-        assertEquals(true,theTruth);
+        assertTrue(theTruth);
     }
 
     @Test
+    /*
+     * Check if alert will show with or without internet
+     * WORKS WITH OR WITHOUT INTERNET
+     */
     public void check_AlertShowingWithInternet(){
         Intent intent = new Intent(Intent.ACTION_PICK);
         MainActivity newMain = mMainActivity.launchActivity(intent);
@@ -76,9 +86,12 @@ public class InstrumentedWebViewTest{
         else{
             workingAsIntended = true;
         }
-        assertEquals(true,workingAsIntended);
+        assertTrue(workingAsIntended);
     }
 
+    /*
+     * Runs alertView as a test run
+     */
     @Test
     //Check Alert Dialog runs
     public void check_alertView_1() throws Exception{
@@ -86,4 +99,7 @@ public class InstrumentedWebViewTest{
         MainActivity newMain = mMainActivity.launchActivity(intent);
         mAlertDialog = new AlertDialog.Builder(mMainActivity.getActivity()).create();
     }
+    //More AlertView tests necessary but need to access xml ID's
+    //which means the creation of Buttons/TextViews in xml activity
+    //linking the buttons and strings together
 }

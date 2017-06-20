@@ -13,9 +13,6 @@ import static org.junit.Assert.*;
  */
 
 public class WebViewTest {
-
-    //MainActivity.java Tests
-
     /*
     Check on Getter for WebName()
      */
