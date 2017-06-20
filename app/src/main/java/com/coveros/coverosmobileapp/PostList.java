@@ -39,23 +39,22 @@ import java.util.List;
  */
 public class PostList extends ListActivity {
 
-    List<Post> posts = new ArrayList<>();
-    HashMap<Integer, Author> authors = new HashMap<>();
-    RequestQueue rQueue;
+    private List<Post> posts = new ArrayList<>();
+    private HashMap<Integer, Author> authors = new HashMap<>();
+    private RequestQueue rQueue;
 
-    ListView postListView;
-    PostListAdapter postsAdapter;
+    private ListView postListView;
+    private PostListAdapter postsAdapter;
 
-    int currentListSize;
-    boolean firstScroll = true;  // first time scrolling to bottom
+    private int currentListSize;
 
-    AlertDialog errorMessage;
+    private AlertDialog errorMessage;
 
-    final int postsPerPage = 10;
-    int postsOffset = 0;
+    private final int postsPerPage = 10;
+    private int postsOffset = 0;
 
-    int numOfAuthors = 100;  // number of users that will be returned by the REST call... so if someday Coveros has over 100 employees, this needs to be changed
-    final String authorsUrl = "https://www.dev.secureci.com/wp-json/wp/v2/users?orderby=id&per_page=" + numOfAuthors;
+    private int numOfAuthors = 100;  // number of users that will be returned by the REST call... so if someday Coveros has over 100 employees, this needs to be changed
+    private final String authorsUrl = "https://www.dev.secureci.com/wp-json/wp/v2/users?orderby=id&per_page=" + numOfAuthors;
 
     public PostList() {
     }
@@ -210,6 +209,7 @@ public class PostList extends ListActivity {
             public void onScrollStateChanged(AbsListView view, int scrollState) {
             }
 
+            boolean firstScroll = true;  // first time scrolling to bottom
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (postListView.getAdapter() != null) {
