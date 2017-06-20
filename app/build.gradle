@@ -14,8 +14,6 @@ sonarqube {
         property "sonar.jacoco.itReportPath", "$buildDir/aggregatedReports/coverage/InstrumentedCoverage.exec"
         property "sonar.junit.reportsPath", "$buildDir/aggregatedReports/tests" //created directory in the copyFiles task
         property "sonar.sourceEncoding", "UTF-8"
-        property "sonar.sources", "src/main/java/com/coveros/coverosmobileapp," +
-                " build/test-results/testDebugUnitTest" // first defines where the java files are, the second where the xml files are
         property "sonar.tests", "src/test, src/androidTest" // where the tests are located
         property "sonar.scm.provider", "git"
         property "sonar.jacoco.reportPath", "$buildDir/jacoco/testDebugUnitTest.exec" // path to coverage reports
