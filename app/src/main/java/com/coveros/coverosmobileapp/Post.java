@@ -33,7 +33,7 @@ public class Post {
 
 
     public Post(String title, String date, Author author, int id, String content) {
-        this.title = title;
+        this.title = StringEscapeUtils.unescapeHtml4(title);
         try {
             this.date = formatDate(date);
         } catch (ParseException e) {
@@ -60,7 +60,7 @@ public class Post {
         return datePrint.format(parsedDate);
     }
 
-
+    public String getTitle() { return title; }
     public int getId() { return id; }
     public String getHeading() { return heading; }
     public String getSubheading() { return subheading; }
