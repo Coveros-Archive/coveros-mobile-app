@@ -1,5 +1,9 @@
 package com.coveros.coverosmobileapp;
 
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
