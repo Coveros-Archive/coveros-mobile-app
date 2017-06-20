@@ -1,31 +1,15 @@
 package com.coveros.coverosmobileapp;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.webkit.WebView;
 
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import org.apache.commons.text.StringEscapeUtils;
-
 import java.util.ArrayList;
-import java.util.List;
 
 
 /**

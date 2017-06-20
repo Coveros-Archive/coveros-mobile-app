@@ -50,7 +50,7 @@ public class PostList extends ListActivity {
     PostListAdapter postsAdapter;
 
     int currentListSize;
-    boolean first = true; // do I need this?
+    boolean firstScroll = true;  // first time scrolling to bottom
 
     AlertDialog errorMessage;
 
@@ -58,7 +58,6 @@ public class PostList extends ListActivity {
     int postsOffset = 0;
 
     int numOfAuthors = 100;  // number of users that will be returned by the REST call... so if someday Coveros has over 100 employees, this needs to be changed
-    final String postsUrl = "https://www.dev.secureci.com/wp-json/wp/v2/posts?per_page=" + postsPerPage + "&order=desc&orderby=date&fields=id,title,date,author&offset=" + postsOffset;
     final String authorsUrl = "https://www.dev.secureci.com/wp-json/wp/v2/users?orderby=id&per_page=" + numOfAuthors;
 
     public PostList() {
@@ -84,31 +83,29 @@ public class PostList extends ListActivity {
                     }
                 });
 
-        rQueue = Volley.newRequestQueue(PostList.this);
-
-        retrieveAuthors(new PostListCallback() {
-            @Override
-            public void onSuccess(boolean go) {
-                if (go) {
-                    retrievePosts(new PostListCallback() {
-                        @Override
-                        public void onSuccess(boolean go) {
-                            if (go) {
-                                Log.d("authors", authors.toString());
-                                Log.d("posts", posts.toString());
-
+        Thread requests = new Thread() {
+            public void run() {
+                rQueue = Volley.newRequestQueue(PostList.this);
+                retrieveAuthors(new PostListCallback<Author>() {
+                    @Override
+                    public void onSuccess(List<Author> newAuthors) {
+                        retrievePosts(new PostListCallback<Post>() {
+                            @Override
+                            public void onSuccess(List<Post> newPosts) {
+                                posts.addAll(newPosts);
                                 postsAdapter = new PostListAdapter(PostList.this, R.layout.post_list_text, posts);
                                 postListView.setAdapter(postsAdapter);
-                                postsOffset = postsOffset + postsPerPage;
                                 currentListSize = postListView.getAdapter().getCount();
-                                Log.d("CurrentList Size", "" + currentListSize);
+                                setScrollListener();
                             }
-                        }
 
-                    });
-                }
+                        });
+                    }
+                });
             }
-        });
+        };
+
+        requests.start();
 
 
         postListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -143,7 +140,7 @@ public class PostList extends ListActivity {
                     String name = authorJson.get("name").getAsString();
                     authors.put(id, new Author(authorJson.get("name").getAsString(), id.intValue()));
                 }
-                postListCallback.onSuccess(true);
+                postListCallback.onSuccess(null);
             }
         }, getErrorListener());
         rQueue.add(authorsRequest);
@@ -154,10 +151,15 @@ public class PostList extends ListActivity {
      * @param postListCallback
      */
     protected void retrievePosts(final PostListCallback postListCallback) {
+        final String postsUrl = "https://www.dev.secureci.com/wp-json/wp/v2/posts?per_page=" + postsPerPage + "&order=desc&orderby=date&fields=id,title,date,author&offset=" + postsOffset;
         StringRequest postsRequest = new StringRequest(Request.Method.GET, postsUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 JsonArray postsJson = new JsonParser().parse(response).getAsJsonArray();
+                Log.d("POSTSURL", postsUrl);
+                Log.d("PostsJson", postsJson.toString());
+                List<Post> newPosts = new ArrayList<>();
+                int count = 0;
                 for (JsonElement post : postsJson) {
                     JsonObject postJson = (JsonObject) post;
                     String title = postJson.get("title").getAsJsonObject().get("rendered").getAsString();
@@ -165,9 +167,12 @@ public class PostList extends ListActivity {
                     int authorId = postJson.get("author").getAsInt();
                     int id = postJson.get("id").getAsInt();
                     String content = postJson.get("content").getAsJsonObject().get("rendered").getAsString();
-                    posts.add(new Post(title, date, authors.get(authorId), id, content));
+                    newPosts.add(new Post(title, date, authors.get(authorId), id, content));
+                    count++;
                 }
-                postListCallback.onSuccess(true);
+                Log.d("NUMBER OF POSTS", "" + count);
+                postListCallback.onSuccess(newPosts);
+                postsOffset = postsOffset + postsPerPage;
             }
         }, getErrorListener());
 
@@ -199,91 +204,59 @@ public class PostList extends ListActivity {
     }
 
 
+    private void setScrollListener() {
+        postListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
 
-//    private void setListViewScrollListener() {
-//        postListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(AbsListView view, int scrollState) {
-//            }
-//
-//            @Override
-//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//                if (postListView.getAdapter() != null) {
-//                    if (first) {
-//                        if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount != 0) {
-//                            Log.d("First visible item", "" + firstVisibleItem);
-//                            Log.d("Visible item count", "" + visibleItemCount);
-//                            Log.d("Total item count", "" + totalItemCount);
-////                            addPosts();
-//                            Log.d("DEBUGGING", "CALLING ADDPOSTS() AT FIRST");
-//                        }
-//                    } else {
-//                        // ensures new posts are loaded only once per time the bottom is reached (i.e. if the user continuously scrolls to the bottom, more than "postsPerPage" posts will not be loaded
-//                        if (postListView.getAdapter().getCount() == currentListSize + postsPerPage) {
-//                            if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount != 0) {
-//                                addPosts();
-//                                Log.d("DEBUGGING", "CALLING ADDPOSTS() NOT AT FIRST");
-//                                Log.d("First visible item", "" + firstVisibleItem);
-//                                Log.d("Visible item count", "" + visibleItemCount);
-//                                Log.d("Total item count", "" + totalItemCount);
-//                                currentListSize = postListView.getAdapter().getCount();
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//            });
-//    }
-//
-//
-//    protected void addPosts() {
-//
-//        url = "https://www.dev.secureci.com/wp-json/wp/v2/posts?per_page=" + postsPerPage + "&order=desc&orderby=date&fields=id,title,date,author&offset=" + offset;
-//        first = false;
-//
-//        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                Log.d("List view count", "" + postListView.getAdapter().getCount());
+                Log.d("currentList", "" + currentListSize);
+                if (postListView.getAdapter() != null) {
+                    if (firstScroll) {
+                        if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount != 0) {
+                            Log.d("firstVisibleItem", "" + firstVisibleItem);
+                            Log.d("visibleItemCount", "" + visibleItemCount);
+                            Log.d("totalItemCount", "" + totalItemCount);
+                            addPosts();
+                            firstScroll = false;
+                        }
+                    } else {
+                        // ensures new posts are loaded only once per time the bottom is reached (i.e. if the user continuously scrolls to the bottom, more than "postsPerPage" posts will not be loaded
+                        if (postListView.getAdapter().getCount() == currentListSize + postsPerPage) {
+                            Log.d("List view count", "" + postListView.getAdapter().getCount());
+                            if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount != 0) {
+                                addPosts();
+                                currentListSize = postListView.getAdapter().getCount();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    private void addPosts() {
+        Thread addPostRequest = new Thread() {
+            public void run() {
 //                postsOffset = postsOffset + postsPerPage;
-//                JsonArray newResponseList = new JsonParser().parse(response).getAsJsonArray();
-////                responseList.addAll(newResponseList);
-//                try {
-//                    for (JsonElement responseJson : newResponseList) {
-//                        final JsonObject responseJsonObject = (JsonObject) responseJson;
-//                        Post.retrieveAuthor(new VolleyCallback() {
-//                            String author;
-//                            @Override
-//                            public void onSuccess(JsonObject result) {
-//                                try {
-//                                    author = result.get("name").getAsString();
-//                                    Log.d("NAME: ", author);
-//                                    PostMetaData pmd = new PostMetaData((JsonObject) responseJsonObject, PostList.this, author);
-//                                    Log.d("POST META DATA ", pmd.toString());
-//                                    posts.add(pmd);
-//                                    postsAdapter = new PostListAdapter(PostList.this, R.layout.post_list_text, posts);
-//                                    postListView.setAdapter(postsAdapter);
-//                                    postsOffset = postsOffset + postsPerPage;
-//                                    currentListSize = postListView.getAdapter().getCount();
-//
-//                                } catch (Exception e) {
-//                                    Log.e("ERROR", e.getMessage(), e);
-//                                }
-//                            }
-//                        }, responseJsonObject.get("author").getAsInt(), PostList.this);
-//                    }
-//                }
-//                catch (Exception e) {
-//                    Log.e("Error", e.toString());
-//                }
-//
-//                postsAdapter.addAll(posts);
-//                postsAdapter.notifyDataSetChanged();
-//            }
-//        }, getErrorListener(PostList.this));
-//        RequestQueue rQueue = Volley.newRequestQueue(PostList.this);
-//        rQueue.add(request);
-//    }
-//
+                retrievePosts(new PostListCallback<Post>() {
+                    @Override
+                    public void onSuccess (List < Post > newPosts) {
+                        postsAdapter.addAll(newPosts);
+                        postsAdapter.notifyDataSetChanged();
+                        Log.d("postsOffset before", "" + postsOffset);
+                        Log.d("posts per page", "" + postsPerPage);
+                        Log.d("postsOffset after", "" + postsOffset);
+                    }
+                });
+            }
+        };
+        addPostRequest.start();
+    }
+
     @VisibleForTesting
     public static Activity getActivity() throws Exception {
         Class activityThreadClass = Class.forName("android.app.ActivityThread");
@@ -310,8 +283,8 @@ public class PostList extends ListActivity {
     /**
      * Used to ensure StringRequests are completed before their data are used.
      */
-    public interface PostListCallback {
-        void onSuccess(boolean go);
+    public interface PostListCallback<T> {
+        void onSuccess(List<T> newItem);
     }
 
 }
