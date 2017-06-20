@@ -70,6 +70,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 }
 
 dependencies {
@@ -79,7 +80,18 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    // adding for testing Wordpress integration
+    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.android.volley:volley:1.0.0'
+
+    // decoding decimal unicode received from Wordpress
+    compile 'org.apache.commons:commons-text:1.1'
+
+    // required for local unit tests (JUnit 4 framework)
     testCompile 'junit:junit:4.12'
+    // for testing error message
+    testCompile 'org.mockito:mockito-core:2.1.0'
 }
 
 //Defined reports generated
