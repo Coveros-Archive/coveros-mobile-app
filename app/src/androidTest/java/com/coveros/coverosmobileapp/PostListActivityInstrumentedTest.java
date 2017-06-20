@@ -54,24 +54,6 @@ public class PostListActivityInstrumentedTest {
         assertTrue("errorMessage should be displayed.", mPostListRule.getActivity().getErrorMessage().isShowing());
     }
 
-//    @Test
-//    public void onItemClickListener_itemClicked() throws Exception {
-//
-//        final int position = 0;
-//
-//        // get ListView of post_list and "select" first item
-//
-//        mPostListRule.getActivity().runOnUiThread(new Runnable() {
-//            public void run() {
-//                clickItemInPostListView(mPostListRule.getActivity(), position);
-//            }
-//        });
-//        Activity currentActivity = getActivity();
-//        PostReadActivity currentPost = (PostReadActivity) currentActivity;
-//        assertTrue(Integer.toString(position).equals(currentPost.getPosition()));
-//
-//    }
-
     public void clickItemInPostListView(PostListActivity p, int position) {
         PostListActivity posts = p;
         ListView postListView = posts.getPostListView();
@@ -79,7 +61,7 @@ public class PostListActivityInstrumentedTest {
         postListView.setItemChecked(position, true);
     }
 
-    }
-
-
 }
+
+
+
