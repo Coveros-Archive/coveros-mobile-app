@@ -235,12 +235,12 @@ public class PostList extends ListActivity {
     /**
      * Adds posts to the list view. Called when user scrolls to the bottom of the listview.
      */
-    private void addPosts() {
+    protected void addPosts() {
         Thread addPostRequest = new Thread() {
             public void run() {
                 retrievePosts(new PostListCallback<Post>() {
                     @Override
-                    public void onSuccess (List < Post > newPosts) {
+                    public void onSuccess (List <Post> newPosts) {
                         postsAdapter.addAll(newPosts);
                         postsAdapter.notifyDataSetChanged();
                     }
@@ -252,6 +252,9 @@ public class PostList extends ListActivity {
 
     public AlertDialog getErrorMessage() { return errorMessage; }
     public ListView getPostListView() { return postListView; }
+
+    public List<Post> getPosts() { return posts; }
+    public int getPostsPerPage() { return postsPerPage; }
 
     /**
      * Used to ensure StringRequests are completed before their data are used.
