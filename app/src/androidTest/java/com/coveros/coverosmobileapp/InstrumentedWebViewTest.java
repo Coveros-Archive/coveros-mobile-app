@@ -64,8 +64,6 @@ public class InstrumentedWebViewTest{
         Intent intent = new Intent(Intent.ACTION_PICK);
         MainActivity newMain = mMainActivity.launchActivity(intent);
         boolean theTruth = newMain.isOnline();
-        if(newMain.isOnline()){ theTruth = true; }
-        else { theTruth = false; }
         assertTrue(theTruth);
     }
 
