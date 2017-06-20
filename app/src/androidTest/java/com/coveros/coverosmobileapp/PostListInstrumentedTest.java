@@ -164,31 +164,5 @@ public class PostListInstrumentedTest {
         return false;
     }
 
-    /**
-     *  Gets current running activity.
-     *  Source: https://androidreclib.wordpress.com/2014/11/22/getting-the-current-activity/
-     * @return
-     * @throws Exception
-     */
-    public static Activity getActivity() throws Exception {
-        Class activityThreadClass = Class.forName("android.app.ActivityThread");
-        Object activityThread = activityThreadClass.getMethod("currentActivityThread").invoke(null);
-        Field activitiesField = activityThreadClass.getDeclaredField("mActivities");
-        activitiesField.setAccessible(true);
-        ArrayMap activities = (ArrayMap) activitiesField.get(activityThread);
-        for (Object activityRecord : activities.values()) {
-            Class activityRecordClass = activityRecord.getClass();
-            Field pausedField = activityRecordClass.getDeclaredField("paused");
-            pausedField.setAccessible(true);
-            if (!pausedField.getBoolean(activityRecord)) {
-                Field activityField = activityRecordClass.getDeclaredField("activity");
-                activityField.setAccessible(true);
-                Activity activity = (Activity) activityField.get(activityRecord);
-                return activity;
-            }
-        }
-        return null;
-    }
-
 
 }
