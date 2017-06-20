@@ -111,8 +111,4 @@ public class InstrumentedWebViewTest{
         //Assert that alert button.NEGATIVE works (Reload App)
 
     }
-
-    public void check_alertView_5() throws Exception{
-
-    }
 }

@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
                 super.onPageFinished(view, url);
             }
         });
+        browser.loadUrl("file:///android_asset/sampleErrorPage.html");
     }
 
     /*
