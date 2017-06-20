@@ -17,11 +17,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PostRead"
+            android:name=".PostReadActivity"
             android:label="@string/app_name">
         </activity>
         <activity
-            android:name=".PostList"
+            android:name=".PostListActivity"
             android:label="CoverosMobileApp"
             android:exported="true">
         </activity>

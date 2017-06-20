@@ -9,9 +9,9 @@ import static org.junit.Assume.assumeTrue;
 /**
  * @author Maria Kim
  */
-public class PostListTest {
+public class PostListActivityTest {
 
-    PostList postList = new PostList();
+    PostListActivity postListActivity = new PostListActivity();
 
     @Test
     public void addPosts_withWordpressConnection() throws InterruptedException, IOException {

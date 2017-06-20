@@ -16,7 +16,7 @@ import java.util.ArrayList;
  * @author Maria Kim
  * Creates and displays a single blog post when it is selected from the list of blog post_list.
  */
-public class PostRead extends AppCompatActivity {
+public class PostReadActivity extends AppCompatActivity {
 
     TextView heading, subheading;
     WebView content;

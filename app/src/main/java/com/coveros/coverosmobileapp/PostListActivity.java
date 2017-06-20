@@ -37,7 +37,7 @@ import java.util.List;
  * @author Maria Kim
  * Creates ListView that displays list of titles of blog post_list.
  */
-public class PostList extends ListActivity {
+public class PostListActivity extends ListActivity {
 
     private List<Post> posts = new ArrayList<>();
     private HashMap<Integer, Author> authors = new HashMap<>();
@@ -56,7 +56,7 @@ public class PostList extends ListActivity {
     private int numOfAuthors = 100;  // number of users that will be returned by the REST call... so if someday Coveros has over 100 employees, this needs to be changed
     private final String authorsUrl = "https://www.dev.secureci.com/wp-json/wp/v2/users?orderby=id&per_page=" + numOfAuthors;
 
-    public PostList() {
+    public PostListActivity() {
     }
 
     @Override
@@ -68,7 +68,7 @@ public class PostList extends ListActivity {
         postListView = getListView();
 
         // constructing errorMessage dialog for activity
-        errorMessage = new AlertDialog.Builder(PostList.this).create();
+        errorMessage = new AlertDialog.Builder(PostListActivity.this).create();
         errorMessage.setTitle("Error");
         errorMessage.setMessage("An error occurred.");
         errorMessage.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay",
@@ -82,7 +82,7 @@ public class PostList extends ListActivity {
         // running these requests on a separate thread for performance
         Thread requests = new Thread() {
             public void run() {
-                rQueue = Volley.newRequestQueue(PostList.this);
+                rQueue = Volley.newRequestQueue(PostListActivity.this);
                 retrieveAuthors(new PostListCallback<Author>() {
                     @Override
                     public void onSuccess(List<Author> newAuthors) {
@@ -90,7 +90,7 @@ public class PostList extends ListActivity {
                             @Override
                             public void onSuccess(List<Post> newPosts) {
                                 posts.addAll(newPosts);
-                                postsAdapter = new PostListAdapter(PostList.this, R.layout.post_list_text, posts);
+                                postsAdapter = new PostListAdapter(PostListActivity.this, R.layout.post_list_text, posts);
                                 postListView.setAdapter(postsAdapter);
                                 currentListSize = postListView.getAdapter().getCount();
                                 setScrollListener();
@@ -105,7 +105,7 @@ public class PostList extends ListActivity {
         requests.start();
 
 
-        // when a post is selected, feeds its associated data into a PostRead activity
+        // when a post is selected, feeds its associated data into a PostReadActivity activity
         postListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -116,7 +116,7 @@ public class PostList extends ListActivity {
                 postData.add(post.getSubheading());
                 postData.add(post.getContent());
                 postData.add("" + position);
-                Intent intent = new Intent(getApplicationContext(), PostRead.class);
+                Intent intent = new Intent(getApplicationContext(), PostReadActivity.class);
                 intent.putStringArrayListExtra("postData", postData);
                 startActivity(intent);
             }
