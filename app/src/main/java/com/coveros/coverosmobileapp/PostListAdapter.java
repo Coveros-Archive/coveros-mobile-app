@@ -43,8 +43,7 @@ public class PostListAdapter extends ArrayAdapter<Post> {
             holder.heading = (TextView) row.findViewById(R.id.title);
             holder.subheading = (TextView) row.findViewById(R.id.author_date);
             row.setTag(holder);
-        }
-        else {
+        } else {
             holder = (PostViewHolder) row.getTag();
         }
 
