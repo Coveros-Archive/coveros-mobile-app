@@ -6,50 +6,6 @@
     android:layout_height="match_parent"
     tools:context="com.coveros.coverosmobileapp.MainActivity">
 
-    <!-- POSITIONS FOR TEXTVIEW AND BUTTONS NOT USED
-          DEFAULT SET BY ALERT DIALOG IN MAIN ACTIVITY
-          CAN CHANGE BUT CAN CONSIDER THIS TECHNICAL DEBT
-          IF CHANGED !-->
-    <TextView
-        android:id="@+id/alertTitle"
-        android:layout_width="325dp"
-        android:layout_height="50dp"
-        android:layout_x="28dp"
-        android:layout_y="146dp"
-        tools:layout_editor_absoluteX="30dp"
-        tools:layout_editor_absoluteY="154dp" />
-
-    <TextView
-        android:id="@+id/alertMessage"
-        android:layout_width="325dp"
-        android:layout_height="125dp"
-        tools:layout_editor_absoluteX="30dp"
-        tools:layout_editor_absoluteY="204dp" />
-
-    <Button
-        android:id="@+id/alertButton_neutral"
-        android:layout_width="110dp"
-        android:layout_height="48dp"
-        android:visibility="invisible"
-        tools:layout_editor_absoluteX="30dp"
-        tools:layout_editor_absoluteY="329dp" />
-
-    <Button
-        android:id="@+id/alertButton_negative"
-        android:layout_width="110dp"
-        android:layout_height="48dp"
-        android:visibility="invisible"
-        tools:layout_editor_absoluteX="137dp"
-        tools:layout_editor_absoluteY="329dp" />
-
-    <Button
-        android:id="@+id/alertButton_positive"
-        android:layout_width="112dp"
-        android:layout_height="48dp"
-        android:visibility="invisible"
-        tools:layout_editor_absoluteX="245dp"
-        tools:layout_editor_absoluteY="329dp" />
-
     <WebView
         android:id="@+id/activity_main_webview"
         android:layout_width="0dp"

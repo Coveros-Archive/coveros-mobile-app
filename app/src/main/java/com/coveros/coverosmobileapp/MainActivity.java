@@ -145,12 +145,6 @@ public class MainActivity extends AppCompatActivity {
         String button2 = "Reload App";
         String button3 = "OK";
 
-        TextView mainTitle = (TextView) findViewById(R.id.alertTitle);
-        TextView mainMessage = (TextView) findViewById(R.id.alertMessage);
-        final Button btnReload = (Button) findViewById(R.id.alertButton_negative);
-        Button btnOK = (Button) findViewById(R.id.alertButton_neutral);
-        Button btnExit = (Button) findViewById(R.id.alertButton_positive);
-
         //Init Alert Dialog menu & Cancel only if pressed on button
         dialog = new AlertDialog.Builder(MainActivity.this)
                 .setNeutralButton(button2, new DialogInterface.OnClickListener() {
@@ -163,7 +157,8 @@ public class MainActivity extends AppCompatActivity {
         })
                 .setNegativeButton(button3, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) { dialog.dismiss(); }
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss(); }
                 })
                 .setPositiveButton(button1, new DialogInterface.OnClickListener(){
                     @Override
@@ -173,7 +168,6 @@ public class MainActivity extends AppCompatActivity {
                         finish();
                     }
                 }).create();
-        
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
         //Setters (title, default message, button 1 -> Exit, button2 -> Reload)

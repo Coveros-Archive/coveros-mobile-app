@@ -86,14 +86,4 @@ public class InstrumentedWebViewTest{
         MainActivity newMain = mMainActivity.launchActivity(intent);
         mAlertDialog = new AlertDialog.Builder(mMainActivity.getActivity()).create();
     }
-
-    @Test
-    //Check strings
-    public void check_alertView_2() throws Exception{
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        MainActivity newMain = mMainActivity.launchActivity(intent);
-        mAlertDialog = new AlertDialog.Builder(mMainActivity.getActivity()).create();
-        //Assert that the strings are identical
-
-    }
 }
