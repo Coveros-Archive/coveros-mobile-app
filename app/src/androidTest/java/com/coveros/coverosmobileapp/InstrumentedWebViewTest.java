@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -49,21 +50,16 @@ public class InstrumentedWebViewTest{
         MainActivity newMain = mMainActivity.launchActivity(intent);
     }
 
+    //isOnline tests -> INTERNET IS CURRENTLY CONNECTED
+    //MUST MANUALLY SWITCH OFF INTERNET IN EMULATOR FOR CHANGES
     @Test
     public void check_isOnlineTrue() throws Exception {
         Intent intent = new Intent(Intent.ACTION_PICK);
         MainActivity newMain = mMainActivity.launchActivity(intent);
         boolean theTruth = newMain.isOnline();
+        if(newMain.isOnline()){ theTruth = true; }
+        else { theTruth = false; }
         assertEquals(true,theTruth);
-    }
-
-    @Test
-    public void check_isOnlineFalse() throws Exception {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        MainActivity newMain = mMainActivity.launchActivity(intent);
-        //Change Internet connectivity
-        boolean theTruth = newMain.isOnline();
-        assertNotEquals(false, theTruth);
     }
 
     @Test
@@ -77,7 +73,7 @@ public class InstrumentedWebViewTest{
             mAlertDialog.dismiss();
         }
         else{
-            workingAsIntended= true;
+            workingAsIntended = true;
         }
         assertEquals(true,workingAsIntended);
     }
@@ -91,22 +87,32 @@ public class InstrumentedWebViewTest{
     }
 
     @Test
+    //Check strings
     public void check_alertView_2() throws Exception{
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        MainActivity newMain = mMainActivity.launchActivity(intent);
+        mAlertDialog = new AlertDialog.Builder(mMainActivity.getActivity()).create();
 
-        //Assert that alert button.POSITIVE works (Exit App)
     }
 
     @Test
     public void check_alertView_3() throws Exception{
-
-
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        MainActivity newMain = mMainActivity.launchActivity(intent);
+        mAlertDialog = new AlertDialog.Builder(mMainActivity.getActivity()).create();
         //Assert that alert button.NEUTRAL works (OK)
     }
 
     @Test
     public void check_alertView_4() throws Exception{
-
-
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        MainActivity newMain = mMainActivity.launchActivity(intent);
+        mAlertDialog = new AlertDialog.Builder(mMainActivity.getActivity()).create();
         //Assert that alert button.NEGATIVE works (Reload App)
+
+    }
+
+    public void check_alertView_5() throws Exception{
+
     }
 }

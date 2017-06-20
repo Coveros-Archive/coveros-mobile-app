@@ -133,11 +133,6 @@ public class MainActivity extends AppCompatActivity {
      *      the Coveros website in the background
      */
     private void alertView(){
-
-        //Init Alert Dialog menu & Cancel only if pressed on button
-        dialog = new AlertDialog.Builder(MainActivity.this).create();
-        dialog.setCanceledOnTouchOutside(false);
-
         //Create Strings for Title, messsage, and buttons
         String title = "Alert";
         String message = "Sorry, we cannot currently retrieve the requested information.";
@@ -145,31 +140,34 @@ public class MainActivity extends AppCompatActivity {
         String button2 = "Reload App";
         String button3 = "OK";
 
-        //Setters (title, default message, button 1 -> Exit, button2 -> Reload)
-        dialog.setTitle(title);
-        dialog.setMessage(message);
-        dialog.setButton(AlertDialog.BUTTON_POSITIVE, button1, new DialogInterface.OnClickListener(){
-            //Text Message on the bottom after clicking the button
-            public void onClick(DialogInterface dialog, int which){
-                Toast.makeText(getApplicationContext(), "Thank You", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
-                finish();
-            }
-        });
-        dialog.setButton(AlertDialog.BUTTON_NEUTRAL, button2, new DialogInterface.OnClickListener() {
+        //Init Alert Dialog menu & Cancel only if pressed on button
+        dialog = new AlertDialog.Builder(MainActivity.this)
+                .setNeutralButton(button2, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Toast.makeText(getApplicationContext(), "Loading App", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
                 recreate();
             }
-        });
-        dialog.setButton(AlertDialog.BUTTON_NEGATIVE, button3, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which){
-                dialog.dismiss();
-            }
-        });
+        })
+                .setNegativeButton(button3, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) { dialog.dismiss(); }
+                })
+                .setPositiveButton(button1, new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int which){
+                        Toast.makeText(getApplicationContext(), "Thank You", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                        finish();
+                    }
+                }).create();
+
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        //Setters (title, default message, button 1 -> Exit, button2 -> Reload)
+        dialog.setTitle(title);
+        dialog.setMessage(message);
         //Show dialog and make text changes (font color, size, etc.)
         dialog.show();
     }
