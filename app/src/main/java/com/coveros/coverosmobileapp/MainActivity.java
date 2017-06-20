@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.*;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 //import java.util.function.Function;
 
@@ -65,7 +67,9 @@ public class MainActivity extends AppCompatActivity {
                 super.onPageFinished(view, url);
             }
         });
-        browser.loadUrl("file:///android_asset/sampleErrorPage.html");
+        if(!isOnline()){
+            browser.loadUrl("file:///android_asset/sampleErrorPage.html");
+        }
     }
 
     /*
@@ -141,6 +145,12 @@ public class MainActivity extends AppCompatActivity {
         String button2 = "Reload App";
         String button3 = "OK";
 
+        TextView mainTitle = (TextView) findViewById(R.id.alertTitle);
+        TextView mainMessage = (TextView) findViewById(R.id.alertMessage);
+        final Button btnReload = (Button) findViewById(R.id.alertButton_negative);
+        Button btnOK = (Button) findViewById(R.id.alertButton_neutral);
+        Button btnExit = (Button) findViewById(R.id.alertButton_positive);
+
         //Init Alert Dialog menu & Cancel only if pressed on button
         dialog = new AlertDialog.Builder(MainActivity.this)
                 .setNeutralButton(button2, new DialogInterface.OnClickListener() {
@@ -163,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
                         finish();
                     }
                 }).create();
-
+        
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
         //Setters (title, default message, button 1 -> Exit, button2 -> Reload)

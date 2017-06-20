@@ -6,6 +6,7 @@ import android.os.Looper;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.ServiceTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.widget.Button;
 
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -92,23 +93,7 @@ public class InstrumentedWebViewTest{
         Intent intent = new Intent(Intent.ACTION_PICK);
         MainActivity newMain = mMainActivity.launchActivity(intent);
         mAlertDialog = new AlertDialog.Builder(mMainActivity.getActivity()).create();
-
-    }
-
-    @Test
-    public void check_alertView_3() throws Exception{
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        MainActivity newMain = mMainActivity.launchActivity(intent);
-        mAlertDialog = new AlertDialog.Builder(mMainActivity.getActivity()).create();
-        //Assert that alert button.NEUTRAL works (OK)
-    }
-
-    @Test
-    public void check_alertView_4() throws Exception{
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        MainActivity newMain = mMainActivity.launchActivity(intent);
-        mAlertDialog = new AlertDialog.Builder(mMainActivity.getActivity()).create();
-        //Assert that alert button.NEGATIVE works (Reload App)
+        //Assert that the strings are identical
 
     }
 }
