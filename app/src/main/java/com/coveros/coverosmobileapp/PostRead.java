@@ -24,6 +24,8 @@ import com.google.gson.JsonParser;
 
 import org.apache.commons.text.StringEscapeUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -34,13 +36,12 @@ import org.apache.commons.text.StringEscapeUtils;
 
 public class PostRead extends AppCompatActivity {
 
-    static AlertDialog errorMessage;
-    TextView title;
+    AlertDialog errorMessage;
+    TextView heading, subheading;
     WebView content;
-
-    private boolean isActive;
-
-    private String id;
+    final int HEADING = 0;
+    final int SUBHEADING = 1;
+    final int CONTENT = 2;
 
     /**
      * When post is created (through selection), GETs data for post via Wordpress' REST API and displays title and content.
@@ -52,67 +53,29 @@ public class PostRead extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.post);
 
-        id = getIntent().getExtras().getString("id");
+        ArrayList<String> post = getIntent().getStringArrayListExtra("postData");
 
-        title = (TextView) findViewById(R.id.title);
+        // constructing errorMessage dialog for activity
+        errorMessage = new AlertDialog.Builder(PostRead.this).create();
+        errorMessage.setTitle("Error");
+        errorMessage.setMessage("An error occurred.");
+        errorMessage.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        finish();
+                    }
+                });
+
+        heading = (TextView) findViewById(R.id.heading);
+        subheading = (TextView) findViewById(R.id.subheading);
         content = (WebView) findViewById(R.id.content);
 
-        String url = "https://www.dev.secureci.com/wp-json/wp/v2/posts/" + id + "?fields=author,title,date,content";
+        heading.setText(post.get(HEADING));
+        subheading.setText(post.get(SUBHEADING));
+        content.loadData(post.get(CONTENT), "text/html; charset=utf-8", "UTF-8");
 
-        StringRequest request = new StringRequest(Request.Method.GET, url, getListener(), getErrorListener(PostRead.this));
 
-        RequestQueue rQueue = Volley.newRequestQueue(PostRead.this);
-        rQueue.add(request);
     }
-
-    public String getId() {
-        return id;
-    }
-
-
-    public boolean getIsActive() {
-        return isActive;
-    }
-
-    private Response.ErrorListener getErrorListener(final Context context) {
-        Response.ErrorListener responseListener = new Response.ErrorListener() {
-            // logs error
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                // creates error message to be displayed to user
-                errorMessage = new AlertDialog.Builder(context).create();
-                errorMessage.setTitle("Error");
-                errorMessage.setMessage("An error occurred.");
-                errorMessage.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                finish();
-                            }
-                        });
-                errorMessage.show();
-
-                Log.e("Volley error", "" + volleyError.networkResponse.statusCode);
-            }
-        };
-        return responseListener;
-    }
-    private Response.Listener<String> getListener() {
-        Response.Listener<String> listener= new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                JsonObject post = new JsonParser().parse(response).getAsJsonObject();
-                JsonObject titleText = post.get("title").getAsJsonObject();
-                JsonObject contentText = post.get("content").getAsJsonObject();
-
-                title.setText(StringEscapeUtils.unescapeHtml3(titleText.get("rendered").getAsString()));
-                content.loadData(StringEscapeUtils.unescapeHtml3(contentText.get("rendered").getAsString()), "text/html; charset=utf-8", "UTF-8");
-            }
-        };
-        return listener;
-    }
-
-
-
 
 }

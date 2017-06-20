@@ -39,7 +39,6 @@ import java.util.List;
 /**
  * Created by Maria Kim on 6/9/2017
  * Creates ListView that displays list of titles of blog post_list.
- * Reference: https://www.simplifiedcoding.net/wordpress-to-android-app-tutorial/
  */
 public class PostList extends ListActivity {
 
@@ -117,12 +116,62 @@ public class PostList extends ListActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Post post = posts.get(position);
 
+                ArrayList<String> postData = new ArrayList<String>();
+                postData.add(post.getHeading());
+                postData.add(post.getSubheading());
+                postData.add(post.content);
                 Intent intent = new Intent(getApplicationContext(), PostRead.class);
-                intent.putExtra("id", "" + post.getId());
+                intent.putStringArrayListExtra("postData", postData);
                 startActivity(intent);
             }
         });
 
+    }
+
+    /**
+     * Populates List of Authors.
+     * @param postListCallback
+     */
+    protected void retrieveAuthors(final PostListCallback postListCallback) {
+        StringRequest authorsRequest = new StringRequest(Request.Method.GET, authorsUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JsonArray authorsJson = new JsonParser().parse(response).getAsJsonArray();
+                for (JsonElement author : authorsJson) {
+                    JsonObject authorJson = (JsonObject) author;
+                    Integer id = authorJson.get("id").getAsInt();
+                    String name = authorJson.get("name").getAsString();
+                    authors.put(id, new Author(authorJson.get("name").getAsString(), id.intValue()));
+                }
+                postListCallback.onSuccess(true);
+            }
+        }, getErrorListener());
+        rQueue.add(authorsRequest);
+    }
+
+    /**
+     * Populates List of Posts.
+     * @param postListCallback
+     */
+    protected void retrievePosts(final PostListCallback postListCallback) {
+        StringRequest postsRequest = new StringRequest(Request.Method.GET, postsUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JsonArray postsJson = new JsonParser().parse(response).getAsJsonArray();
+                for (JsonElement post : postsJson) {
+                    JsonObject postJson = (JsonObject) post;
+                    String title = postJson.get("title").getAsJsonObject().get("rendered").getAsString();
+                    String date = postJson.get("date").getAsString();
+                    int authorId = postJson.get("author").getAsInt();
+                    int id = postJson.get("id").getAsInt();
+                    String content = postJson.get("content").getAsJsonObject().get("rendered").getAsString();
+                    posts.add(new Post(title, date, authors.get(authorId), id, content));
+                }
+                postListCallback.onSuccess(true);
+            }
+        }, getErrorListener());
+
+        rQueue.add(postsRequest);
     }
 
     /**
@@ -149,53 +198,7 @@ public class PostList extends ListActivity {
         return responseListener;
     }
 
-    /**
-     * Populates List of Authors.
-     * @param postListCallback
-     */
-    protected void retrieveAuthors(final PostListCallback postListCallback) {
-        StringRequest authorsRequest = new StringRequest(Request.Method.GET, authorsUrl, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                JsonArray authorsJson = new JsonParser().parse(response).getAsJsonArray();
-                for (JsonElement author : authorsJson) {
-                    JsonObject authorJson = (JsonObject) author;
-                    Integer id = authorJson.get("id").getAsInt();
-                    String name = authorJson.get("name").getAsString();
-                    authors.put(id, new Author(authorJson.get("name").getAsString(), id.intValue()));
-                    Log.d("REQUEST NOTICE", "USER REQUEST RESPONDED");
-                }
-                postListCallback.onSuccess(true);
-            }
-        }, getErrorListener());
-        rQueue.add(authorsRequest);
-    }
 
-    /**
-     * Populates List of Posts.
-     * @param postListCallback
-     */
-    protected void retrievePosts(final PostListCallback postListCallback) {
-        StringRequest postsRequest = new StringRequest(Request.Method.GET, postsUrl, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                JsonArray postsJson = new JsonParser().parse(response).getAsJsonArray();
-                for (JsonElement post : postsJson) {
-                    JsonObject postJson = (JsonObject) post;
-                    String title = postJson.get("title").getAsJsonObject().get("rendered").getAsString();
-                    String date = postJson.get("date").getAsString();
-                    int authorId = postJson.get("author").getAsInt();
-                    Log.d("Author id", "" + authorId);
-                    int id = postJson.get("id").getAsInt();
-                    posts.add(new Post(title, date, authors.get(authorId), id));
-                    Log.d("REQUEST NOTICE", "POST REQUEST RESPONDED");
-                }
-                postListCallback.onSuccess(true);
-            }
-        }, getErrorListener());
-
-        rQueue.add(postsRequest);
-    }
 
 //    private void setListViewScrollListener() {
 //        postListView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -281,74 +284,32 @@ public class PostList extends ListActivity {
 //        rQueue.add(request);
 //    }
 //
-//    @VisibleForTesting
-//    public static Activity getActivity() throws Exception {
-//        Class activityThreadClass = Class.forName("android.app.ActivityThread");
-//        Object activityThread = activityThreadClass.getMethod("currentActivityThread").invoke(null);
-//        Field activitiesField = activityThreadClass.getDeclaredField("mActivities");
-//        activitiesField.setAccessible(true);
-//        HashMap activities = (HashMap) activitiesField.get(activityThread);
-//        for(Object activityRecord:activities.values()){
-//            Class activityRecordClass = activityRecord.getClass();
-//            Field pausedField = activityRecordClass.getDeclaredField("paused");
-//            pausedField.setAccessible(true);
-//            if(!pausedField.getBoolean(activityRecord)) {
-//                Field activityField = activityRecordClass.getDeclaredField("activity");
-//                activityField.setAccessible(true);
-//                Activity activity = (Activity) activityField.get(activityRecord);
-//                return activity;
-//            }
-//        }
-//        return new Activity();
-//    }
-//
-
-//
-//    private Response.Listener<String> getListener() {
-//        Response.Listener<String> listener= new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-//                responseList = new JsonParser().parse(response).getAsJsonArray();
-//                try {
-//                    for (JsonElement responseJson : responseList) {
-//                        final JsonObject responseJsonObject = (JsonObject) responseJson;
-//                        Log.d("DATE", responseJsonObject.get("date").getAsString());
-//                        PostMetaData.retrieveAuthor(new VolleyCallback() {
-//                            String author;
-//                            @Override
-//                            public void onSuccess(JsonObject result) {
-//                                try {
-//                                    Log.d("ID", result.get("id").getAsString());
-//                                    author = result.get("name").getAsString();
-//                                    Log.d("NAME: ", author);
-//                                    PostMetaData pmd = new PostMetaData((JsonObject) responseJsonObject, PostList.this, author);
-//                                    Log.d("POST META DATA ", pmd.toString());
-//                                    posts.add(pmd);
-//                                    postsAdapter = new PostListAdapter(PostList.this, R.layout.post_list_text, posts);
-//                                    postListView.setAdapter(postsAdapter);
-//                                    postsOffset = postsOffset + postsPerPage;
-//                                    currentListSize = postListView.getAdapter().getCount();
-//                                    Log.d("Current list view count", "" + currentListSize);
-//                                    setListViewScrollListener();
-//
-//                                } catch (Exception e) {
-//                                    Log.e("ERROR", e.getMessage(), e);
-//                                }
-//                            }
-//                        }, responseJsonObject.get("author").getAsInt(), PostList.this);
-//                    }
-//                }
-//                catch (Exception e) {
-//                    Log.e("Error", e.toString());
-//                }
-//
-//            }
-//        };
-//        return listener;
-//    }
+    @VisibleForTesting
+    public static Activity getActivity() throws Exception {
+        Class activityThreadClass = Class.forName("android.app.ActivityThread");
+        Object activityThread = activityThreadClass.getMethod("currentActivityThread").invoke(null);
+        Field activitiesField = activityThreadClass.getDeclaredField("mActivities");
+        activitiesField.setAccessible(true);
+        HashMap activities = (HashMap) activitiesField.get(activityThread);
+        for(Object activityRecord:activities.values()){
+            Class activityRecordClass = activityRecord.getClass();
+            Field pausedField = activityRecordClass.getDeclaredField("paused");
+            pausedField.setAccessible(true);
+            if(!pausedField.getBoolean(activityRecord)) {
+                Field activityField = activityRecordClass.getDeclaredField("activity");
+                activityField.setAccessible(true);
+                Activity activity = (Activity) activityField.get(activityRecord);
+                return activity;
+            }
+        }
+        return new Activity();
+    }
 
     public List<Post> getPosts() { return posts; }
 
+    /**
+     * Used to ensure StringRequests are completed before their data are used.
+     */
     public interface PostListCallback {
         void onSuccess(boolean go);
     }

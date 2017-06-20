@@ -26,12 +26,12 @@ import java.util.Locale;
 
 public class Post {
 
-    String title, date, heading, subheading;
+    String title, date, heading, subheading, content;
     Author author;
     int id;
 
 
-    public Post(String title, String date, Author author, int id) {
+    public Post(String title, String date, Author author, int id, String content) {
         this.title = title;
         try {
             this.date = formatDate(date);
@@ -40,6 +40,7 @@ public class Post {
         }
         this.author = author;
         this.id = id;
+        this.content = StringEscapeUtils.unescapeHtml4(content);
 
         heading = StringEscapeUtils.unescapeHtml4(this.title);
         subheading = StringEscapeUtils.unescapeHtml4(this.author + "\n" + this.date);
@@ -56,6 +57,7 @@ public class Post {
     public int getId() { return id; }
     public String getHeading() { return heading; }
     public String getSubheading() { return subheading; }
+    public String getContent() { return content; }
 
     public String toString() {
         return "Heading: " + heading + "\nSubheading: " + subheading;
