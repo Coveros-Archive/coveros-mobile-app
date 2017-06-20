@@ -53,7 +53,7 @@ public class Post {
      * @return
      * @throws ParseException
      */
-    private String formatDate(String date) throws ParseException {
+    protected String formatDate(String date) throws ParseException {
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH);
         Date parsedDate = dateFormatter.parse(date);
         SimpleDateFormat datePrint = new SimpleDateFormat("MMM d, yyyy");
