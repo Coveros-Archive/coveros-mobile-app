@@ -25,7 +25,9 @@ public class PostRead extends AppCompatActivity {
     final int HEADING = 0;
     final int SUBHEADING = 1;
     final int CONTENT = 2;
+    final int POSITION = 3;
 
+    String position; // for instrumented test
     /**
      * Grabs post data from Intent and displays it.
      * @param savedInstanceState
@@ -37,6 +39,8 @@ public class PostRead extends AppCompatActivity {
         setContentView(R.layout.post);
 
         ArrayList<String> post = getIntent().getStringArrayListExtra("postData");
+
+        String position = post.get(POSITION);
 
         // constructing errorMessage dialog for activity
         errorMessage = new AlertDialog.Builder(PostRead.this).create();
@@ -60,5 +64,10 @@ public class PostRead extends AppCompatActivity {
 
 
     }
+
+    /**
+     * For instrumented test to check that correct post is being displayed.
+     */
+    public String getPosition() { return position; }
 
 }

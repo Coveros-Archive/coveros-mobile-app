@@ -30,7 +30,7 @@ import static junit.framework.Assert.assertTrue;
  */
 
 @RunWith(AndroidJUnit4.class)
-public class PostsInstrumentedTest {
+public class PostListInstrumentedTest {
 
 
     @BeforeClass
@@ -39,7 +39,7 @@ public class PostsInstrumentedTest {
     }
 
     @Rule
-    public ActivityTestRule<Posts> mPostsRule = new ActivityTestRule<Posts>(Posts.class);
+    public ActivityTestRule<PostList> mPostsRule = new ActivityTestRule<PostList>(PostList.class);
 
     @Test
     public void getErrorListener_withPostList() throws Exception {
@@ -50,7 +50,7 @@ public class PostsInstrumentedTest {
         VolleyError volleyError = new VolleyError(networkResponse);
 
         // trigger error and check if error message (an AlertDialog) is displayed
-        Response.ErrorListener errorListener = mPostsRule.getActivity().getErrorListener(mPostsRule.getActivity());
+        Response.ErrorListener errorListener = mPostsRule.getActivity().getErrorListener();
         errorListener.onErrorResponse(volleyError);
         assertTrue("errorMessage should be displayed.", mPostsRule.getActivity().getErrorMessage().isShowing());
     }
@@ -58,10 +58,10 @@ public class PostsInstrumentedTest {
     @Test
     public void onItemClickListener_itemClicked() {
 
-        int position = 0;
+        final int position = 0;
 
         // get ListView of post_list and "select" first item
-        Posts posts = mPostsRule.getActivity();
+        final PostList posts = mPostsRule.getActivity();
         posts.runOnUiThread(new Runnable() {
             public void run() {
                 clickItemInPostsListView(posts, position);
@@ -69,8 +69,8 @@ public class PostsInstrumentedTest {
         });
         try {
             Activity currentActivity = getActivity();
-            Post currentPost = (Post) currentActivity;
-            assertTrue(Integer.toString(position).equals(currentPost.getId()));
+            PostRead currentPost = (PostRead) currentActivity;
+            assertTrue(Integer.toString(position).equals(currentPost.getPosition()));
         }
         catch(Exception e) {
             System.err.println(e);
@@ -79,11 +79,11 @@ public class PostsInstrumentedTest {
 
     }
 
-    public void clickItemInPostsListView(Posts p, int position) {
-        Posts posts = p;
-        ListView postsListView = posts.getPostsListView();
-        postsListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        postsListView.setItemChecked(position, true);
+    public void clickItemInPostsListView(PostList p, int position) {
+        PostList posts = p;
+        ListView postListView = posts.getPostListView();
+        postListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        postListView.setItemChecked(position, true);
     }
 
     /**

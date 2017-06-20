@@ -1,6 +1,5 @@
 package com.coveros.coverosmobileapp;
 
-import android.app.Activity;
 import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -8,7 +7,6 @@ import android.os.Bundle;
 // importing tools for WordPress integration
 
 import android.content.Intent;
-import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
@@ -31,7 +29,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -119,6 +116,7 @@ public class PostList extends ListActivity {
                 postData.add(post.getHeading());
                 postData.add(post.getSubheading());
                 postData.add(post.getContent());
+                postData.add("" + position);
                 Intent intent = new Intent(getApplicationContext(), PostRead.class);
                 intent.putStringArrayListExtra("postData", postData);
                 startActivity(intent);
@@ -181,7 +179,7 @@ public class PostList extends ListActivity {
     /**
      * Logs error and displays errorMessage dialog.
      */
-    private Response.ErrorListener getErrorListener() {
+    protected Response.ErrorListener getErrorListener() {
         Response.ErrorListener responseListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
@@ -252,31 +250,8 @@ public class PostList extends ListActivity {
         addPostRequest.start();
     }
 
-    /**
-     * Gets the current Activity that is running. For testing purposes.
-     * @return
-     * @throws Exception
-     */
-    @VisibleForTesting
-    public static Activity getActivity() throws Exception {
-        Class activityThreadClass = Class.forName("android.app.ActivityThread");
-        Object activityThread = activityThreadClass.getMethod("currentActivityThread").invoke(null);
-        Field activitiesField = activityThreadClass.getDeclaredField("mActivities");
-        activitiesField.setAccessible(true);
-        HashMap activities = (HashMap) activitiesField.get(activityThread);
-        for(Object activityRecord:activities.values()){
-            Class activityRecordClass = activityRecord.getClass();
-            Field pausedField = activityRecordClass.getDeclaredField("paused");
-            pausedField.setAccessible(true);
-            if(!pausedField.getBoolean(activityRecord)) {
-                Field activityField = activityRecordClass.getDeclaredField("activity");
-                activityField.setAccessible(true);
-                Activity activity = (Activity) activityField.get(activityRecord);
-                return activity;
-            }
-        }
-        return new Activity();
-    }
+    public AlertDialog getErrorMessage() { return errorMessage; }
+    public ListView getPostListView() { return postListView; }
 
     /**
      * Used to ensure StringRequests are completed before their data are used.
