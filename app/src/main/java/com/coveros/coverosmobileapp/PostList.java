@@ -34,7 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by Maria Kim on 6/9/2017
+ * @author Maria Kim
  * Creates ListView that displays list of titles of blog post_list.
  */
 public class PostList extends ListActivity {

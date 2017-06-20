@@ -11,9 +11,8 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
 /**
- * Created by maria on 6/20/2017.
+ * @author Maria Kim
  */
-
 public class PostTest {
 
     Post post = new Post("&#8220;Post", "1996-02-27T00:00:00", new Author("Ryan Kenney", 14), 1234, "content&#8212;content");

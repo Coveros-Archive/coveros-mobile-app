@@ -7,9 +7,8 @@ import java.io.IOException;
 import static org.junit.Assume.assumeTrue;
 
 /**
- * Created by maria on 6/20/2017.
+ * @author Maria Kim
  */
-
 public class PostListTest {
 
     PostList postList = new PostList();

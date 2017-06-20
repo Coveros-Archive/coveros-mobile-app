@@ -12,9 +12,8 @@ import java.util.List;
 
 /**
  * Custom adapter to handle multi-line items in the postListView.
- * Created by Maria Kim on 6/18/17.
+ * @author Maria Kim
  */
-
 public class PostListAdapter extends ArrayAdapter<Post> {
 
     static Context context;

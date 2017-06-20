@@ -2,9 +2,8 @@ package com.coveros.coverosmobileapp;
 
 /**
  * Represents an author.
- * Created by Maria Kim on 6/19/2017.
+ * @author Maria Kim
  */
-
 public class Author {
 
     String name;

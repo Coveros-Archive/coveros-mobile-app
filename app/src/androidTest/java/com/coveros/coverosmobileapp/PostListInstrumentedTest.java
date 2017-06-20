@@ -26,9 +26,8 @@ import static junit.framework.Assert.assertTrue;
 
 
 /**
- * Created by Maria Kim on 6/14/2017.
+ * @author Maria Kim
  */
-
 @RunWith(AndroidJUnit4.class)
 public class PostListInstrumentedTest {
 

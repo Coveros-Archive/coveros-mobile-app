@@ -22,9 +22,8 @@ import java.util.Locale;
 
 /**
  * Represents a post.
- * Created by maria on 6/16/2017.
+ * @author Maria Kim
  */
-
 public class Post {
 
     String title, date, heading, subheading, content;
