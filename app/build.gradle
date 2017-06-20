@@ -1,9 +1,49 @@
+plugins {
+    id "org.sonarqube" version "2.5"
+}
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco'
-apply plugin: 'com.android.application'
 apply plugin: 'jacoco-android'
 
+sonarqube {
+    properties {
+        property "sonar.host.url", sonarUrl
+        property "sonar.projectKey", "coveros_mobile_app"
+        property "sonar.projectName", "Coveros Mobile App"
+        property "sonar.projectVersion", AppVersion
+        property "sonar.jacoco.itReportPath", "$buildDir/aggregatedReports/coverage/InstrumentedCoverage.exec"
+        property "sonar.junit.reportsPath", "$buildDir/aggregatedReports/tests" //created directory in the copyFiles task
+        property "sonar.sourceEncoding", "UTF-8"
+        property "sonar.tests", "src/test, src/androidTest" // where the tests are located
+        property "sonar.scm.provider", "git"
+        property "sonar.jacoco.reportPath", "$buildDir/jacoco/testDebugUnitTest.exec" // path to coverage reports
+        property "sonar.java.coveragePlugin", "jacoco"
+    }
+}
 
+//created to put files for testing in one directory
+task copyFiles {
+    copy {
+        from "$buildDir/test-results/testDebugUnitTest"
+        into "$buildDir/aggregatedReports/tests"
+    }
+    copy {
+        from "$buildDir/outputs/androidTest-results/connected"
+        into "$buildDir/aggregatedReports/tests"
+    }
+    copy {
+        from "$buildDir/outputs/code-coverage/connected"
+        into "$buildDir/aggregatedReports/coverage"
+        rename {
+            fileName ->
+            "InstrumentedCoverage.exec"
+        }
+    }
+}
+
+//App version to track differences
+def APP_VERSION = "1.0.0"
+ext.set('AppVersion', APP_VERSION)
 
 android {
     compileSdkVersion 25
@@ -21,11 +61,16 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
     buildTypes {
+        debug {
+            testCoverageEnabled true
+        }
         release {
+            testCoverageEnabled false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 }
 
 dependencies {
@@ -35,10 +80,23 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    // adding for testing Wordpress integration
+    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.android.volley:volley:1.0.0'
+
+    // decoding decimal unicode received from Wordpress
+    compile 'org.apache.commons:commons-text:1.1'
+
+    // required for local unit tests (JUnit 4 framework)
     testCompile 'junit:junit:4.12'
+    // for testing error message
+    testCompile 'org.mockito:mockito-core:2.1.0'
 }
+
+//Defined reports generated
 jacocoAndroidUnitTestReport {
     csv.enabled false
     html.enabled false
-    xml.enabled true
+    xml.enabled false
 }
