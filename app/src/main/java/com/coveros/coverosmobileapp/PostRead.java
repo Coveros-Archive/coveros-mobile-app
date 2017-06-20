@@ -15,7 +15,6 @@ import java.util.ArrayList;
 /**
  * Created by Maria Kim on 6/9/2017.
  * Creates and displays a single blog post when it is selected from the list of blog post_list.
- * Reference: https://www.simplifiedcoding.net/wordpress-to-android-app-tutorial/
  */
 
 public class PostRead extends AppCompatActivity {
@@ -28,7 +27,7 @@ public class PostRead extends AppCompatActivity {
     final int CONTENT = 2;
 
     /**
-     * When post is created (through selection), GETs data for post via Wordpress' REST API and displays title and content.
+     * Grabs post data from Intent and displays it.
      * @param savedInstanceState
      */
 

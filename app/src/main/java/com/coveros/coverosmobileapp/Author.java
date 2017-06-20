@@ -1,7 +1,8 @@
 package com.coveros.coverosmobileapp;
 
 /**
- * Created by maria on 6/19/2017.
+ * Represents an author.
+ * Created by Maria Kim on 6/19/2017.
  */
 
 public class Author {

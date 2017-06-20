@@ -21,6 +21,7 @@ import java.util.Locale;
 
 
 /**
+ * Represents a post.
  * Created by maria on 6/16/2017.
  */
 
@@ -46,6 +47,12 @@ public class Post {
         subheading = StringEscapeUtils.unescapeHtml4(this.author + "\n" + this.date);
     }
 
+    /**
+     * Modifies date from Wordpress to a simpler form.
+     * @param date
+     * @return
+     * @throws ParseException
+     */
     private String formatDate(String date) throws ParseException {
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH);
         Date parsedDate = dateFormatter.parse(date);

@@ -11,7 +11,8 @@ import android.widget.TextView;
 import java.util.List;
 
 /**
- * Created by MariaKim on 6/18/17.
+ * Custom adapter to handle multi-line items in the postListView.
+ * Created by Maria Kim on 6/18/17.
  */
 
 public class PostListAdapter extends ArrayAdapter<Post> {

@@ -83,6 +83,7 @@ public class PostList extends ListActivity {
                     }
                 });
 
+        // running these requests on a separate thread for performance
         Thread requests = new Thread() {
             public void run() {
                 rQueue = Volley.newRequestQueue(PostList.this);
@@ -108,6 +109,7 @@ public class PostList extends ListActivity {
         requests.start();
 
 
+        // when a post is selected, feeds its associated data into a PostRead activity
         postListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -116,7 +118,7 @@ public class PostList extends ListActivity {
                 ArrayList<String> postData = new ArrayList<String>();
                 postData.add(post.getHeading());
                 postData.add(post.getSubheading());
-                postData.add(post.content);
+                postData.add(post.getContent());
                 Intent intent = new Intent(getApplicationContext(), PostRead.class);
                 intent.putStringArrayListExtra("postData", postData);
                 startActivity(intent);
@@ -156,8 +158,6 @@ public class PostList extends ListActivity {
             @Override
             public void onResponse(String response) {
                 JsonArray postsJson = new JsonParser().parse(response).getAsJsonArray();
-                Log.d("POSTSURL", postsUrl);
-                Log.d("PostsJson", postsJson.toString());
                 List<Post> newPosts = new ArrayList<>();
                 int count = 0;
                 for (JsonElement post : postsJson) {
@@ -170,7 +170,6 @@ public class PostList extends ListActivity {
                     newPosts.add(new Post(title, date, authors.get(authorId), id, content));
                     count++;
                 }
-                Log.d("NUMBER OF POSTS", "" + count);
                 postListCallback.onSuccess(newPosts);
                 postsOffset = postsOffset + postsPerPage;
             }
@@ -204,6 +203,9 @@ public class PostList extends ListActivity {
     }
 
 
+    /**
+     * Sets the scroll listener for the list view. When the user scrolls to the bottom, calls method to load more posts by the specified increment (postsPerPage)
+     */
     private void setScrollListener() {
         postListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -212,21 +214,15 @@ public class PostList extends ListActivity {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                Log.d("List view count", "" + postListView.getAdapter().getCount());
-                Log.d("currentList", "" + currentListSize);
                 if (postListView.getAdapter() != null) {
                     if (firstScroll) {
                         if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount != 0) {
-                            Log.d("firstVisibleItem", "" + firstVisibleItem);
-                            Log.d("visibleItemCount", "" + visibleItemCount);
-                            Log.d("totalItemCount", "" + totalItemCount);
                             addPosts();
                             firstScroll = false;
                         }
                     } else {
                         // ensures new posts are loaded only once per time the bottom is reached (i.e. if the user continuously scrolls to the bottom, more than "postsPerPage" posts will not be loaded
                         if (postListView.getAdapter().getCount() == currentListSize + postsPerPage) {
-                            Log.d("List view count", "" + postListView.getAdapter().getCount());
                             if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount != 0) {
                                 addPosts();
                                 currentListSize = postListView.getAdapter().getCount();
@@ -238,18 +234,17 @@ public class PostList extends ListActivity {
         });
     }
 
+    /**
+     * Adds posts to the list view. Called when user scrolls to the bottom of the listview.
+     */
     private void addPosts() {
         Thread addPostRequest = new Thread() {
             public void run() {
-//                postsOffset = postsOffset + postsPerPage;
                 retrievePosts(new PostListCallback<Post>() {
                     @Override
                     public void onSuccess (List < Post > newPosts) {
                         postsAdapter.addAll(newPosts);
                         postsAdapter.notifyDataSetChanged();
-                        Log.d("postsOffset before", "" + postsOffset);
-                        Log.d("posts per page", "" + postsPerPage);
-                        Log.d("postsOffset after", "" + postsOffset);
                     }
                 });
             }
@@ -257,6 +252,11 @@ public class PostList extends ListActivity {
         addPostRequest.start();
     }
 
+    /**
+     * Gets the current Activity that is running. For testing purposes.
+     * @return
+     * @throws Exception
+     */
     @VisibleForTesting
     public static Activity getActivity() throws Exception {
         Class activityThreadClass = Class.forName("android.app.ActivityThread");
@@ -277,8 +277,6 @@ public class PostList extends ListActivity {
         }
         return new Activity();
     }
-
-    public List<Post> getPosts() { return posts; }
 
     /**
      * Used to ensure StringRequests are completed before their data are used.
