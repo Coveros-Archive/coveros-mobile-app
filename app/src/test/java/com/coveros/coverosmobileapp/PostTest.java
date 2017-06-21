@@ -15,7 +15,7 @@ import static junit.framework.Assert.assertTrue;
  */
 public class PostTest {
 
-    Post post = new Post("&#8220;Post", "1996-02-27T00:00:00", new Author("Ryan Kenney", 14), 1234, "content&#8212;content");
+    private Post post = new Post("&#8220;Post", "1996-02-27T00:00:00", "Ryan Kenney", 1234, "content&#8212;content");
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();

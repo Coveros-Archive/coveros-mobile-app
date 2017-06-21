@@ -39,7 +39,7 @@ import java.util.Locale;
 public class PostListActivity extends ListActivity {
 
     private List<Post> posts = new ArrayList<>();
-    private SparseArray<Author> authors = new SparseArray<>();
+    private SparseArray<String> authors = new SparseArray<>();
     private RequestQueue rQueue;
 
     private ListView postListView;
@@ -96,9 +96,9 @@ public class PostListActivity extends ListActivity {
             @Override
             public void run() {
                 rQueue = Volley.newRequestQueue(PostListActivity.this);
-                retrieveAuthors(new PostListCallback<Author>() {
+                retrieveAuthors(new PostListCallback<String>() {
                     @Override
-                    public void onSuccess(List<Author> newAuthors) {
+                    public void onSuccess(List<String> newAuthors) {
                         retrievePosts(new PostListCallback<Post>() {
                             @Override
                             public void onSuccess(List<Post> newPosts) {
@@ -116,7 +116,6 @@ public class PostListActivity extends ListActivity {
         };
         requests.start();
 
-
         // when a post is selected, feeds its associated data into a PostReadActivity activity
         postListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -132,14 +131,13 @@ public class PostListActivity extends ListActivity {
                 startActivity(intent);
             }
         });
-
     }
 
     /**
      * Populates List of Authors.
      * @param postListCallback A callback function to be executed after the list of authors has been retrieved
      */
-    protected void retrieveAuthors(final PostListCallback<Author> postListCallback) {
+    protected void retrieveAuthors(final PostListCallback<String> postListCallback) {
         StringRequest authorsRequest = new StringRequest(Request.Method.GET, AUTHORS_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -147,7 +145,7 @@ public class PostListActivity extends ListActivity {
                 for (JsonElement author : authorsJson) {
                     JsonObject authorJson = (JsonObject) author;
                     Integer id = authorJson.get("id").getAsInt();
-                    authors.put(id, new Author(authorJson.get("name").getAsString(), id));
+                    authors.put(id, authorJson.get("name").getAsString());
                 }
                 postListCallback.onSuccess(null);
             }
@@ -188,7 +186,6 @@ public class PostListActivity extends ListActivity {
     protected Response.ErrorListener getErrorListener() {
         return errorListener;
     }
-
 
     /**
      * Sets the scroll listener for the list view. When the user scrolls to the bottom, calls method to load more posts by the specified increment (POSTS_PER_PAGE)
@@ -256,7 +253,6 @@ public class PostListActivity extends ListActivity {
     interface PostListCallback<T> {
         void onSuccess(List<T> newItem);
     }
-
 }
 
 
