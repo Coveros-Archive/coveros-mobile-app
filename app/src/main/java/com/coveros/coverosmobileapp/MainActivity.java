@@ -10,10 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.*;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
-//import java.util.function.Function;
 
 public class MainActivity extends AppCompatActivity {
     //MainActivity
@@ -22,25 +19,27 @@ public class MainActivity extends AppCompatActivity {
     //Alerts
     private AlertDialog dialog;
 
-    public MainActivity(){
+    public MainActivity() {
         webName = "https://www.coveros.com";
     }
 
-    public String getWebName(){
+    public String getWebName() {
         return webName;
     }
 
-    public void setWebName(String website){
+    public void setWebName(String website) {
         webName = website;
     }
 
-    public WebView getWebViewBrowser(){ return browser; }
+    public WebView getWebViewBrowser() {
+        return browser;
+    }
 
-    public void setWebViewBrowser(WebView br){
+    public void setWebViewBrowser(WebView br) {
         browser = br;
     }
 
-    public AlertDialog getDialog(){
+    public AlertDialog getDialog() {
         return dialog;
     }
 
@@ -56,18 +55,19 @@ public class MainActivity extends AppCompatActivity {
         browser = (WebView) findViewById(R.id.activity_main_webview);
         main.setWebViewBrowser(browser);
         //Links open in WebView with Coveros regex check
-        browser.setWebViewClient(new CustomWebViewClient(){
+        browser.setWebViewClient(new CustomWebViewClient() {
             @Override
-            public void onPageStarted(WebView view, String url, Bitmap fav){
+            public void onPageStarted(WebView view, String url, Bitmap fav) {
                 super.onPageStarted(view, url, fav);
             }
+
             @Override
             public void onPageFinished(WebView view, String url) {
                 setWebName(url);
                 super.onPageFinished(view, url);
             }
         });
-        if(!isOnline()){
+        if (!isOnline()) {
             browser.loadUrl("file:///android_asset/sampleErrorPage.html");
         }
     }
@@ -76,21 +76,19 @@ public class MainActivity extends AppCompatActivity {
      * On App StartUp
      */
     @Override
-    protected void onStart(){
+    protected void onStart() {
         //Phone is online & Connected to a server
-        if(isOnline()){
+        if (isOnline()) {
             //Enable Javascript (Plugins)
             WebSettings webSettings = browser.getSettings();
             webSettings.setJavaScriptEnabled(true);
             //Can be changed by either using setWebName or changing value in constructor
             browser.loadUrl(webName);
-        }
-        else{
-            try{
+        } else {
+            try {
                 //AlertDialog
                 alertView();
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 //Save logs if necessary
                 Log.d("Error: ", "Show Dialog: " + e.getMessage());
             }
@@ -102,11 +100,10 @@ public class MainActivity extends AppCompatActivity {
      * Back button is pressed in the app. Default implementation
      */
     @Override
-    public void onBackPressed(){
-        if(browser.canGoBack()){
+    public void onBackPressed() {
+        if (browser.canGoBack()) {
             browser.goBack();
-        }
-        else{
+        } else {
             super.onBackPressed();
         }
     }
@@ -114,14 +111,14 @@ public class MainActivity extends AppCompatActivity {
     /*
      * Checks if the user is connected to the Internet
      */
-    public boolean isOnline(){
+    public boolean isOnline() {
         //Get Connectivity Manager and network info
         ConnectivityManager conMgr = (ConnectivityManager)
                 getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
 
         //No internet connection
-        if(netInfo == null || !netInfo.isConnected() || !netInfo.isAvailable()){
+        if (netInfo == null || !netInfo.isConnected() || !netInfo.isAvailable()) {
             return false;
         }
         //Otherwise, must be connected
@@ -137,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
      * OK option provided to immediately close the dialog box if the user's wifi loads
      *      the Coveros website in the background
      */
-    private void alertView(){
+    private void alertView() {
         //Create Strings for Title, messsage, and buttons
         String title = "Alert";
         String message = "Sorry, we cannot currently retrieve the requested information.";
@@ -148,21 +145,22 @@ public class MainActivity extends AppCompatActivity {
         //Init Alert Dialog menu & Cancel only if pressed on button
         dialog = new AlertDialog.Builder(MainActivity.this)
                 .setNeutralButton(button2, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getApplicationContext(), "Loading App", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
-                recreate();
-            }
-        })
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(), "Loading App", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                        recreate();
+                    }
+                })
                 .setNegativeButton(button3, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss(); }
+                        dialog.dismiss();
+                    }
                 })
-                .setPositiveButton(button1, new DialogInterface.OnClickListener(){
+                .setPositiveButton(button1, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which){
+                    public void onClick(DialogInterface dialog, int which) {
                         Toast.makeText(getApplicationContext(), "Thank You", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                         finish();
@@ -184,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
      * pushed to the top of a webpage, losing track of where/what they were
      * looking at
      */
-    private float calculateProgression(WebView content){
+    private float calculateProgression(WebView content) {
         float contentHeight = content.getContentHeight();
         float currentScrollPosition = content.getScrollY();
         float percentWebview = currentScrollPosition / contentHeight;
