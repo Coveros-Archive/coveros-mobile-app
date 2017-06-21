@@ -30,6 +30,7 @@ import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Maria Kim
@@ -48,11 +49,13 @@ public class PostListActivity extends ListActivity {
 
     private AlertDialog errorMessage;
 
-    private final int postsPerPage = 10;
+    private static final int POSTS_PER_PAGE = 10;
     private int postsOffset = 0;
 
-    private int numOfAuthors = 100;  // number of users that will be returned by the REST call... so if someday Coveros has over 100 employees, this needs to be changed
-    private final String authorsUrl = "https://www.dev.secureci.com/wp-json/wp/v2/users?orderby=id&per_page=" + numOfAuthors;
+    private static final int NUM_OF_AUTHORS = 100;  // number of users that will be returned by the REST call... so if someday Coveros has over 100 employees, this needs to be changed
+    private static final String AUTHORS_URL = "https://www.dev.secureci.com/wp-json/wp/v2/users?orderby=id&per_page=" + NUM_OF_AUTHORS;
+
+    private static final String POSTS_URL = "https://www.dev.secureci.com/wp-json/wp/v2/posts?per_page=" + POSTS_PER_PAGE + "&order=desc&orderby=date&fields=id,title,date,author&offset=%d";
 
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
@@ -81,6 +84,7 @@ public class PostListActivity extends ListActivity {
         errorMessage.setMessage("An error occurred.");
         errorMessage.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay",
                 new DialogInterface.OnClickListener() {
+                    @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         finish();
@@ -136,7 +140,7 @@ public class PostListActivity extends ListActivity {
      * @param postListCallback A callback function to be executed after the list of authors has been retrieved
      */
     protected void retrieveAuthors(final PostListCallback<Author> postListCallback) {
-        StringRequest authorsRequest = new StringRequest(Request.Method.GET, authorsUrl, new Response.Listener<String>() {
+        StringRequest authorsRequest = new StringRequest(Request.Method.GET, AUTHORS_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 JsonArray authorsJson = new JsonParser().parse(response).getAsJsonArray();
@@ -156,8 +160,7 @@ public class PostListActivity extends ListActivity {
      * @param postListCallback A callback function to be executed after the list of posts has been retrieved
      */
     protected void retrievePosts(final PostListCallback<Post> postListCallback) {
-        final String postsUrl = "https://www.dev.secureci.com/wp-json/wp/v2/posts?per_page=" + postsPerPage + "&order=desc&orderby=date&fields=id,title,date,author&offset=" + postsOffset;
-        StringRequest postsRequest = new StringRequest(Request.Method.GET, postsUrl, new Response.Listener<String>() {
+        StringRequest postsRequest = new StringRequest(Request.Method.GET, String.format(Locale.US, POSTS_URL, postsOffset), new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 JsonArray postsJson = new JsonParser().parse(response).getAsJsonArray();
@@ -172,7 +175,7 @@ public class PostListActivity extends ListActivity {
                     newPosts.add(new Post(title, date, authors.get(authorId), id, content));
                 }
                 postListCallback.onSuccess(newPosts);
-                postsOffset = postsOffset + postsPerPage;
+                postsOffset = postsOffset + POSTS_PER_PAGE;
             }
         }, getErrorListener());
 
@@ -188,15 +191,16 @@ public class PostListActivity extends ListActivity {
 
 
     /**
-     * Sets the scroll listener for the list view. When the user scrolls to the bottom, calls method to load more posts by the specified increment (postsPerPage)
+     * Sets the scroll listener for the list view. When the user scrolls to the bottom, calls method to load more posts by the specified increment (POSTS_PER_PAGE)
      */
     private void setScrollListener() {
         postListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            private boolean firstScroll = true;  // first time scrolling to bottom
+
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
             }
 
-            private boolean firstScroll = true;  // first time scrolling to bottom
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (postListView.getAdapter() != null) {
@@ -206,8 +210,8 @@ public class PostListActivity extends ListActivity {
                             firstScroll = false;
                         }
                     } else {
-                        // ensures new posts are loaded only once per time the bottom is reached (i.e. if the user continuously scrolls to the bottom, more than "postsPerPage" posts will not be loaded
-                        if (postListView.getAdapter().getCount() == currentListSize + postsPerPage) {
+                        // ensures new posts are loaded only once per time the bottom is reached (i.e. if the user continuously scrolls to the bottom, more than "POSTS_PER_PAGE" posts will not be loaded
+                        if (postListView.getAdapter().getCount() == currentListSize + POSTS_PER_PAGE) {
                             if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount != 0) {
                                 addPosts();
                                 currentListSize = postListView.getAdapter().getCount();
