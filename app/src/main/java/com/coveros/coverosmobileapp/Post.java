@@ -1,16 +1,6 @@
 package com.coveros.coverosmobileapp;
 
-import android.content.Context;
-
 import android.util.Log;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import org.apache.commons.text.StringEscapeUtils;
 
@@ -21,17 +11,28 @@ import java.util.Locale;
 
 
 /**
- * Represents a post.
+ * Represents a blog post.
  * @author Maria Kim
  */
-public class Post {
+class Post {
 
-    String title, date, heading, subheading, content;
-    Author author;
-    int id;
+    private String title;
+    private String date;
+    private String heading;
+    private String subheading;
+    private String content;
+    private Author author;
+    private int id;
 
-
-    public Post(String title, String date, Author author, int id, String content) {
+    /**
+     * Create a blog Post instance
+     * @param title The title of the blog post
+     * @param date The date the blog post was published
+     * @param author The author of the blog post
+     * @param id The id of the blog post
+     * @param content The html content of the blog post
+     */
+    Post(String title, String date, Author author, int id, String content) {
         this.title = StringEscapeUtils.unescapeHtml4(title);
         try {
             this.date = formatDate(date);
@@ -47,10 +48,10 @@ public class Post {
     }
 
     /**
-     * Modifies date from Wordpress to a simpler form.
-     * @param date
-     * @return
-     * @throws ParseException
+     * Modifies date from Wordpress to MMM dd YYYY format.
+     * @param date The date to format
+     * @return The date in MM dd YYYY format
+     * @throws ParseException If the internal date format cannot be parsed
      */
     protected String formatDate(String date) throws ParseException {
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH);
@@ -68,9 +69,5 @@ public class Post {
     public String toString() {
         return "Heading: " + heading + "\nSubheading: " + subheading;
     }
-
-
-
-
 }
 
