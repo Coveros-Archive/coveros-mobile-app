@@ -18,7 +18,6 @@ import java.util.HashMap;
 
 import static org.junit.Assert.assertTrue;
 
-
 /**
  * @author Maria Kim
  */

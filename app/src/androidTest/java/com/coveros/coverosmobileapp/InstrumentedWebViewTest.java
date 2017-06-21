@@ -8,7 +8,6 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.coveros.coverosmobileapp.test.util.LooperTestSuite;
 
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
