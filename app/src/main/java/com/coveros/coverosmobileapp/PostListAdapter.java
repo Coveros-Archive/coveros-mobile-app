@@ -35,25 +35,27 @@ class PostListAdapter extends ArrayAdapter<Post> {
     }
 
     @Override
-    public @NonNull View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    @NonNull
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        View row = convertView;
         PostViewHolder holder;
 
-        if (convertView == null) {
+        if (row == null) {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-            convertView = inflater.inflate(layoutResourceId, parent, false);
+            row = inflater.inflate(layoutResourceId, parent, false);
             holder = new PostViewHolder();
-            holder.heading = (TextView) convertView.findViewById(R.id.title);
-            holder.subheading = (TextView) convertView.findViewById(R.id.author_date);
-            convertView.setTag(holder);
+            holder.heading = (TextView) row.findViewById(R.id.title);
+            holder.subheading = (TextView) row.findViewById(R.id.author_date);
+            row.setTag(holder);
         } else {
-            holder = (PostViewHolder) convertView.getTag();
+            holder = (PostViewHolder) row.getTag();
         }
 
         Post post = data.get(position);
         holder.heading.setText(post.getHeading());
         holder.subheading.setText(post.getSubheading());
 
-        return convertView;
+        return row;
     }
 
     private static class PostViewHolder {

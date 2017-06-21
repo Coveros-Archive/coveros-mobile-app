@@ -66,6 +66,7 @@ class Post {
     public String getSubheading() { return subheading; }
     public String getContent() { return content; }
 
+    @Override
     public String toString() {
         return "Heading: " + heading + "\nSubheading: " + subheading;
     }
