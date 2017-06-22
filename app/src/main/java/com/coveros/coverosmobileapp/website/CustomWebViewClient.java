@@ -1,4 +1,4 @@
-package com.coveros.coverosmobileapp;
+package com.coveros.coverosmobileapp.website;
 
 import android.content.Intent;
 import android.util.Log;

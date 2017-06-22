@@ -1,4 +1,4 @@
-package com.coveros.coverosmobileapp;
+package com.coveros.coverosmobileapp.post;
 
 import android.app.ListActivity;
 import android.content.DialogInterface;
@@ -23,6 +23,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import com.coveros.coverosmobileapp.R;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

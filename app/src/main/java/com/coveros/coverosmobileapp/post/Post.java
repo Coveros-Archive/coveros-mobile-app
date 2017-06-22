@@ -1,4 +1,4 @@
-package com.coveros.coverosmobileapp;
+package com.coveros.coverosmobileapp.post;
 
 import android.util.Log;
 

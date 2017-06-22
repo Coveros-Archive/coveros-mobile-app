@@ -1,4 +1,4 @@
-package com.coveros.coverosmobileapp;
+package com.coveros.coverosmobileapp.website;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Toast;
+
+import com.coveros.coverosmobileapp.R;
 
 public class MainActivity extends AppCompatActivity {
     //MainActivity

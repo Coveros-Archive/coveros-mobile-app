@@ -1,9 +1,11 @@
-package com.coveros.coverosmobileapp;
+package com.coveros.coverosmobileapp.post;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebView;
 import android.widget.TextView;
+
+import com.coveros.coverosmobileapp.R;
 
 import java.util.List;
 

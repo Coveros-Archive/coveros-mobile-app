@@ -1,4 +1,4 @@
-package com.coveros.coverosmobileapp;
+package com.coveros.coverosmobileapp.website;
 
 import android.app.AlertDialog;
 import android.content.Intent;
