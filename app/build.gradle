@@ -21,24 +21,34 @@ sonarqube {
     }
 }
 
-//created to put files for testing in one directory
-task copyFiles {
-    copy {
-        from "$buildDir/test-results/testDebugUnitTest"
-        into "$buildDir/aggregatedReports/tests"
-    }
-    copy {
-        from "$buildDir/outputs/androidTest-results/connected"
-        into "$buildDir/aggregatedReports/tests"
-    }
-    copy {
-        from "$buildDir/outputs/code-coverage/connected"
-        into "$buildDir/aggregatedReports/coverage"
-        rename {
-            fileName ->
+task aggregateUnitTestResults(type: Copy) {
+    from "$buildDir/test-results/testDebugUnitTest"
+    from "$buildDir/outputs/androidTest-results/connected"
+    into "$buildDir/aggregatedReports/tests"
+}
+
+task aggregateCoverageResults(type: Copy) {
+    from "$buildDir/outputs/code-coverage/connected"
+    into "$buildDir/aggregatedReports/coverage"
+    rename {
+        fileName ->
             "InstrumentedCoverage.exec"
-        }
     }
+}
+
+task aggregateTestData {
+    dependsOn 'aggregateUnitTestResults'
+    dependsOn 'aggregateCoverageResults'
+}
+
+task fullSonarAnalysis {
+    dependsOn 'jacocoTestReport'
+    dependsOn 'connectedAndroidTest'
+    dependsOn 'aggregateTestData'
+    dependsOn 'sonarqube'
+    tasks.findByName('aggregateTestData').mustRunAfter 'jacocoTestReport'
+    tasks.findByName('aggregateTestData').mustRunAfter 'connectedAndroidTest'
+    tasks.findByName('sonarqube').mustRunAfter 'aggregateTestData'
 }
 
 //App version to track differences
