@@ -1,14 +1,12 @@
-package com.coveros.coverosmobileapp;
+package com.coveros.coverosmobileapp.post;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.mockito.Mock;
 
 import java.text.ParseException;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 
 /**
  * @author Maria Kim

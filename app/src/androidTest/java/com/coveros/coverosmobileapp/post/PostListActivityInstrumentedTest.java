@@ -1,4 +1,4 @@
-package com.coveros.coverosmobileapp;
+package com.coveros.coverosmobileapp.post;
 
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;

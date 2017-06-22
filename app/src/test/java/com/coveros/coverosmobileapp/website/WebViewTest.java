@@ -1,18 +1,14 @@
-package com.coveros.coverosmobileapp;
-
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+package com.coveros.coverosmobileapp.website;
 
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 /**
- * Created by EPainter on 6/14/2017.
+ * @author Ethan Painter
  */
-
 public class WebViewTest {
+
     /**
      * Check on Getter for WebName()
      */
