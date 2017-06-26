@@ -42,10 +42,11 @@ class Post {
         }
 
         this.id = id;
-        this.content = StringEscapeUtils.unescapeHtml4(content);
+
 
         heading = StringEscapeUtils.unescapeHtml4(this.title);
         subheading = StringEscapeUtils.unescapeHtml4(author + "\n" + this.date);
+        this.content = "<h3>" + heading + "</h3><h4>" + author + "</h4><h5>" + this.date + "</h5>" + StringEscapeUtils.unescapeHtml4(content);
     }
 
     /**
