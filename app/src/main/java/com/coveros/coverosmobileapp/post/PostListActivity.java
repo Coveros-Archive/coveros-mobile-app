@@ -151,7 +151,7 @@ public class PostListActivity extends ListActivity {
                 }
                 postListCallback.onSuccess(null);
             }
-        }, getErrorListener());
+        }, errorListener);
         rQueue.add(authorsRequest);
     }
 
@@ -177,16 +177,9 @@ public class PostListActivity extends ListActivity {
                 postListCallback.onSuccess(newPosts);
                 postsOffset = postsOffset + POSTS_PER_PAGE;
             }
-        }, getErrorListener());
+        }, errorListener);
 
         rQueue.add(postsRequest);
-    }
-
-    /**
-     * Logs error and displays errorMessage dialog.
-     */
-    protected Response.ErrorListener getErrorListener() {
-        return errorListener;
     }
 
     /**
@@ -253,7 +246,7 @@ public class PostListActivity extends ListActivity {
      * Used to ensure StringRequests are completed before their data are used.
      */
     interface PostListCallback<T> {
-        void onSuccess(List<T> newItem);
+        void onSuccess(List<T> newItems);
     }
 }
 

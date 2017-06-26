@@ -1,5 +1,6 @@
 package com.coveros.coverosmobileapp.post;
 
+import android.text.Html;
 import android.util.Log;
 
 import org.apache.commons.text.StringEscapeUtils;

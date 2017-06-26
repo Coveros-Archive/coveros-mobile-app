@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +53,7 @@ class CommentAdapter extends ArrayAdapter<Comment> {
         Comment comment = data.get(position);
         holder.commentName.setText(comment.getAuthor());
         holder.commentDate.setText(comment.getDate());
-        holder.commentContent.setText(comment.getContent());
+        holder.commentContent.setText(Html.fromHtml(comment.getContent()));
 
         return row;
     }
