@@ -7,7 +7,7 @@ import org.apache.commons.text.StringEscapeUtils;
 import java.text.ParseException;
 
 /**
- * Created by maria on 6/26/2017.
+ * @author Maria Kim
  */
 
 public class Comment {
