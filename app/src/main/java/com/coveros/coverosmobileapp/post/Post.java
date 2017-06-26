@@ -55,7 +55,7 @@ class Post {
      * @return The date in MM dd YYYY format
      * @throws ParseException If the internal date format cannot be parsed
      */
-    String formatDate(String date) throws ParseException {
+    static String formatDate(String date) throws ParseException {
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH);
         Date parsedDate = dateFormatter.parse(date);
         SimpleDateFormat datePrint = new SimpleDateFormat("MMM d, yyyy");

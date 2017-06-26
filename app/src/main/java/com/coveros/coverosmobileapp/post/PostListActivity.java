@@ -127,6 +127,7 @@ public class PostListActivity extends ListActivity {
                 postData.add(post.getSubheading());
                 postData.add(post.getContent());
                 postData.add(String.valueOf(position));
+                postData.add(String.valueOf(post.getId()));
                 Intent intent = new Intent(getApplicationContext(), PostReadActivity.class);
                 intent.putStringArrayListExtra("postData", postData);
                 startActivity(intent);
