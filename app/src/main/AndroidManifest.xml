@@ -38,6 +38,11 @@
             android:label="CoverosMobileApp"
             android:exported="true">
         </activity>
+        <activity
+            android:name=".DrawerLayoutActivity"
+            android:label="CoverosMobileApp"
+            android:exported="true">
+        </activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
