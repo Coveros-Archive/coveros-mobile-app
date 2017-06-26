@@ -14,6 +14,7 @@ import java.util.List;
  * Creates and displays a single blog post when it is selected from the list of blog post_list.
  * @author Maria Kim
  */
+@SuppressWarnings("squid:MaximumInheritanceDepth")
 public class PostReadActivity extends AppCompatActivity {
 
     static final int HEADING_KEY = 0;

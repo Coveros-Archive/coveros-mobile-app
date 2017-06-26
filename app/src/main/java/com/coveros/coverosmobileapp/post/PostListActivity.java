@@ -37,6 +37,7 @@ import java.util.Locale;
  * @author Maria Kim
  * Creates ListView that displays list of titles of blog post_list.
  */
+@SuppressWarnings("squid:MaximumInheritanceDepth")
 public class PostListActivity extends ListActivity {
 
     private List<Post> posts = new ArrayList<>();
