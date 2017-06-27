@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -57,6 +58,12 @@ public class CommentListActivity extends ListActivity {
         final String postId = getIntent().getExtras().getString("postId");
 
         commentListView = getListView();
+        TextView textView = new TextView(CommentListActivity.this);
+        textView.setText("Comments");
+        textView.setTextSize(20);
+        textView.setPadding(0,0,0,30);
+
+        commentListView.addHeaderView(textView);
 
 //        final String COMMENTS_URL = "http://www.dev.secureci.com/wp-json/wp/v2/comments?post=" + postId;
         final String COMMENTS_URL = "http://www.dev.secureci.com/wp-json/wp/v2/comments?post=6600";  // hard coding for development

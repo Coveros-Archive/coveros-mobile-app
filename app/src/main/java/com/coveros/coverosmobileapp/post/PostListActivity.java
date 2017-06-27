@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -78,7 +79,12 @@ public class PostListActivity extends ListActivity {
         setContentView(R.layout.post_list);
 
         postListView = getListView();
+        TextView textView = new TextView(PostListActivity.this);
+        textView.setText("Blog posts");
+        textView.setTextSize(20);
+        textView.setPadding(0,0,0,30);
 
+        postListView.addHeaderView(textView);
         // constructing errorMessage dialog for activity
         errorMessage = new AlertDialog.Builder(PostListActivity.this).create();
         errorMessage.setTitle("Error");
@@ -121,7 +127,7 @@ public class PostListActivity extends ListActivity {
         postListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Post post = posts.get(position);
+                Post post = posts.get(position - 1);  // -1 because the TextView offsets the posts by one for some reason
                 ArrayList<String> postData = new ArrayList<>();
                 postData.add(post.getHeading());
                 postData.add(post.getSubheading());
