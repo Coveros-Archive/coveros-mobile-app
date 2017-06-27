@@ -38,14 +38,14 @@ class BlogPost {
         } catch (ParseException e) {
             Log.e("Parse exception", e.toString());
         }
-        String author = authors.get(blogPostJson.get("author").getAsInt());
+        String author = StringEscapeUtils.unescapeHtml4(authors.get(blogPostJson.get("author").getAsInt()));
 
         // to show in BlogPostListActivity
-        this.title = blogPostJson.get("title").getAsJsonObject().get("rendered").getAsString();
+        this.title = StringEscapeUtils.unescapeHtml4(blogPostJson.get("title").getAsJsonObject().get("rendered").getAsString());
         author_date = StringEscapeUtils.unescapeHtml4(author + "\n" + this.date);
 
         // to display in BlogPostReadActivity
-        this.content = "<h3>" + this.title + "</h3><h4>" + author + "</h4><h5>" + this.date + "</h5>" + blogPostJson.get("content").getAsJsonObject().get("rendered").getAsString();
+        this.content = "<h3>" + this.title + "</h3><h4>" + author + "</h4><h5>" + this.date + "</h5>" + StringEscapeUtils.unescapeHtml4(blogPostJson.get("content").getAsJsonObject().get("rendered").getAsString());
     }
 
     /**
