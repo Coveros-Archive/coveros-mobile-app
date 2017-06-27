@@ -3,12 +3,10 @@
     package="com.coveros.coverosmobileapp">
 
     <!-- Get Permission for main activity to use the internet and load web pages -->
-    <uses-permission
-        android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <!-- Check if the device has a network connection -->
-    <uses-permission
-        android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <!-- Collecting Metadata -->
     <meta-data
@@ -39,8 +37,4 @@
             android:exported="true">
         </activity>
     </application>
-
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
 </manifest>
