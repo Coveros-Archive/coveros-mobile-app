@@ -11,25 +11,22 @@ import android.widget.ListView;
  */
 
 public class DrawerLayoutActivity extends ListActivity {
-    private String[] menuTitles;
-    private DrawerLayout menuDrawerLayout;
+    private String[] menuTitles = new String[]{"Menu","Blog","Team"};
     private ListView menuDrawerList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.drawer_layout);
 
-        menuTitles = getResources().getStringArray(R.array.menu_names);
-        menuDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        menuDrawerList = (ListView) findViewById(R.id.left_drawer);
+        menuDrawerList = getListView();
 
         // Set the adapter for the list view
-        menuDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.menu_list_text, menuTitles));
+        menuDrawerList.setAdapter(new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1 , menuTitles));
 
         // Set the list's click listener
-       // menuDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+       //menuDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
     }
 }
