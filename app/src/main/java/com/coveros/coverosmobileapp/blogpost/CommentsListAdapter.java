@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.coveros.coverosmobileapp.R;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -29,7 +31,7 @@ class CommentsListAdapter extends ArrayAdapter<Comment> {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
-        this.data = data;
+        this.data = new ArrayList<>(data);
     }
 
     @Override

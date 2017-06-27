@@ -1,26 +1,21 @@
 package com.coveros.coverosmobileapp.blogpost;
 
-import android.app.ListActivity;
-import android.content.DialogInterface;
+
 import android.os.Bundle;
 
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 
 
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -38,7 +33,7 @@ import java.util.Locale;
  * @author Maria Kim
  * Creates ListView that displays list of titles of blog post_list.
  */
-public class BlogPostsListActivity extends ListActivity {
+public class BlogPostsListActivity extends BlogListActivity {
 
     private List<BlogPost> blogPosts = new ArrayList<>();
     private SparseArray<String> authors = new SparseArray<>();  // to aggregate the ids and names of the authors of displayed blog posts
@@ -49,29 +44,13 @@ public class BlogPostsListActivity extends ListActivity {
 
     private int currentListSize;
 
-    private AlertDialog errorMessage;
-
     private static final int POSTS_PER_PAGE = 10;
     private int postsOffset = 0;
 
     private static final int NUM_OF_AUTHORS = 100;  // number of users that will be returned by the REST call... so if someday Coveros has over 100 employees, this needs to be changed
     private static final String AUTHORS_URL = "https://www.dev.secureci.com/wp-json/wp/v2/users?orderby=id&per_page=" + NUM_OF_AUTHORS;
 
-    private static final String POSTS_URL = "https://www.dev.secureci.com/wp-json/wp/v2/blogPosts?per_page=" + POSTS_PER_PAGE + "&order=desc&orderby=date&fields=id,title,date,author&offset=%d";
-
-    private Response.ErrorListener errorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError volleyError) {
-            // displays errorMessage
-            errorMessage.show();
-            NetworkResponse errorNetworkResponse = volleyError.networkResponse;
-            String errorData = "";
-            if (errorNetworkResponse != null && errorNetworkResponse.data != null) {
-                errorData = new String(errorNetworkResponse.data);
-            }
-            Log.e("Volley error", errorData);
-        }
-    };
+    private static final String POSTS_URL = "https://www.dev.secureci.com/wp-json/wp/v2/posts?per_page=" + POSTS_PER_PAGE + "&order=desc&orderby=date&fields=id,title,date,author&offset=%d";
 
     @Override
     protected void onCreate(Bundle icicle) {
@@ -79,24 +58,9 @@ public class BlogPostsListActivity extends ListActivity {
         setContentView(R.layout.post_list);
 
         postListView = getListView();
-        TextView textView = new TextView(BlogPostsListActivity.this);
-        textView.setText("Blog blogPosts");
-        textView.setTextSize(20);
-        textView.setPadding(0,0,0,30);
+        postListView.addHeaderView(createTextViewLabel(BlogPostsListActivity.this, "Blog posts"));  // settings label above blog post list
 
-        postListView.addHeaderView(textView);
-        // constructing errorMessage dialog for activity
-        errorMessage = new AlertDialog.Builder(BlogPostsListActivity.this).create();
-        errorMessage.setTitle("Error");
-        errorMessage.setMessage("An error occurred.");
-        errorMessage.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        finish();
-                    }
-                });
+        errorListener = createErrorListener(BlogPostsListActivity.this);
 
         // running these requests on a separate thread for performance
         Thread requests = new Thread() {
@@ -130,7 +94,6 @@ public class BlogPostsListActivity extends ListActivity {
                 BlogPost blogPost = blogPosts.get(position - 1);  // -1 because the TextView offsets the blogPosts by one for some reason
                 ArrayList<String> blogPostData = new ArrayList<>();
                 blogPostData.add(blogPost.getTitle());
-                blogPostData.add(blogPost.getAuthorDate());
                 blogPostData.add(blogPost.getContent());
                 blogPostData.add(String.valueOf(blogPost.getId()));
                 Intent intent = new Intent(getApplicationContext(), BlogPostReadActivity.class);
@@ -171,8 +134,7 @@ public class BlogPostsListActivity extends ListActivity {
                 JsonArray blogPostsJson = new JsonParser().parse(response).getAsJsonArray();
                 List<BlogPost> newBlogPosts = new ArrayList<>();
                 for (JsonElement blogPost : blogPostsJson) {
-                    JsonObject blogPostJson = (JsonObject) blogPost;
-                    newBlogPosts.add(new BlogPost(blogPostJson, authors));
+                    newBlogPosts.add(new BlogPost((JsonObject) blogPost, authors));
                 }
                 postListCallback.onSuccess(newBlogPosts);
                 postsOffset = postsOffset + POSTS_PER_PAGE;
@@ -234,13 +196,8 @@ public class BlogPostsListActivity extends ListActivity {
         addPostRequest.start();
     }
 
-    Response.ErrorListener getErrorListener() {
-        return errorListener;
-    }
+    Response.ErrorListener getErrorListener() { return errorListener; }
     AlertDialog getErrorMessage() { return errorMessage; }
-    ListView getPostListView() {
-        return postListView;
-    }
 
     /**
      * Used to ensure StringRequests are completed before their data are used.

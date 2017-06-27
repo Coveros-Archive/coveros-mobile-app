@@ -11,18 +11,15 @@ import com.coveros.coverosmobileapp.R;
 
 import java.util.List;
 
-
 /**
  * Creates and displays a single blog post when it is selected from the list of blog post_list.
  * @author Maria Kim
  */
 public class BlogPostReadActivity extends AppCompatActivity {
 
-    static final int HEADING_KEY = 0;
-    static final int SUBHEADING_KEY = 1;
-    static final int CONTENT_KEY = 2;
-    static final int ID_KEY = 4;
-
+    static final int TITLE_KEY = 0;
+    static final int CONTENT_KEY = 1;
+    static final int ID_KEY = 2;
 
     /**
      * Grabs post data from Intent and displays it and its comments.
@@ -36,13 +33,13 @@ public class BlogPostReadActivity extends AppCompatActivity {
 
         final List<String> post = getIntent().getStringArrayListExtra("postData");
 
-
         WebView content = (WebView) findViewById(R.id.content);
 
-        setTitle(post.get(HEADING_KEY));
+        setTitle(post.get(TITLE_KEY));
         content.loadData(post.get(CONTENT_KEY), "text/html; charset=utf-8", "UTF-8");
-
         Button viewComments = (Button) findViewById(R.id.view_comments);
+
+        // when user clicks on "View comments" button, open up CommentsListActivity to display comments for this post
         viewComments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
