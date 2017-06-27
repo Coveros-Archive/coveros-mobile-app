@@ -80,6 +80,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 
 }
 
@@ -102,6 +105,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     // for testing error message
     testCompile 'org.mockito:mockito-core:2.1.0'
+
 }
 
 //Defined reports generated

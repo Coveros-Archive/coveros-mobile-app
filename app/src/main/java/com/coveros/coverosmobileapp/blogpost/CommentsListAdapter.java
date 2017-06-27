@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,16 +54,21 @@ class CommentsListAdapter extends ArrayAdapter<Comment> {
         }
 
         Comment comment = data.get(position);
-        holder.commentName.setText(comment.getAuthor());
-        holder.commentDate.setText(comment.getDate());
-        holder.commentContent.setText(Html.fromHtml(comment.getContent()));
+        holder.getCommentName().setText(comment.getAuthor());
+        holder.getCommentDate().setText(comment.getDate());
+        holder.getCommentContent().setText(Html.fromHtml(comment.getContent()));
 
         return row;
     }
 
-    private static class CommentHolder {
+    static class CommentHolder {
         TextView commentName;
         TextView commentDate;
         TextView commentContent;
+
+        TextView getCommentName() { return commentName; }
+        TextView getCommentDate() { return commentDate; }
+        TextView getCommentContent() { return commentContent; }
+
     }
 }

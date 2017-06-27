@@ -2,7 +2,6 @@ package com.coveros.coverosmobileapp.blogpost;
 
 import android.util.Log;
 
-import com.android.volley.Response;
 import com.google.gson.JsonObject;
 import org.apache.commons.text.StringEscapeUtils;
 import java.text.ParseException;

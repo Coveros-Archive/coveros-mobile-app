@@ -5,12 +5,11 @@ import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.text.ParseException;
 
 import static junit.framework.Assert.assertEquals;
 
 /**
- * Created by maria on 6/27/2017.
+ * @author Maria Kim
  */
 
 public class CommentTest {
