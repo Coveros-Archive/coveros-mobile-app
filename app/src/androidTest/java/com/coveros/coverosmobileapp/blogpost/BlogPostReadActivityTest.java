@@ -1,4 +1,4 @@
-package com.coveros.coverosmobileapp.post;
+package com.coveros.coverosmobileapp.blogpost;
 
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
@@ -14,14 +14,14 @@ import java.util.ArrayList;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
-public class PostReadActivityTest {
+public class BlogPostReadActivityTest {
 
     private static final String HEADING = "The Ugly Barnacle";
     private static final String SUBHEADING = "Marie Kin - July 4 2005";
     private static final String CONTENT = "Once upon a time there was an ugly barnacle. He was so ugly that everyone died. The end.";
 
     @Rule
-    public ActivityTestRule<PostReadActivity> postReadActivityRule = new ActivityTestRule<PostReadActivity>(PostReadActivity.class) {
+    public ActivityTestRule<BlogPostReadActivity> postReadActivityRule = new ActivityTestRule<BlogPostReadActivity>(BlogPostReadActivity.class) {
         @Override
         public Intent getActivityIntent() {
             Intent intent = new Intent();
@@ -37,9 +37,9 @@ public class PostReadActivityTest {
     @Test
     public void onCreateWithData() {
         assertEquals("The correct heading should be set", HEADING,
-                ((TextView) postReadActivityRule.getActivity().findViewById(R.id.heading)).getText());
+                ((TextView) postReadActivityRule.getActivity().findViewById(R.id.title)).getText());
         assertEquals("The correct subheading should be set", SUBHEADING,
-                ((TextView) postReadActivityRule.getActivity().findViewById(R.id.subheading)).getText());
+                ((TextView) postReadActivityRule.getActivity().findViewById(R.id.author_date)).getText());
         assertTrue("The content should be displayed",
                 postReadActivityRule.getActivity().findViewById(R.id.content).isShown());
     }

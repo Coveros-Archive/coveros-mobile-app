@@ -1,4 +1,4 @@
-package com.coveros.coverosmobileapp.post;
+package com.coveros.coverosmobileapp.blogpost;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,13 +18,13 @@ import java.util.List;
  * Custom adapter to handle multi-line items in the postListView.
  * @author Maria Kim
  */
-class PostListAdapter extends ArrayAdapter<Post> {
+class BlogPostsListAdapter extends ArrayAdapter<BlogPost> {
 
     private final Context context;
     private final int layoutResourceId;
-    private final List<Post> data;
+    private final List<BlogPost> data;
 
-    PostListAdapter(Context context, int layoutResourceId, List<Post> data) {
+    BlogPostsListAdapter(Context context, int layoutResourceId, List<BlogPost> data) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
@@ -53,9 +53,9 @@ class PostListAdapter extends ArrayAdapter<Post> {
             holder = (PostViewHolder) row.getTag();
         }
 
-        Post post = data.get(position);
-        holder.heading.setText(post.getHeading());
-        holder.subheading.setText(post.getSubheading());
+        BlogPost blogPost = data.get(position);
+        holder.heading.setText(blogPost.getTitle());
+        holder.subheading.setText(blogPost.getAuthorDate());
 
         return row;
     }

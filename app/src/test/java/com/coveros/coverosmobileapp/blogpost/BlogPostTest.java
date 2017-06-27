@@ -1,4 +1,4 @@
-package com.coveros.coverosmobileapp.post;
+package com.coveros.coverosmobileapp.blogpost;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -11,31 +11,31 @@ import static junit.framework.Assert.assertEquals;
 /**
  * @author Maria Kim
  */
-public class PostTest {
+public class BlogPostTest {
 
-    private Post post = new Post("&#8220;Post", "1996-02-27T00:00:00", "Ryan Kenney", 1234, "content&#8212;content");
+    private BlogPost blogPost = new BlogPost(1234, "Ryan Kenney", "1996-02-27T00:00:00", "content&#8212;content", "&#8220;BlogPost");
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void formatDate_withValidInput() throws ParseException {
-        assertEquals("Feb 27, 1996", post.formatDate("1996-02-27T00:00:00"));
+        assertEquals("Feb 27, 1996", blogPost.formatDate("1996-02-27T00:00:00"));
     }
 
     @Test(expected = ParseException.class)
     public void formatDate_withInvalidInput() throws ParseException {
-        post.formatDate("02/27/96");
+        blogPost.formatDate("02/27/96");
     }
 
     @Test
     public void unescapeTitle_withUnicodeSymbol() {
-        assertEquals("\u201CPost", post.getTitle());
+        assertEquals("\u201CPost", blogPost.getTitle());
     }
 
     @Test
     public void unescapeContent_withUnicodeSymbol() {
-        assertEquals("content\u2014content", post.getContent());
+        assertEquals("content\u2014content", blogPost.getContent());
     }
 
 

@@ -1,6 +1,5 @@
-package com.coveros.coverosmobileapp.post;
+package com.coveros.coverosmobileapp.blogpost;
 
-import android.text.Html;
 import android.util.Log;
 
 import org.apache.commons.text.StringEscapeUtils;
@@ -20,7 +19,7 @@ public class Comment {
     public Comment(String author, String date, String content) {
         this.author = StringEscapeUtils.unescapeHtml4(author);
         try {
-            this.date = Post.formatDate(date);
+            this.date = BlogPost.formatDate(date);
         } catch(ParseException e) {
             Log.e("Parse exception", e.toString());
 

@@ -1,4 +1,4 @@
-package com.coveros.coverosmobileapp.post;
+package com.coveros.coverosmobileapp.blogpost;
 
 import android.app.ListActivity;
 import android.content.DialogInterface;
@@ -28,7 +28,7 @@ import java.util.List;
  * @author Maria Kim
  */
 
-public class CommentListActivity extends ListActivity {
+public class CommentsListActivity extends ListActivity {
 
     private AlertDialog errorMessage;
     private RequestQueue rQueue;
@@ -58,7 +58,7 @@ public class CommentListActivity extends ListActivity {
         final String postId = getIntent().getExtras().getString("postId");
 
         commentListView = getListView();
-        TextView textView = new TextView(CommentListActivity.this);
+        TextView textView = new TextView(CommentsListActivity.this);
         textView.setText("Comments");
         textView.setTextSize(20);
         textView.setPadding(0,0,0,30);
@@ -69,7 +69,7 @@ public class CommentListActivity extends ListActivity {
         final String COMMENTS_URL = "http://www.dev.secureci.com/wp-json/wp/v2/comments?post=6600";  // hard coding for development
 
         // constructing errorMessage dialog for activity
-        errorMessage = new AlertDialog.Builder(CommentListActivity.this).create();
+        errorMessage = new AlertDialog.Builder(CommentsListActivity.this).create();
         errorMessage.setTitle("Error");
         errorMessage.setMessage("An error occurred.");
         errorMessage.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay",
@@ -84,7 +84,7 @@ public class CommentListActivity extends ListActivity {
         Thread commentRequest = new Thread() {
             @Override
             public void run() {
-                rQueue = Volley.newRequestQueue(CommentListActivity.this);
+                rQueue = Volley.newRequestQueue(CommentsListActivity.this);
                 retrieveComments(new PostReadCallback<Comment>() {
                     @Override
                     public void onSuccess(List<Comment> newComments) {
@@ -96,7 +96,7 @@ public class CommentListActivity extends ListActivity {
                         newComments.add(new Comment("Maria", "2017-06-06T10:23:18", "<p>Awesome post! Way better than anything Ryan could write.</p>"));
                         newComments.add(new Comment("Ethan", "2017-06-06T10:23:18", "<p>Why aren't the lights on?</p>"));
                         newComments.add(new Comment("Sadie", "2017-06-06T10:23:18", "<p>I don't know, felt like it DRONEd on...</p>"));
-                        CommentAdapter commentsAdapter = new CommentAdapter(CommentListActivity.this, R.layout.comment_list_text, newComments);
+                        CommentsListAdapter commentsAdapter = new CommentsListAdapter(CommentsListActivity.this, R.layout.comment_list_text, newComments);
                         commentListView.setAdapter(commentsAdapter);
                         Log.d("NOTICE", "PAST SETTING ADAPTER");
                         Log.d("COMMENTS", "" +  commentListView.isShown());
@@ -109,7 +109,7 @@ public class CommentListActivity extends ListActivity {
     }
 
     /**
-     * Passes List of Comments for the Post from Wordpress to callback.
+     * Passes List of Comments for the BlogPost from Wordpress to callback.
      * @param postReadCallback A callback function to be executed after the list of authors has been retrieved
      */
     protected void retrieveComments(final PostReadCallback<Comment> postReadCallback, String COMMENTS_URL) {

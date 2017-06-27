@@ -1,4 +1,4 @@
-package com.coveros.coverosmobileapp.post;
+package com.coveros.coverosmobileapp.blogpost;
 
 import android.app.Activity;
 import android.content.Context;
@@ -19,13 +19,13 @@ import java.util.List;
  * @author Maria Kim
  */
 
-class CommentAdapter extends ArrayAdapter<Comment> {
+class CommentsListAdapter extends ArrayAdapter<Comment> {
 
     private final Context context;
     private final int layoutResourceId;
     private final List<Comment> data;
 
-    CommentAdapter(Context context, int layoutResourceId, List<Comment> data) {
+    CommentsListAdapter(Context context, int layoutResourceId, List<Comment> data) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;

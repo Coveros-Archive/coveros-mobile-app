@@ -1,4 +1,4 @@
-package com.coveros.coverosmobileapp.post;
+package com.coveros.coverosmobileapp.blogpost;
 
 import android.app.ListActivity;
 import android.content.DialogInterface;
@@ -38,14 +38,14 @@ import java.util.Locale;
  * @author Maria Kim
  * Creates ListView that displays list of titles of blog post_list.
  */
-public class PostListActivity extends ListActivity {
+public class BlogPostsListActivity extends ListActivity {
 
-    private List<Post> posts = new ArrayList<>();
-    private SparseArray<String> authors = new SparseArray<>();
+    private List<BlogPost> blogPosts = new ArrayList<>();
+    private SparseArray<String> authors = new SparseArray<>();  // to aggregate the ids and names of the authors of displayed blog posts
     private RequestQueue rQueue;
 
     private ListView postListView;
-    private PostListAdapter postsAdapter;
+    private BlogPostsListAdapter postsAdapter;
 
     private int currentListSize;
 
@@ -57,7 +57,7 @@ public class PostListActivity extends ListActivity {
     private static final int NUM_OF_AUTHORS = 100;  // number of users that will be returned by the REST call... so if someday Coveros has over 100 employees, this needs to be changed
     private static final String AUTHORS_URL = "https://www.dev.secureci.com/wp-json/wp/v2/users?orderby=id&per_page=" + NUM_OF_AUTHORS;
 
-    private static final String POSTS_URL = "https://www.dev.secureci.com/wp-json/wp/v2/posts?per_page=" + POSTS_PER_PAGE + "&order=desc&orderby=date&fields=id,title,date,author&offset=%d";
+    private static final String POSTS_URL = "https://www.dev.secureci.com/wp-json/wp/v2/blogPosts?per_page=" + POSTS_PER_PAGE + "&order=desc&orderby=date&fields=id,title,date,author&offset=%d";
 
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
@@ -79,14 +79,14 @@ public class PostListActivity extends ListActivity {
         setContentView(R.layout.post_list);
 
         postListView = getListView();
-        TextView textView = new TextView(PostListActivity.this);
-        textView.setText("Blog posts");
+        TextView textView = new TextView(BlogPostsListActivity.this);
+        textView.setText("Blog blogPosts");
         textView.setTextSize(20);
         textView.setPadding(0,0,0,30);
 
         postListView.addHeaderView(textView);
         // constructing errorMessage dialog for activity
-        errorMessage = new AlertDialog.Builder(PostListActivity.this).create();
+        errorMessage = new AlertDialog.Builder(BlogPostsListActivity.this).create();
         errorMessage.setTitle("Error");
         errorMessage.setMessage("An error occurred.");
         errorMessage.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay",
@@ -102,15 +102,15 @@ public class PostListActivity extends ListActivity {
         Thread requests = new Thread() {
             @Override
             public void run() {
-                rQueue = Volley.newRequestQueue(PostListActivity.this);
+                rQueue = Volley.newRequestQueue(BlogPostsListActivity.this);
                 retrieveAuthors(new PostListCallback<String>() {
                     @Override
                     public void onSuccess(List<String> newAuthors) {
-                        retrievePosts(new PostListCallback<Post>() {
+                        retrieveBlogPosts(new PostListCallback<BlogPost>() {
                             @Override
-                            public void onSuccess(List<Post> newPosts) {
-                                posts.addAll(newPosts);
-                                postsAdapter = new PostListAdapter(PostListActivity.this, R.layout.post_list_text, posts);
+                            public void onSuccess(List<BlogPost> newPosts) {
+                                blogPosts.addAll(newPosts);
+                                postsAdapter = new BlogPostsListAdapter(BlogPostsListActivity.this, R.layout.post_list_text, blogPosts);
                                 postListView.setAdapter(postsAdapter);
                                 currentListSize = postListView.getAdapter().getCount();
                                 setScrollListener();
@@ -123,19 +123,18 @@ public class PostListActivity extends ListActivity {
         };
         requests.start();
 
-        // when a post is selected, feeds its associated data into a PostReadActivity activity
+        // when a post is selected, feeds its associated data into a BlogPostReadActivity activity
         postListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Post post = posts.get(position - 1);  // -1 because the TextView offsets the posts by one for some reason
-                ArrayList<String> postData = new ArrayList<>();
-                postData.add(post.getHeading());
-                postData.add(post.getSubheading());
-                postData.add(post.getContent());
-                postData.add(String.valueOf(position));
-                postData.add(String.valueOf(post.getId()));
-                Intent intent = new Intent(getApplicationContext(), PostReadActivity.class);
-                intent.putStringArrayListExtra("postData", postData);
+                BlogPost blogPost = blogPosts.get(position - 1);  // -1 because the TextView offsets the blogPosts by one for some reason
+                ArrayList<String> blogPostData = new ArrayList<>();
+                blogPostData.add(blogPost.getTitle());
+                blogPostData.add(blogPost.getAuthorDate());
+                blogPostData.add(blogPost.getContent());
+                blogPostData.add(String.valueOf(blogPost.getId()));
+                Intent intent = new Intent(getApplicationContext(), BlogPostReadActivity.class);
+                intent.putStringArrayListExtra("postData", blogPostData);
                 startActivity(intent);
             }
         });
@@ -163,33 +162,28 @@ public class PostListActivity extends ListActivity {
 
     /**
      * Populates List of Posts.
-     * @param postListCallback A callback function to be executed after the list of posts has been retrieved
+     * @param postListCallback A callback function to be executed after the list of blogPosts has been retrieved
      */
-    protected void retrievePosts(final PostListCallback<Post> postListCallback) {
-        StringRequest postsRequest = new StringRequest(Request.Method.GET, String.format(Locale.US, POSTS_URL, postsOffset), new Response.Listener<String>() {
+    protected void retrieveBlogPosts(final PostListCallback<BlogPost> postListCallback) {
+        StringRequest blogPostsRequest = new StringRequest(Request.Method.GET, String.format(Locale.US, POSTS_URL, postsOffset), new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                JsonArray postsJson = new JsonParser().parse(response).getAsJsonArray();
-                List<Post> newPosts = new ArrayList<>();
-                for (JsonElement post : postsJson) {
-                    JsonObject postJson = (JsonObject) post;
-                    String title = postJson.get("title").getAsJsonObject().get("rendered").getAsString();
-                    String date = postJson.get("date").getAsString();
-                    int authorId = postJson.get("author").getAsInt();
-                    int id = postJson.get("id").getAsInt();
-                    String content = postJson.get("content").getAsJsonObject().get("rendered").getAsString();
-                    newPosts.add(new Post(title, date, authors.get(authorId), id, content));
+                JsonArray blogPostsJson = new JsonParser().parse(response).getAsJsonArray();
+                List<BlogPost> newBlogPosts = new ArrayList<>();
+                for (JsonElement blogPost : blogPostsJson) {
+                    JsonObject blogPostJson = (JsonObject) blogPost;
+                    newBlogPosts.add(new BlogPost(blogPostJson, authors));
                 }
-                postListCallback.onSuccess(newPosts);
+                postListCallback.onSuccess(newBlogPosts);
                 postsOffset = postsOffset + POSTS_PER_PAGE;
             }
         }, errorListener);
 
-        rQueue.add(postsRequest);
+        rQueue.add(blogPostsRequest);
     }
 
     /**
-     * Sets the scroll listener for the list view. When the user scrolls to the bottom, calls method to load more posts by the specified increment (POSTS_PER_PAGE)
+     * Sets the scroll listener for the list view. When the user scrolls to the bottom, calls method to load more blogPosts by the specified increment (POSTS_PER_PAGE)
      */
     private void setScrollListener() {
         postListView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -208,7 +202,7 @@ public class PostListActivity extends ListActivity {
                             firstScroll = false;
                         }
                     } else {
-                        // ensures new posts are loaded only once per time the bottom is reached (i.e. if the user continuously scrolls to the bottom, more than "POSTS_PER_PAGE" posts will not be loaded
+                        // ensures new blogPosts are loaded only once per time the bottom is reached (i.e. if the user continuously scrolls to the bottom, more than "POSTS_PER_PAGE" blogPosts will not be loaded
                         if (postListView.getAdapter().getCount() == currentListSize + POSTS_PER_PAGE) {
                             if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount != 0) {
                                 addPosts();
@@ -222,15 +216,15 @@ public class PostListActivity extends ListActivity {
     }
 
     /**
-     * Adds posts to the list view. Called when user scrolls to the bottom of the listview.
+     * Adds blogPosts to the list view. Called when user scrolls to the bottom of the listview.
      */
     protected void addPosts() {
         Thread addPostRequest = new Thread() {
             @Override
             public void run() {
-                retrievePosts(new PostListCallback<Post>() {
+                retrieveBlogPosts(new PostListCallback<BlogPost>() {
                     @Override
-                    public void onSuccess (List <Post> newPosts) {
+                    public void onSuccess (List <BlogPost> newPosts) {
                         postsAdapter.addAll(newPosts);
                         postsAdapter.notifyDataSetChanged();
                     }
@@ -240,11 +234,11 @@ public class PostListActivity extends ListActivity {
         addPostRequest.start();
     }
 
-    public AlertDialog getErrorMessage() {
-        return errorMessage;
+    Response.ErrorListener getErrorListener() {
+        return errorListener;
     }
-
-    public ListView getPostListView() {
+    AlertDialog getErrorMessage() { return errorMessage; }
+    ListView getPostListView() {
         return postListView;
     }
 
