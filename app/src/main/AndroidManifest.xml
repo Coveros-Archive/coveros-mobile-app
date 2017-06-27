@@ -3,12 +3,10 @@
     package="com.coveros.coverosmobileapp">
 
     <!-- Get Permission for main activity to use the internet and load web pages -->
-    <uses-permission
-        android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <!-- Check if the device has a network connection -->
-    <uses-permission
-        android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <!-- Collecting Metadata -->
     <meta-data
@@ -22,7 +20,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".website.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,11 +28,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PostReadActivity"
+            android:name=".post.PostReadActivity"
             android:label="@string/app_name">
         </activity>
         <activity
-            android:name=".PostListActivity"
+            android:name=".post.PostListActivity"
             android:label="CoverosMobileApp"
             android:exported="true">
         </activity>
@@ -44,8 +42,4 @@
             android:exported="true">
         </activity>
     </application>
-
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
 </manifest>
