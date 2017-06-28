@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,12 +43,14 @@ class CommentsListAdapter extends ArrayAdapter<Comment> {
         CommentHolder holder;
 
         if (row == null) {
+            Log.d("ROW IS NULL", "SETTING HOLDER TEXT VIEWS NOW");
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
             holder = new CommentHolder();
             holder.commentName = (TextView) row.findViewById(R.id.comment_name);
             holder.commentDate = (TextView) row.findViewById(R.id.comment_date);
             holder.commentContent = (TextView) row.findViewById(R.id.comment_content);
+
             row.setTag(holder);
         } else {
             holder = (CommentHolder) row.getTag();

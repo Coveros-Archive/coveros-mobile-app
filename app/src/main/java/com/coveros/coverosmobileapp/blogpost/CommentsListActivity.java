@@ -25,7 +25,7 @@ import java.util.List;
 public class CommentsListActivity extends BlogListActivity {
 
     private RequestQueue rQueue;
-    private ListView commentListView;
+    private ListView commentsListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +33,8 @@ public class CommentsListActivity extends BlogListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.comment_list);
 
-        commentListView = getListView();
-        commentListView.addHeaderView(createTextViewLabel(CommentsListActivity.this, "Comments"));  // setting label above comments list
+        commentsListView = getListView();
+        commentsListView.addHeaderView(createTextViewLabel(CommentsListActivity.this, "Comments"));  // setting label above comments list
 
         errorListener = createErrorListener(CommentsListActivity.this);
 //        final String COMMENTS_URL = "http://www.dev.secureci.com/wp-json/wp/v2/comments?post=" + getIntent().getExtras().getString("postId");
@@ -56,7 +56,7 @@ public class CommentsListActivity extends BlogListActivity {
                         newComments.add(new Comment("Ethan", "2017-06-06T10:23:18", "<p>Why aren't the lights on?</p>"));
                         newComments.add(new Comment("Sadie", "2017-06-06T10:23:18", "<p>I don't know, felt like it DRONEd on...</p>"));
                         CommentsListAdapter commentsAdapter = new CommentsListAdapter(CommentsListActivity.this, R.layout.comment_list_text, newComments);
-                        commentListView.setAdapter(commentsAdapter);
+                        commentsListView.setAdapter(commentsAdapter);
                     }
                 }, COMMENTS_URL);
             }
@@ -83,6 +83,7 @@ public class CommentsListActivity extends BlogListActivity {
         rQueue.add(commentsRequest);
     }
 
+    ListView getCommentsListView() { return commentsListView; }
     /**
      * Used to ensure StringRequests are completed before their data are used.
      */

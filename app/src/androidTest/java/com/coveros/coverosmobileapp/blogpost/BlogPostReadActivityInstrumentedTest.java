@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
-public class BlogPostReadActivityTest {
+public class BlogPostReadActivityInstrumentedTest {
 
     private static final String HEADING = "The Ugly Barnacle";
     private static final String SUBHEADING = "Marie Kin - July 4 2005";
