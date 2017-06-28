@@ -3,6 +3,7 @@ package com.coveros.coverosmobileapp.blogpost;
 
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
 import android.text.Html;
 import android.view.View;
 import android.widget.TextView;
@@ -12,6 +13,7 @@ import com.coveros.coverosmobileapp.R;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ import static junit.framework.Assert.assertNotNull;
  * @author Maria Kim
  */
 
+@RunWith(AndroidJUnit4.class)
 public class CommentsListAdapterInstrumentedTest {
 
     private CommentsListAdapter commentsListAdapter;
@@ -37,7 +40,6 @@ public class CommentsListAdapterInstrumentedTest {
         @Override
         public Intent getActivityIntent() {
             Intent intent = new Intent();
-            ArrayList<String> postData = new ArrayList<>();
             intent.putExtra("postId", "" + POST_ID);
             return intent;
         }
