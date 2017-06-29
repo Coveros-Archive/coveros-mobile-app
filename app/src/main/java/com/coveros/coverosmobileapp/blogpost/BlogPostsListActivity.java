@@ -49,8 +49,8 @@ public class BlogPostsListActivity extends BlogListActivity {
     private static final String POSTS_URL = "https://www.dev.secureci.com/wp-json/wp/v2/posts?per_page=" + POSTS_PER_PAGE + "&order=desc&orderby=date&fields=id,title,date,author&offset=%d";
 
     @Override
-    protected void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.post_list);
 
         postListView = getListView();

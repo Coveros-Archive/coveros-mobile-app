@@ -38,9 +38,7 @@ public class CommentsListActivity extends BlogListActivity {
         commentsListView.addHeaderView(createTextViewLabel(CommentsListActivity.this, "Comments"));  // setting label above comments list
 
         errorListener = createErrorListener(CommentsListActivity.this);
-//        final String commentsUrl = "http://www.dev.secureci.com/wp-json/wp/v2/comments?post=" + getIntent().getExtras().getString("postId");
-        final String commentsUrl = "http://www.dev.secureci.com/wp-json/wp/v2/comments?post=6600";  // hard coding for development
-
+        final String commentsUrl = "http://www.dev.secureci.com/wp-json/wp/v2/comments?post=" + getIntent().getExtras().getString("postId");
 
         Thread commentRequest = new Thread() {
             @Override
@@ -50,7 +48,7 @@ public class CommentsListActivity extends BlogListActivity {
                     @Override
                     public void onSuccess(List<Comment> newComments) {
                         if (newComments.isEmpty()) {
-                            newComments.add(new Comment("", "", "No comments to display."));
+                            newComments.add(new Comment("", "", "<p>No comments to display.</p>"));
                         }
                         CommentsListAdapter commentsAdapter = new CommentsListAdapter(CommentsListActivity.this, R.layout.comment_list_text, newComments);
                         commentsListView.setAdapter(commentsAdapter);
