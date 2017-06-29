@@ -174,8 +174,6 @@ public class BlogPostsListActivity extends BlogListActivity {
         }
     }
 
-    ;
-
     class PostListOnScrollListener implements AbsListView.OnScrollListener {
         private boolean firstScroll = true;  // first time scrolling to bottom
         private boolean isScrolledToBottom;  // ListView is scrolled to bottom
