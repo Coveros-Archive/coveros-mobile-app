@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">CoverosMobileApp</string>
+    <string name="comments_label">Comments</string>
+    <string name="error_message_title">Error</string>
+    <string name="error_message_message">An error occurred.</string>
+    <string name="error_message_dismiss_button">Okay</string>
 </resources>

@@ -27,13 +27,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".blogpost.BlogListActivity"
+            android:label="@string/app_name"
+            android:exported="true" >
+        </activity>
+
         <activity
-            android:name=".post.PostReadActivity"
-            android:label="@string/app_name">
+            android:name=".blogpost.BlogPostReadActivity"
+            android:label="@string/app_name"
+            android:exported="true" >
         </activity>
         <activity
-            android:name=".post.PostListActivity"
-            android:label="CoverosMobileApp"
+            android:name=".blogpost.BlogPostsListActivity"
+            android:label="@string/app_name"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".blogpost.CommentsListActivity"
+            android:label="@string/app_name"
             android:exported="true">
         </activity>
     </application>
