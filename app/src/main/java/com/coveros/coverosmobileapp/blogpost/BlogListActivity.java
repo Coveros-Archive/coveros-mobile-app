@@ -3,6 +3,7 @@ package com.coveros.coverosmobileapp.blogpost;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.TextView;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.coveros.coverosmobileapp.R;
 
 /**
  * @author Maria Kim
@@ -19,6 +21,9 @@ public class BlogListActivity extends ListActivity {
 
     AlertDialog errorMessage;
     Response.ErrorListener errorListener;
+
+    private static final int textViewTextSize = 20;
+    private static final int textViewPaddingBottom = 30;
 
     Response.ErrorListener createErrorListener(final Context context) {
         return new Response.ErrorListener() {
@@ -39,9 +44,9 @@ public class BlogListActivity extends ListActivity {
 
     AlertDialog createErrorMessage(Context context){
         AlertDialog errorMessage = new AlertDialog.Builder(context).create();
-        errorMessage.setTitle("Error");
-        errorMessage.setMessage("An error occurred.");
-        errorMessage.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay",
+        errorMessage.setTitle(context.getString(R.string.error_message_title));
+        errorMessage.setMessage(context.getString(R.string.error_message_message));
+        errorMessage.setButton(AlertDialog.BUTTON_NEUTRAL, context.getString(R.string.error_message_dismiss_button),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -55,9 +60,12 @@ public class BlogListActivity extends ListActivity {
     TextView createTextViewLabel(Context context, String label) {
         TextView textViewLabel = new TextView(context);
         textViewLabel.setText(label);
-        textViewLabel.setTextSize(20);
-        textViewLabel.setPadding(0,0,0,30);
+        textViewLabel.setTextSize(textViewTextSize);
+        textViewLabel.setPadding(0,0,0,textViewPaddingBottom);
         return textViewLabel;
     }
+
+    static int getTextViewTextSize() { return textViewTextSize; }
+    static int getTextViewPaddingBottom() { return textViewPaddingBottom; }
 
 }
