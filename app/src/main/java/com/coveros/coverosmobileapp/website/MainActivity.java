@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.coveros.coverosmobileapp.R;
 
+@SuppressWarnings("squid:MaximumInheritanceDepth")
 public class MainActivity extends AppCompatActivity {
     //MainActivity
     private String webName;
