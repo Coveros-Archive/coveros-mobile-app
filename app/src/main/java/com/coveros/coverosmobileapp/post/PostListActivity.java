@@ -5,13 +5,17 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import android.content.Intent;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -24,6 +28,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import com.coveros.coverosmobileapp.R;
+import com.coveros.coverosmobileapp.website.MainActivity;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -43,6 +48,11 @@ public class PostListActivity extends ListActivity {
     private List<Post> posts = new ArrayList<>();
     private SparseArray<String> authors = new SparseArray<>();
     private RequestQueue rQueue;
+
+    private String[] menuTitles = new String[]{"Website","Blog","Bookmarks"};
+    private DrawerLayout menu;
+    private ListView drawerList;
+    private LinearLayout postList;
 
     private ListView postListView;
     private PostListAdapter postsAdapter;
@@ -77,8 +87,22 @@ public class PostListActivity extends ListActivity {
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.post_list);
-
         postListView = getListView();
+
+        postList = (LinearLayout) findViewById(R.id.postlist);
+        menu = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerList = (ListView)findViewById(R.id.left_drawer);
+        drawerList.setAdapter(new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1 , menuTitles));
+        drawerList.setOnItemClickListener(new DrawerItemClickListener());
+        menu.addDrawerListener(new DrawerLayout.SimpleDrawerListener(){
+                @Override
+                public void onDrawerSlide(View drawerView, float slideOffset){
+                    postList.setTranslationX(slideOffset * drawerView.getWidth());
+                    menu.bringChildToFront(drawerView);
+                    menu.requestLayout();
+        }}
+        );
 
         // constructing errorMessage dialog for activity
         errorMessage = new AlertDialog.Builder(PostListActivity.this).create();
@@ -254,6 +278,21 @@ public class PostListActivity extends ListActivity {
      */
     interface PostListCallback<T> {
         void onSuccess(List<T> newItem);
+    }
+    private class DrawerItemClickListener implements ListView.OnItemClickListener{
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            switch(position) {
+                case 0:
+                    Intent a = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(a);
+                    break;
+
+                case 1:
+                    Intent b = new Intent(getApplicationContext(), PostListActivity.class);
+                    startActivity(b);
+                    break;
+            }
+        }
     }
 }
 
