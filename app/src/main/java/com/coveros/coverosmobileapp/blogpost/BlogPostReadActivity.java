@@ -13,6 +13,7 @@ import java.util.List;
 
 /**
  * Creates and displays a single blog post when it is selected from the list of blog post_list.
+ *
  * @author Maria Kim
  */
 public class BlogPostReadActivity extends AppCompatActivity {
@@ -23,6 +24,7 @@ public class BlogPostReadActivity extends AppCompatActivity {
 
     /**
      * Grabs post data from Intent and displays it and its comments.
+     *
      * @param savedInstanceState The saved instance state
      */
     @Override

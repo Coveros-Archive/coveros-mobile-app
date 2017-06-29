@@ -27,7 +27,7 @@ import java.util.Locale;
 
 /**
  * @author Maria Kim
- * Creates ListView that displays list of titles of blog post_list.
+ *         Creates ListView that displays list of titles of blog post_list.
  */
 public class BlogPostsListActivity extends BlogListActivity {
 
@@ -80,6 +80,7 @@ public class BlogPostsListActivity extends BlogListActivity {
 
     /**
      * Populates List of Authors.
+     *
      * @param postListCallback A callback function to be executed after the list of authors has been retrieved
      */
     protected void retrieveAuthors(final PostListCallback<String> postListCallback) {
@@ -100,6 +101,7 @@ public class BlogPostsListActivity extends BlogListActivity {
 
     /**
      * Populates List of Posts.
+     *
      * @param postListCallback A callback function to be executed after the list of blogPosts has been retrieved
      */
     protected void retrieveBlogPosts(final PostListCallback<BlogPost> postListCallback) {
@@ -128,7 +130,7 @@ public class BlogPostsListActivity extends BlogListActivity {
             public void run() {
                 retrieveBlogPosts(new PostListCallback<BlogPost>() {
                     @Override
-                    public void onSuccess (List <BlogPost> newPosts) {
+                    public void onSuccess(List<BlogPost> newPosts) {
                         postsAdapter.addAll(newPosts);
                         postsAdapter.notifyDataSetChanged();
                     }
@@ -138,7 +140,9 @@ public class BlogPostsListActivity extends BlogListActivity {
         addPostRequest.start();
     }
 
-    Response.ErrorListener getErrorListener() { return errorListener; }
+    Response.ErrorListener getErrorListener() {
+        return errorListener;
+    }
 
     /**
      * Used to ensure StringRequests are completed before their data are used.
@@ -168,11 +172,14 @@ public class BlogPostsListActivity extends BlogListActivity {
                 }
             });
         }
-    };
+    }
 
-    class PostListOnScrollListener implements AbsListView.OnScrollListener{
+    ;
+
+    class PostListOnScrollListener implements AbsListView.OnScrollListener {
         private boolean firstScroll = true;  // first time scrolling to bottom
         private boolean isScrolledToBottom;  // ListView is scrolled to bottom
+
         @Override
         public void onScrollStateChanged(AbsListView view, int scrollState) {
             // no need to listen to the scroll while scrolling. just need the final position of the scroll (onScroll())
@@ -187,8 +194,8 @@ public class BlogPostsListActivity extends BlogListActivity {
                     addPosts();
                     firstScroll = false;
                 } else if (postListView.getAdapter().getCount() == currentListSize + POSTS_PER_PAGE) {
-                        addPosts();
-                        currentListSize = postListView.getAdapter().getCount();
+                    addPosts();
+                    currentListSize = postListView.getAdapter().getCount();
                 }
 
             }

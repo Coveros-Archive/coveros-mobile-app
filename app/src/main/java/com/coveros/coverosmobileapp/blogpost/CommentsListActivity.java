@@ -19,6 +19,7 @@ import java.util.List;
 
 /**
  * Displays comments for a blog post.
+ *
  * @author Maria Kim
  */
 
@@ -62,6 +63,7 @@ public class CommentsListActivity extends BlogListActivity {
 
     /**
      * Passes List of Comments for the BlogPost from Wordpress to callback.
+     *
      * @param postReadCallback A callback function to be executed after the list of authors has been retrieved
      */
     protected void retrieveComments(final PostReadCallback<Comment> postReadCallback, String commentsUrl) {
@@ -79,7 +81,10 @@ public class CommentsListActivity extends BlogListActivity {
         rQueue.add(commentsRequest);
     }
 
-    ListView getCommentsListView() { return commentsListView; }
+    ListView getCommentsListView() {
+        return commentsListView;
+    }
+
     /**
      * Used to ensure StringRequests are completed before their data are used.
      */

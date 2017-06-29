@@ -10,6 +10,7 @@ import java.text.ParseException;
 
 /**
  * Represents a comment for a blog post.
+ *
  * @author Maria Kim
  */
 
@@ -23,7 +24,8 @@ public class Comment {
         this.author = StringEscapeUtils.unescapeHtml4(commentJson.get("author_name").getAsString());
         try {
             this.date = BlogPost.formatDate(commentJson.get("date").getAsString());
-        } catch(ParseException e) {
+        } catch (ParseException e) {
+            this.date = "Unknown date";
             Log.e("Parse exception", e.toString());
 
         }
@@ -35,17 +37,24 @@ public class Comment {
         this.author = StringEscapeUtils.unescapeHtml4(author);
         try {
             this.date = BlogPost.formatDate(date);
-        } catch(ParseException e) {
+        } catch (ParseException e) {
             Log.e("Parse exception", e.toString());
 
         }
         this.content = StringEscapeUtils.unescapeHtml4(content);
     }
 
-    String getAuthor() { return author; }
-    String getDate() { return date; }
-    String getContent() { return content; }
+    String getAuthor() {
+        return author;
+    }
 
+    String getDate() {
+        return date;
+    }
+
+    String getContent() {
+        return content;
+    }
 
 
 }

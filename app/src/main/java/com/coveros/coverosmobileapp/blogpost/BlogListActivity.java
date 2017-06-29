@@ -43,7 +43,7 @@ public class BlogListActivity extends ListActivity {
         };
     }
 
-    AlertDialog createErrorMessage(Context context){
+    AlertDialog createErrorMessage(Context context) {
         AlertDialog errorMessageToCreate = new AlertDialog.Builder(context).create();
         errorMessageToCreate.setTitle(context.getString(R.string.error_message_title));
         errorMessageToCreate.setMessage(context.getString(R.string.error_message_message));
@@ -62,12 +62,20 @@ public class BlogListActivity extends ListActivity {
         TextView textViewLabel = new TextView(context);
         textViewLabel.setText(label);
         textViewLabel.setTextSize(COMPLEX_UNIT_PX, TEXT_VIEW_TEXT_SIZE);
-        textViewLabel.setPadding(0,0,0, TEXT_VIEW_PADDING_BOTTOM);
+        textViewLabel.setPadding(0, 0, 0, TEXT_VIEW_PADDING_BOTTOM);
         return textViewLabel;
     }
 
-    static float getTextViewTextSize() { return TEXT_VIEW_TEXT_SIZE; }
-    static int getTextViewPaddingBottom() { return TEXT_VIEW_PADDING_BOTTOM; }
-    AlertDialog getErrorMessage() { return errorMessage; }
+    static float getTextViewTextSize() {
+        return TEXT_VIEW_TEXT_SIZE;
+    }
+
+    static int getTextViewPaddingBottom() {
+        return TEXT_VIEW_PADDING_BOTTOM;
+    }
+
+    AlertDialog getErrorMessage() {
+        return errorMessage;
+    }
 
 }

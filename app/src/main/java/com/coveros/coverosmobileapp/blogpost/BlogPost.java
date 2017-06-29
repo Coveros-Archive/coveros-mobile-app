@@ -28,14 +28,16 @@ class BlogPost {
 
     /**
      * Create a blog BlogPost instance
+     *
      * @param blogPostJson JsonObject that contains information about BlogPost received from Wordpress
-     * @param authors    SparseArray that contains ids and names of all visible authors
+     * @param authors      SparseArray that contains ids and names of all visible authors
      */
     BlogPost(JsonObject blogPostJson, SparseArray<String> authors) {
         this.id = blogPostJson.get("id").getAsInt();
         try {
             this.date = formatDate(blogPostJson.get("date").getAsString());
         } catch (ParseException e) {
+            this.date = "Unknown date";
             Log.e("Parse exception", e.toString());
         }
         String author = StringEscapeUtils.unescapeHtml4(authors.get(blogPostJson.get("author").getAsInt()));
@@ -51,9 +53,9 @@ class BlogPost {
     /**
      * Modifies date from Wordpress to MMM dd YYYY format.
      *
-     * @param date    the date to format
-     * @return    the date in MM dd YYYY format
-     * @throws ParseException    if the internal date format cannot be parsed
+     * @param date the date to format
+     * @return the date in MM dd YYYY format
+     * @throws ParseException if the internal date format cannot be parsed
      */
     static String formatDate(String date) throws ParseException {
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH);

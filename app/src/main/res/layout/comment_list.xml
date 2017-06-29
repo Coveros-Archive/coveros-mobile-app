@@ -14,15 +14,6 @@
         tools:layout_editor_absoluteY="16dp"
         tools:layout_editor_absoluteX="0dp">
 
-    <!--<TextView-->
-        <!--android:id="@+id/comments_label"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="@string/comments_label"-->
-        <!--android:textColor="@color/dimGray"-->
-        <!--android:textSize="15dp"-->
-        <!--android:textStyle="bold" />-->
-
     <ListView
         android:layout_width="match_parent"
         android:layout_height="fill_parent"

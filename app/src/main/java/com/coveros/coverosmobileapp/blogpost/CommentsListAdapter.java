@@ -16,7 +16,9 @@ import com.coveros.coverosmobileapp.R;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Custom adapter to handle multi-line items in the commentsListView.
+/**
+ * Custom adapter to handle multi-line items in the commentsListView.
+ *
  * @author Maria Kim
  */
 
@@ -68,9 +70,17 @@ class CommentsListAdapter extends ArrayAdapter<Comment> {
         TextView commentDate;
         TextView commentContent;
 
-        TextView getCommentName() { return commentName; }
-        TextView getCommentDate() { return commentDate; }
-        TextView getCommentContent() { return commentContent; }
+        TextView getCommentName() {
+            return commentName;
+        }
+
+        TextView getCommentDate() {
+            return commentDate;
+        }
+
+        TextView getCommentContent() {
+            return commentContent;
+        }
 
     }
 }
