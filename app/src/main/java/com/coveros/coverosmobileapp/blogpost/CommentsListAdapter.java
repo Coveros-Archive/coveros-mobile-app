@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +14,9 @@ import android.widget.TextView;
 import com.coveros.coverosmobileapp.R;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-/**
+/** Custom adapter to handle multi-line items in the commentsListView.
  * @author Maria Kim
  */
 
@@ -43,7 +40,6 @@ class CommentsListAdapter extends ArrayAdapter<Comment> {
         CommentHolder holder;
 
         if (row == null) {
-            Log.d("ROW IS NULL", "SETTING HOLDER TEXT VIEWS NOW");
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
             holder = new CommentHolder();
@@ -64,6 +60,9 @@ class CommentsListAdapter extends ArrayAdapter<Comment> {
         return row;
     }
 
+    /**
+     * Construct to contain TextViews in getView()
+     */
     static class CommentHolder {
         TextView commentName;
         TextView commentDate;

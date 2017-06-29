@@ -1,7 +1,6 @@
 package com.coveros.coverosmobileapp.blogpost;
 
 import android.os.Bundle;
-
 import android.widget.ListView;
 
 import com.android.volley.Request;
@@ -19,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Displays comments for a blog post.
  * @author Maria Kim
  */
 
@@ -37,8 +37,8 @@ public class CommentsListActivity extends BlogListActivity {
         commentsListView.addHeaderView(createTextViewLabel(CommentsListActivity.this, "Comments"));  // setting label above comments list
 
         errorListener = createErrorListener(CommentsListActivity.this);
-//        final String COMMENTS_URL = "http://www.dev.secureci.com/wp-json/wp/v2/comments?post=" + getIntent().getExtras().getString("postId");
-        final String COMMENTS_URL = "http://www.dev.secureci.com/wp-json/wp/v2/comments?post=6600";  // hard coding for development
+//        final String commentsUrl = "http://www.dev.secureci.com/wp-json/wp/v2/comments?post=" + getIntent().getExtras().getString("postId");
+        final String commentsUrl = "http://www.dev.secureci.com/wp-json/wp/v2/comments?post=6600";  // hard coding for development
 
 
         Thread commentRequest = new Thread() {
@@ -48,17 +48,13 @@ public class CommentsListActivity extends BlogListActivity {
                 retrieveComments(new PostReadCallback<Comment>() {
                     @Override
                     public void onSuccess(List<Comment> newComments) {
-                        if (newComments.size() == 0) {
+                        if (newComments.isEmpty()) {
                             newComments.add(new Comment("", "", "No comments to display."));
                         }
-                        // adding example comments for development purposes
-                        newComments.add(new Comment("Maria", "2017-06-06T10:23:18", "<p>Awesome post! Way better than anything Ryan could write.</p>"));
-                        newComments.add(new Comment("Ethan", "2017-06-06T10:23:18", "<p>Why aren't the lights on?</p>"));
-                        newComments.add(new Comment("Sadie", "2017-06-06T10:23:18", "<p>I don't know, felt like it DRONEd on...</p>"));
                         CommentsListAdapter commentsAdapter = new CommentsListAdapter(CommentsListActivity.this, R.layout.comment_list_text, newComments);
                         commentsListView.setAdapter(commentsAdapter);
                     }
-                }, COMMENTS_URL);
+                }, commentsUrl);
             }
         };
         commentRequest.start();
@@ -68,8 +64,8 @@ public class CommentsListActivity extends BlogListActivity {
      * Passes List of Comments for the BlogPost from Wordpress to callback.
      * @param postReadCallback A callback function to be executed after the list of authors has been retrieved
      */
-    protected void retrieveComments(final PostReadCallback<Comment> postReadCallback, String COMMENTS_URL) {
-        StringRequest commentsRequest = new StringRequest(Request.Method.GET, COMMENTS_URL, new Response.Listener<String>() {
+    protected void retrieveComments(final PostReadCallback<Comment> postReadCallback, String commentsUrl) {
+        StringRequest commentsRequest = new StringRequest(Request.Method.GET, commentsUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 List<Comment> comments = new ArrayList<>();

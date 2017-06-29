@@ -12,8 +12,6 @@ import android.widget.TextView;
 
 import com.coveros.coverosmobileapp.R;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -24,13 +22,11 @@ class BlogPostsListAdapter extends ArrayAdapter<BlogPost> {
 
     private final Context context;
     private final int layoutResourceId;
-    private final List<BlogPost> data;
 
     BlogPostsListAdapter(Context context, int layoutResourceId, List<BlogPost> data) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
-        this.data = new ArrayList<>(data);
     }
 
     @Override
@@ -55,7 +51,7 @@ class BlogPostsListAdapter extends ArrayAdapter<BlogPost> {
             holder = (PostViewHolder) row.getTag();
         }
 
-        BlogPost blogPost = data.get(position);
+        BlogPost blogPost = getItem(position);
         holder.heading.setText(blogPost.getTitle());
         holder.subheading.setText(blogPost.getAuthorDate());
 
@@ -66,4 +62,5 @@ class BlogPostsListAdapter extends ArrayAdapter<BlogPost> {
         TextView heading;
         TextView subheading;
     }
+
 }

@@ -2,7 +2,6 @@ package com.coveros.coverosmobileapp.blogpost;
 
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
-import android.widget.TextView;
 
 import com.coveros.coverosmobileapp.R;
 
@@ -12,7 +11,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
 
 public class BlogPostReadActivityInstrumentedTest {
 
@@ -36,10 +34,6 @@ public class BlogPostReadActivityInstrumentedTest {
 
     @Test
     public void onCreateWithData() {
-        assertEquals("The correct heading should be set", HEADING,
-                ((TextView) postReadActivityRule.getActivity().findViewById(R.id.title)).getText());
-        assertEquals("The correct subheading should be set", SUBHEADING,
-                ((TextView) postReadActivityRule.getActivity().findViewById(R.id.author_date)).getText());
         assertTrue("The content should be displayed",
                 postReadActivityRule.getActivity().findViewById(R.id.content).isShown());
     }

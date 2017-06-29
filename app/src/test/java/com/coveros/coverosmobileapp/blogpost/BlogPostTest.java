@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.mockito.Mock;
 
 import java.text.ParseException;
 
@@ -61,7 +60,7 @@ public class BlogPostTest {
 
     @Test
     public void unescapeContent_withUnicodeSymbol() {
-        assertEquals("<h3>\u201CBlogPost</h3><h4>Ryan Kenney</h4><h5>Feb 03, 1911</h5>I like to make unfunny puns.\u2014", blogPost.getContent());
+        assertEquals("<h3>\u201CBlogPost</h3><h4>Ryan Kenney</h4><h5>Feb 3, 1911</h5>I like to make unfunny puns.\u2014", blogPost.getContent());
     }
 
 

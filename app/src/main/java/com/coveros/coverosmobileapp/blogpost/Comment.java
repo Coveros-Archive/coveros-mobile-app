@@ -3,10 +3,13 @@ package com.coveros.coverosmobileapp.blogpost;
 import android.util.Log;
 
 import com.google.gson.JsonObject;
+
 import org.apache.commons.text.StringEscapeUtils;
+
 import java.text.ParseException;
 
 /**
+ * Represents a comment for a blog post.
  * @author Maria Kim
  */
 

@@ -3,7 +3,6 @@ package com.coveros.coverosmobileapp.blogpost;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.TextView;
@@ -24,8 +23,8 @@ public class BlogListActivity extends ListActivity {
     AlertDialog errorMessage;
     Response.ErrorListener errorListener;
 
-    private static final float textViewTextSize = 60;
-    private static final int textViewPaddingBottom = 30;
+    private static final float TEXT_VIEW_TEXT_SIZE = 60;
+    private static final int TEXT_VIEW_PADDING_BOTTOM = 30;
 
     Response.ErrorListener createErrorListener(final Context context) {
         return new Response.ErrorListener() {
@@ -45,10 +44,10 @@ public class BlogListActivity extends ListActivity {
     }
 
     AlertDialog createErrorMessage(Context context){
-        AlertDialog errorMessage = new AlertDialog.Builder(context).create();
-        errorMessage.setTitle(context.getString(R.string.error_message_title));
-        errorMessage.setMessage(context.getString(R.string.error_message_message));
-        errorMessage.setButton(AlertDialog.BUTTON_NEUTRAL, context.getString(R.string.error_message_dismiss_button),
+        AlertDialog errorMessageToCreate = new AlertDialog.Builder(context).create();
+        errorMessageToCreate.setTitle(context.getString(R.string.error_message_title));
+        errorMessageToCreate.setMessage(context.getString(R.string.error_message_message));
+        errorMessageToCreate.setButton(AlertDialog.BUTTON_NEUTRAL, context.getString(R.string.error_message_dismiss_button),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -56,19 +55,19 @@ public class BlogListActivity extends ListActivity {
                         finish();
                     }
                 });
-        return errorMessage;
+        return errorMessageToCreate;
     }
 
     TextView createTextViewLabel(Context context, String label) {
         TextView textViewLabel = new TextView(context);
         textViewLabel.setText(label);
-        textViewLabel.setTextSize(COMPLEX_UNIT_PX, textViewTextSize);
-        textViewLabel.setPadding(0,0,0,textViewPaddingBottom);
+        textViewLabel.setTextSize(COMPLEX_UNIT_PX, TEXT_VIEW_TEXT_SIZE);
+        textViewLabel.setPadding(0,0,0, TEXT_VIEW_PADDING_BOTTOM);
         return textViewLabel;
     }
 
-    static float getTextViewTextSize() { return textViewTextSize; }
-    static int getTextViewPaddingBottom() { return textViewPaddingBottom; }
+    static float getTextViewTextSize() { return TEXT_VIEW_TEXT_SIZE; }
+    static int getTextViewPaddingBottom() { return TEXT_VIEW_PADDING_BOTTOM; }
     AlertDialog getErrorMessage() { return errorMessage; }
 
 }

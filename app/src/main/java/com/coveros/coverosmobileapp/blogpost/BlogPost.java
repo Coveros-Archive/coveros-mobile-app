@@ -24,7 +24,7 @@ class BlogPost {
     private String date;
     private String content;
     private String title;
-    private String author_date;
+    private String authorDate;
 
     /**
      * Create a blog BlogPost instance
@@ -42,7 +42,7 @@ class BlogPost {
 
         // to show in BlogPostListActivity
         this.title = StringEscapeUtils.unescapeHtml4(blogPostJson.get("title").getAsJsonObject().get("rendered").getAsString());
-        author_date = StringEscapeUtils.unescapeHtml4(author + "\n" + this.date);
+        authorDate = StringEscapeUtils.unescapeHtml4(author + "\n" + this.date);
 
         // to display in BlogPostReadActivity
         this.content = "<h3>" + this.title + "</h3><h4>" + author + "</h4><h5>" + this.date + "</h5>" + StringEscapeUtils.unescapeHtml4(blogPostJson.get("content").getAsJsonObject().get("rendered").getAsString());
@@ -71,7 +71,7 @@ class BlogPost {
     }
 
     String getAuthorDate() {
-        return author_date;
+        return authorDate;
     }
 
     String getContent() {
@@ -80,7 +80,7 @@ class BlogPost {
 
     @Override
     public String toString() {
-        return String.format("Heading: %s%nSubheading: %s", title, author_date);
+        return String.format("Heading: %s%nSubheading: %s", title, authorDate);
     }
 }
 
