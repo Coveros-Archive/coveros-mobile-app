@@ -19,10 +19,6 @@ public class BlogPostReadActivityInstrumentedTest {
     private static final String CONTENT = "<h3>The Ugly Barnacle</h3><h4>Marie Kin</h4><h5>Jul 4 2005O</h5>Once upon a time there was an ugly barnacle. He was so ugly that everyone died. The end.";
     private static final String ID = "0";
 
-    static final int TITLE_KEY = 0;
-    static final int CONTENT_KEY = 1;
-    static final int ID_KEY = 2;
-
     @Rule
     public ActivityTestRule<BlogPostReadActivity> postReadActivityRule = new ActivityTestRule<BlogPostReadActivity>(BlogPostReadActivity.class) {
         @Override
