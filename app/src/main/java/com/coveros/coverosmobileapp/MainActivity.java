@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -58,18 +59,34 @@ public class MainActivity extends AppCompatActivity {
         main.setWebViewBrowser(browser);
         //Links open in WebView with Coveros regex check
         browser.setWebViewClient(new CustomWebViewClient(){
+            @SuppressWarnings("deprecation")
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                //If blog website or blog webspage is categorically loaded (hybrid)
+                if(url.contains("coveros.com/blog")){
+                    //Load new activity
+                    Intent startBlogPost = new Intent(getApplicationContext(), PostListActivity.class);
+                    startActivity(startBlogPost);
+                }
+                if (url.contains("coveros.com")) {
+                    view.loadUrl(url);
+                } else {
+                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    view.getContext().startActivity(i);
+                }
+                return true;
+            }
+
             @Override
             public void onPageStarted(WebView view, String url, Bitmap fav){
+                if(webName.equals("https://www.coveros.com/blog/")){
+                    onBackPressed();
+                }
                 super.onPageStarted(view, url, fav);
             }
             @Override
             public void onPageFinished(WebView view, String url) {
                 setWebName(url);
-                if(url.contains("coveros.com/blog")){
-                    Intent startBlogPost = new Intent(getApplicationContext(), PostListActivity.class);
-                    startActivity(startBlogPost);
-                }
-                super.onPageFinished(view, url);
             }
         });
         if(!isOnline()){
