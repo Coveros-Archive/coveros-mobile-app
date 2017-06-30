@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.AdapterView;
@@ -17,7 +18,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.coveros.coverosmobileapp.R;
-import com.coveros.coverosmobileapp.post.PostListActivity;
+import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
+
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
 public class MainActivity extends AppCompatActivity {
@@ -184,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 case 1:
-                    Intent b = new Intent(getApplicationContext(), PostListActivity.class);
+                    Intent b = new Intent(getApplicationContext(), BlogPostsListActivity.class);
                     startActivity(b);
                     break;
             }

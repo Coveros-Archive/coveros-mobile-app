@@ -1,12 +1,17 @@
 package com.coveros.coverosmobileapp.blogpost;
 
 import android.support.test.rule.ActivityTestRule;
+import android.support.v4.widget.DrawerLayout;
+import android.view.Gravity;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
+import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.test.util.LooperTestSuite;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -16,6 +21,7 @@ import java.util.HashMap;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 
 /**
@@ -65,6 +71,33 @@ public class BlogListActivityInstrumentedTest extends LooperTestSuite {
         blogListActivity.errorListener = blogListActivity.createErrorListener(blogListActivity);
         blogListActivity.errorListener.onErrorResponse(volleyError);
         assertTrue("errorMessage should be displayed.", blogListActivity.getErrorMessage().isShowing());
+
+    }
+    @Test
+    public void slideNavigationMenuOpen(){
+        DrawerLayout menu = (DrawerLayout) mBlogListRule.getActivity().findViewById(R.id.drawer_layout);
+        menu.openDrawer(Gravity.START);
+        Assert.assertTrue(menu.isDrawerOpen(Gravity.START));
+    }
+    @Test
+    public void slideNavigationMenuClosed(){
+        DrawerLayout menu = (DrawerLayout) mBlogListRule.getActivity().findViewById(R.id.drawer_layout);
+        menu.openDrawer(Gravity.START);
+        assertFalse(menu.isDrawerOpen(Gravity.START));
+    }
+    @Test
+    public void clickWebsiteTab(){
+        ListView drawerList = (ListView) mBlogListRule.getActivity().findViewById(R.id.left_drawer);
+        TextView website = (TextView) drawerList.getItemAtPosition(0);
+        website.performClick();
+
+    }
+
+    @Test
+    public void clickBlogTab(){
+        ListView drawerList = (ListView) mBlogListRule.getActivity().findViewById(R.id.left_drawer);
+        TextView blog = (TextView) drawerList.getItemAtPosition(1);
+        blog.performClick();
 
     }
 

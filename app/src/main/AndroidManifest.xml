@@ -47,10 +47,6 @@
             android:label="@string/app_name"
             android:exported="true">
         </activity>
-        <activity
-            android:name=".DrawerLayoutActivity"
-            android:label="CoverosMobileApp"
-            android:exported="true">
-        </activity>
+       
     </application>
 </manifest>
