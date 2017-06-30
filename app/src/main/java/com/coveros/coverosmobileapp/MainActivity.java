@@ -3,6 +3,7 @@ package com.coveros.coverosmobileapp;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -64,6 +65,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 setWebName(url);
+                if(url.contains("coveros.com/blog")){
+                    Intent startBlogPost = new Intent(getApplicationContext(), PostListActivity.class);
+                    startActivity(startBlogPost);
+                }
                 super.onPageFinished(view, url);
             }
         });
