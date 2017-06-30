@@ -4,7 +4,7 @@ plugins {
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco'
 apply plugin: 'jacoco-android'
-apply plugin: 'maven-publish'
+apply plugin: 'maven'
 
 sonarqube {
     properties {
@@ -22,32 +22,37 @@ sonarqube {
     }
 }
 
-publishing {
-    repositories {
-        maven {
-            name "secureci-nexus"
-            url "https://$nexusHost/nexus/content/repositories/snapshots"
-            credentials {
-                username nexusUser
-                password nexusPass
-            }
-        }
-    }
-    publications {
-        maven(MavenPublication) {
-            groupId group
-            artifactId project.name
-            version version
-            artifact source: "$buildDir/outputs/apk/coveros-mobile-app-debug.apk", extension: 'apk'
-        }
+ext.RepoConfigurator = {
+    maven {
+        url = uri("http://$nexusHost/nexus/content/repositories/snapshots")
     }
 }
 
-/*def apk = file("$buildDir/outputs/apk/coveros-mobile-app-debug.apk")
+buildscript.repositories RepoConfigurator
+repositories RepoConfigurator
 
-artifacts {
-    archives apk
-}*/
+ext.nexus = {
+    credentials {
+        username nexusUser
+        password nexusPass
+    }
+    url nexusRepoURL
+}
+
+repositories {
+    maven(nexus)
+    jcenter()
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            snapshotRepository(url: nexusRepoURL) {
+                authentication(userName: nexusUser, password: nexusPass);
+            }
+        }
+    }
+}
 
 task aggregateUnitTestResults(type: Copy) {
     from "$buildDir/test-results/testDebugUnitTest"
