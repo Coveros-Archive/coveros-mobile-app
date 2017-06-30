@@ -1,6 +1,9 @@
 package com.coveros.coverosmobileapp.blogpost;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.android.volley.Request;
@@ -37,8 +40,21 @@ public class CommentsListActivity extends BlogListActivity {
         commentsListView = getListView();
         commentsListView.addHeaderView(createTextViewLabel(CommentsListActivity.this, getResources().getString(R.string.comments_label)));  // setting label above comments list
 
+        final String postId = getIntent().getExtras().getString("postId");
+
+        // when "Leave a Comment" button is clicked, will open comment form
+        Button openCommentForm = (Button) findViewById(R.id.leave_comment);
+        openCommentForm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), CommentFormActivity.class);
+                intent.putExtra("postId", postId);
+                startActivity(intent);
+            }
+        });
+
         errorListener = createErrorListener(CommentsListActivity.this);
-        final String commentsUrl = "http://www.dev.secureci.com/wp-json/wp/v2/comments?post=" + getIntent().getExtras().getString("postId");
+        final String commentsUrl = "http://www.dev.secureci.com/wp-json/wp/v2/comments?post=" + postId;
 
         Thread commentRequest = new Thread() {
             @Override
@@ -48,7 +64,7 @@ public class CommentsListActivity extends BlogListActivity {
                     @Override
                     public void onSuccess(List<Comment> newComments) {
                         if (newComments.isEmpty()) {
-                            newComments.add(new Comment("", "", "<p>No comments to display.</p>"));
+                            newComments.add(new Comment("", "", "<p>" + getResources().getString(R.string.no_comments_text) + "</p>"));
                         }
                         CommentsListAdapter commentsAdapter = new CommentsListAdapter(CommentsListActivity.this, R.layout.comment_list_text, newComments);
                         commentsListView.setAdapter(commentsAdapter);

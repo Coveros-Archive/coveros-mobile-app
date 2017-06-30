@@ -2,6 +2,7 @@ package com.coveros.coverosmobileapp.blogpost;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,6 +33,9 @@ public class CommentFormActivity extends AppCompatActivity {
                 String email = enterEmail.getText().toString();
                 String message = enterMessage.getText().toString();
 
+                Log.d("AUTHOR", author);
+                Log.d("EMAIL", email);
+                Log.d("MESSAGE", message);
 
             }
         });
