@@ -4,6 +4,7 @@ plugins {
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco'
 apply plugin: 'jacoco-android'
+apply plugin: 'maven'
 
 sonarqube {
     properties {
@@ -18,6 +19,29 @@ sonarqube {
         property "sonar.scm.provider", "git"
         property "sonar.jacoco.reportPath", "$buildDir/jacoco/testDebugUnitTest.exec" // path to coverage reports
         property "sonar.java.coveragePlugin", "jacoco"
+    }
+}
+
+ext.nexus = {
+    credentials {
+        username nexusUser
+        password nexusPass
+    }
+    url nexusRepoURL
+}
+
+repositories {
+    maven(nexus)
+    jcenter()
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            snapshotRepository(url: nexusRepoURL) {
+                authentication(userName: nexusUser, password: nexusPass);
+            }
+        }
     }
 }
 
@@ -80,6 +104,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 
 }
 
@@ -103,6 +130,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     // for testing error message
     testCompile 'org.mockito:mockito-core:2.1.0'
+
 }
 
 //Defined reports generated
