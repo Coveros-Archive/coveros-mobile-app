@@ -70,7 +70,7 @@ public class CommentsListAdapterInstrumentedTest {
     }
 
     @Test
-    public void getView_checkThreeTextViewsNotNull() {
+    public void getView_checkThreeTextViewsNotNullAndDataMatch() {
         View view = commentsListAdapter.getView(0, null, mCommentsListActivityRule.getActivity().getCommentsListView());
 
         TextView name = (TextView) view.findViewById(R.id.comment_name);
@@ -84,7 +84,7 @@ public class CommentsListAdapterInstrumentedTest {
 
         assertEquals("Names should match.", comment.getAuthor(), name.getText());
         assertEquals("Dates should match.", comment.getDate(), date.getText());
-        assertEquals("Content should match.", Html.fromHtml(comment.getContent()), content.getText());
+        assertEquals("Content should match.", Html.fromHtml(comment.getContent(), Html.FROM_HTML_MODE_LEGACY), content.getText());
     }
 
 

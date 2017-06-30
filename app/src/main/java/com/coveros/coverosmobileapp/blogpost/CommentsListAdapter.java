@@ -57,7 +57,7 @@ class CommentsListAdapter extends ArrayAdapter<Comment> {
         Comment comment = data.get(position);
         holder.getCommentName().setText(comment.getAuthor());
         holder.getCommentDate().setText(comment.getDate());
-        holder.getCommentContent().setText(Html.fromHtml(comment.getContent(), Html.FROM_HTML_MODE_COMPACT));
+        holder.getCommentContent().setText(Html.fromHtml(comment.getContent(), Html.FROM_HTML_MODE_LEGACY));
 
         return row;
     }
