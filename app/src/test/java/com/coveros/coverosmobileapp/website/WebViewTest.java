@@ -1,5 +1,7 @@
 package com.coveros.coverosmobileapp.website;
 
+import com.coveros.coverosmobileapp.R;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -30,4 +32,5 @@ public class WebViewTest {
         ma.setWebName(savedUrl);
         assertEquals("http://www.html5rocks.com/", ma.getWebName());
     }
+
 }

@@ -14,7 +14,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -30,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     private String[] menuTitles = new String[]{"Website","Blog","Bookmarks"};
     private DrawerLayout menu;
     private ListView drawerList;
-    private WebView postList;
 
     //Create Strings for Title, messsage, and buttons
     private static final String ALERT_TTLE = "Alert";
@@ -64,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         browser = (WebView) findViewById(R.id.activity_main_webview);
         main.setWebViewBrowser(browser);
 
-        postList = (WebView) findViewById(R.id.activity_main_webview);
+        //constructing the menu navigation drawer
         menu = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerList = (ListView)findViewById(R.id.left_drawer);
         drawerList.setAdapter(new ArrayAdapter<>(this,
@@ -73,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         menu.addDrawerListener(new DrawerLayout.SimpleDrawerListener(){
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset){
-                postList.setTranslationX(slideOffset * drawerView.getWidth());
+                browser.setTranslationX(slideOffset * drawerView.getWidth());
                 menu.bringChildToFront(drawerView);
                 menu.requestLayout();
             }}
@@ -174,6 +172,10 @@ public class MainActivity extends AppCompatActivity {
         dialog.setCanceledOnTouchOutside(false);
         return dialog;
     }
+
+    /**
+     * Made to navigate through the menu drawer by click
+     */
     private class DrawerItemClickListener implements ListView.OnItemClickListener{
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             switch(position) {
@@ -189,4 +191,5 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
 }

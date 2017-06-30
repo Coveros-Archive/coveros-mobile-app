@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import android.content.Intent;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -39,8 +40,8 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * @author Maria Kim
- * Creates ListView that displays list of titles of blog post_list.
+ * @author Maria Kim and Sadie Rynestad
+ * Creates ListView that displays list of titles of blog post_list and displays menu navigation drawer by sliding.
  */
 @SuppressWarnings("squid:MaximumInheritanceDepth")
 public class PostListActivity extends ListActivity {
@@ -89,6 +90,7 @@ public class PostListActivity extends ListActivity {
         setContentView(R.layout.post_list);
         postListView = getListView();
 
+        //constructing the menu navigation drawer
         postList = (LinearLayout) findViewById(R.id.postlist);
         menu = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerList = (ListView)findViewById(R.id.left_drawer);
@@ -279,6 +281,10 @@ public class PostListActivity extends ListActivity {
     interface PostListCallback<T> {
         void onSuccess(List<T> newItem);
     }
+
+    /**
+     * Made to navigate through the menu drawer by click
+     */
     private class DrawerItemClickListener implements ListView.OnItemClickListener{
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             switch(position) {
@@ -294,6 +300,7 @@ public class PostListActivity extends ListActivity {
             }
         }
     }
+
 }
 
 
