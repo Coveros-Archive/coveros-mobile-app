@@ -42,17 +42,6 @@ public class CommentsListActivity extends BlogListActivity {
 
         final String postId = getIntent().getExtras().getString("postId");
 
-        // when "Leave a Comment" button is clicked, will open comment form
-        Button openCommentForm = (Button) findViewById(R.id.leave_comment);
-        openCommentForm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), CommentFormActivity.class);
-                intent.putExtra("postId", postId);
-                startActivity(intent);
-            }
-        });
-
         errorListener = createErrorListener(CommentsListActivity.this);
         final String commentsUrl = "http://www.dev.secureci.com/wp-json/wp/v2/comments?post=" + postId;
 
@@ -73,6 +62,17 @@ public class CommentsListActivity extends BlogListActivity {
             }
         };
         commentRequest.start();
+
+        // when "Leave a Comment" button is clicked, will open comment form
+        Button openCommentFormButton = (Button) findViewById(R.id.leave_comment);
+        openCommentFormButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), CommentFormActivity.class);
+                intent.putExtra("postId", postId);
+                startActivity(intent);
+            }
+        });
     }
 
     /**

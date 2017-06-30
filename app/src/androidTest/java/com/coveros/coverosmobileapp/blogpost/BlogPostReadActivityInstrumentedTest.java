@@ -10,13 +10,18 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
+import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class BlogPostReadActivityInstrumentedTest {
 
-    private static final String HEADING = "The Ugly Barnacle";
-    private static final String SUBHEADING = "Marie Kin - July 4 2005";
-    private static final String CONTENT = "Once upon a time there was an ugly barnacle. He was so ugly that everyone died. The end.";
+    private static final String TITLE = "The Ugly Barnacle";
+    private static final String CONTENT = "<h3>The Ugly Barnacle</h3><h4>Marie Kin</h4><h5>Jul 4 2005O</h5>Once upon a time there was an ugly barnacle. He was so ugly that everyone died. The end.";
+    private static final String ID = "0";
+
+    static final int TITLE_KEY = 0;
+    static final int CONTENT_KEY = 1;
+    static final int ID_KEY = 2;
 
     @Rule
     public ActivityTestRule<BlogPostReadActivity> postReadActivityRule = new ActivityTestRule<BlogPostReadActivity>(BlogPostReadActivity.class) {
@@ -24,17 +29,28 @@ public class BlogPostReadActivityInstrumentedTest {
         public Intent getActivityIntent() {
             Intent intent = new Intent();
             ArrayList<String> postData = new ArrayList<>();
-            postData.add(HEADING);
-            postData.add(SUBHEADING);
+            postData.add(TITLE);
             postData.add(CONTENT);
+            postData.add(ID);
             intent.putStringArrayListExtra("postData", postData);
             return intent;
         }
     };
 
     @Test
-    public void onCreateWithData() {
-        assertTrue("The content should be displayed",
-                postReadActivityRule.getActivity().findViewById(R.id.content).isShown());
+    public void onCreate_checkTitlesMatch() {
+        assertEquals("Titles should match", TITLE, postReadActivityRule.getActivity().getTitle());
     }
+
+    @Test
+    public void onCreate_checkWebViewContentIsShown() {
+        assertTrue("Content should be displayed", postReadActivityRule.getActivity().findViewById(R.id.content).isShown());
+    }
+
+    @Test
+    public void onCreate_checkViewCommentsButtonIsShown() {
+        assertTrue("Content should be displayed", postReadActivityRule.getActivity().findViewById(R.id.view_comments).isShown());
+    }
+
+
 }

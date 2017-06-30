@@ -33,12 +33,14 @@ public class CommentFormActivity extends AppCompatActivity {
                 String email = enterEmail.getText().toString();
                 String message = enterMessage.getText().toString();
 
+                // logging for now until we make the actual request
                 Log.d("AUTHOR", author);
                 Log.d("EMAIL", email);
                 Log.d("MESSAGE", message);
 
             }
         });
+
     }
 
 }

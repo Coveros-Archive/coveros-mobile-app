@@ -3,7 +3,6 @@ package com.coveros.coverosmobileapp.blogpost;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.AbsListView;
@@ -176,7 +175,6 @@ public class BlogPostsListActivity extends BlogListActivity {
 
     class PostListOnScrollListener implements AbsListView.OnScrollListener {
         private boolean firstScroll = true;  // first time scrolling to bottom
-        private boolean isScrolledToBottom;  // ListView is scrolled to bottom
 
         @Override
         public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -185,7 +183,7 @@ public class BlogPostsListActivity extends BlogListActivity {
 
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-            isScrolledToBottom = firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount != 0;
+            boolean isScrolledToBottom = firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount != 0; // ListView is scrolled to bottom
             if (postListView.getAdapter() != null && isScrolledToBottom) {
                 // ensures new blogPosts are loaded only once per time the bottom is reached (i.e. if the user continuously scrolls to the bottom, more than "POSTS_PER_PAGE" blogPosts will not be loaded
                 if (firstScroll) {
