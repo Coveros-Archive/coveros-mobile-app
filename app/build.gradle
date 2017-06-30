@@ -22,15 +22,6 @@ sonarqube {
     }
 }
 
-ext.RepoConfigurator = {
-    maven {
-        url = uri("http://$nexusHost/nexus/content/repositories/snapshots")
-    }
-}
-
-buildscript.repositories RepoConfigurator
-repositories RepoConfigurator
-
 ext.nexus = {
     credentials {
         username nexusUser
