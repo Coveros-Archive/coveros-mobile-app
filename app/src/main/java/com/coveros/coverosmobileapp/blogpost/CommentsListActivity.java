@@ -35,7 +35,7 @@ public class CommentsListActivity extends BlogListActivity {
         setContentView(R.layout.comment_list);
 
         commentsListView = getListView();
-        commentsListView.addHeaderView(createTextViewLabel(CommentsListActivity.this, "Comments"));  // setting label above comments list
+        commentsListView.addHeaderView(createTextViewLabel(CommentsListActivity.this, getResources().getString(R.string.comments_label)));  // setting label above comments list
 
         errorListener = createErrorListener(CommentsListActivity.this);
         final String commentsUrl = "http://www.dev.secureci.com/wp-json/wp/v2/comments?post=" + getIntent().getExtras().getString("postId");

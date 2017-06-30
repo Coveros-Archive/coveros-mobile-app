@@ -54,7 +54,7 @@ public class BlogPostsListActivity extends BlogListActivity {
         setContentView(R.layout.post_list);
 
         postListView = getListView();
-        postListView.addHeaderView(createTextViewLabel(BlogPostsListActivity.this, "Blog posts"));  // settings label above blog post list
+        postListView.addHeaderView(createTextViewLabel(BlogPostsListActivity.this, getResources().getString(R.string.blogposts_label)));  // settings label above blog post list
 
         errorListener = createErrorListener(BlogPostsListActivity.this);
 
