@@ -7,10 +7,6 @@ import android.view.Gravity;
 import com.coveros.coverosmobileapp.R;
 import org.junit.Rule;
 import org.junit.Test;
-
-
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
 public class BlogPostsListActivityInstrumentedTest{
