@@ -4,10 +4,7 @@ import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
-import android.widget.ListView;
-import android.widget.TextView;
 import com.coveros.coverosmobileapp.R;
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -22,13 +19,6 @@ public class BlogPostsListActivityInstrumentedTest{
 
     @Test
     @UiThreadTest
-    public void slideNavigationMenuOpen(){
-        DrawerLayout menu = (DrawerLayout) mBlogListRule.getActivity().findViewById(R.id.drawer_layout);
-        menu.openDrawer(Gravity.START);
-        assertTrue(menu.isDrawerOpen(Gravity.START));
-    }
-    @Test
-    @UiThreadTest
     public void slideNavigationMenuClosed(){
         DrawerLayout menu = (DrawerLayout) mBlogListRule.getActivity().findViewById(R.id.drawer_layout);
         if(menu.isDrawerOpen(Gravity.START)){
@@ -36,27 +26,5 @@ public class BlogPostsListActivityInstrumentedTest{
         }
         assertFalse(menu.isDrawerOpen(Gravity.START));
     }
-    @Test
-    public void clickWebsiteTab(){
-        final ListView drawerList = (ListView) mBlogListRule.getActivity().findViewById(R.id.left_drawer);
-        getInstrumentation().runOnMainSync(new Runnable() {
-            @Override
-            public void run() {
 
-                drawerList.performItemClick(drawerList.getAdapter().getView(0, null, null),
-                        0, drawerList.getAdapter().getItemId(0));
-            }
-
-        });
-    
-
-    }
-
-    @Test
-    public void clickBlogTab(){
-        ListView drawerList = (ListView) mBlogListRule.getActivity().findViewById(R.id.left_drawer);
-        TextView blog = (TextView) drawerList.getItemAtPosition(1);
-        blog.performClick();
-
-    }
 }

@@ -91,13 +91,6 @@ public class InstrumentedWebViewTest extends LooperTestSuite {
     //linking the buttons and strings together
     @Test
     @UiThreadTest
-    public void slideNavigationMenuOpen(){
-        DrawerLayout menu = (DrawerLayout) mMainActivity.getActivity().findViewById(R.id.drawer_layout);
-        menu.openDrawer(GravityCompat.START);
-        assertTrue(menu.isDrawerOpen(GravityCompat.START));
-    }
-    @Test
-    @UiThreadTest
     public void slideNavigationMenuClosed(){
         DrawerLayout menu = (DrawerLayout) mMainActivity.getActivity().findViewById(R.id.drawer_layout);
         if(menu.isDrawerOpen(Gravity.START)){
@@ -105,22 +98,5 @@ public class InstrumentedWebViewTest extends LooperTestSuite {
         }
         assertFalse(menu.isDrawerOpen(Gravity.START));
     }
-    /**
-    @Test
-    public void clickWebsiteTab(){
-        ListView drawerList = (ListView) mMainActivity.getActivity().findViewById(R.id.left_drawer);
-        TextView website = (TextView) drawerList.getItemAtPosition(0);
-        website.performClick();
-    //want to be able to check and see if I navigated to Ethan's Activity howevever getActivity() is not what I want
 
-    }
-
-    @Test
-    public void clickBlogTab(){
-        ListView drawerList = (ListView) mMainActivity.getActivity().findViewById(R.id.left_drawer);
-        TextView blog = (TextView) drawerList.getItemAtPosition(1);
-        blog.performClick();
-
-    }
-    */
 }
