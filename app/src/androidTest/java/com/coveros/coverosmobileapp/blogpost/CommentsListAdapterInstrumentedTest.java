@@ -30,11 +30,14 @@ import static junit.framework.Assert.assertNotNull;
 @RunWith(AndroidJUnit4.class)
 public class CommentsListAdapterInstrumentedTest {
 
-    private CommentsListAdapter commentsListAdapter;
+    private static CommentsListAdapter commentsListAdapter;
     private static CommentsListActivity commentsListActivity;
+
+    private static int EXPECTED_ID = 0;
+    private static int EXPECTED_COUNT = 1;
     private static String EXPECTED_NAME = "Ryan Kenney";
     private static String EXPECTED_DATE = "Jun 27, 2017";
-    private static String EXPECTED_CONTENT = "<p>I made Sadie get the rotisserie chicken.</p>";
+    private static String EXPECTED_CONTENT = "\u201CI made Sadie get the rotisserie chicken.";
 
     @Rule
     public ActivityTestRule<CommentsListActivity> mCommentsListActivityRule = new ActivityTestRule<CommentsListActivity>(CommentsListActivity.class) {
@@ -51,7 +54,7 @@ public class CommentsListAdapterInstrumentedTest {
 
         commentsListActivity = mCommentsListActivityRule.getActivity();
 
-        Comment comment = new Comment("Ryan Kenney", "2017-06-27T10:23:18", "<p>I made Sadie get the rotisserie chicken.</p>");
+        Comment comment = new Comment("Ryan Kenney", "2017-06-27T10:23:18", "&#8220;I made Sadie get the rotisserie chicken.");
 
         List<Comment> comments = new ArrayList<>();
         comments.add(comment);
@@ -61,18 +64,20 @@ public class CommentsListAdapterInstrumentedTest {
 
     @Test
     public void getItem_checkName() {
-        assertEquals("Ryan Kenney is expected.", EXPECTED_NAME,
-                ((Comment) commentsListAdapter.getItem(0)).getAuthor());
+        String actualName = ((Comment) commentsListAdapter.getItem(0)).getAuthor();
+        assertEquals("Ryan Kenney is expected.", EXPECTED_NAME, actualName);
     }
 
     @Test
     public void getItem_checkId() {
-        assertEquals("id 0 expected.", 0, commentsListAdapter.getItemId(0));
+        int actualid = (int) commentsListAdapter.getItemId(0);
+        assertEquals("id 0 expected.", EXPECTED_ID, actualid);
     }
 
     @Test
     public void getCount_withOneItem() {
-        assertEquals("Count of 1 expected..", 1, commentsListAdapter.getCount());
+        int actualCount = commentsListAdapter.getCount();
+        assertEquals("Count of 1 expected..", EXPECTED_COUNT, actualCount);
     }
 
     @Test
@@ -88,13 +93,19 @@ public class CommentsListAdapterInstrumentedTest {
         assertNotNull("Date TextView should not be null. ", date);
         assertNotNull("Content ImageView should not be null. ", content);
 
-        assertEquals("Names should match.", EXPECTED_NAME, name.getText());
-        assertEquals("Dates should match.", EXPECTED_DATE, date.getText());
-        assertEquals("Content should match.", EXPECTED_CONTENT, content.getText());
+        String actualName = name.getText().toString();
+        assertEquals("Names should match.", EXPECTED_NAME, actualName);
+
+        String actualDate = date.getText().toString();
+        assertEquals("Dates should match.", EXPECTED_DATE, actualDate);
+
+        String actualContent = content.getText().toString();
+        assertEquals("Content should match.", EXPECTED_CONTENT, actualContent);
     }
 
     @Test
     public void getView_withNonNullConvertView() {
+
         ViewGroup convertView = new LinearLayout(commentsListActivity);
         CommentsListAdapter.CommentHolder mCommentHolder = new CommentsListAdapter.CommentHolder();
         mCommentHolder.commentName = new TextView(commentsListActivity);
@@ -104,9 +115,15 @@ public class CommentsListAdapterInstrumentedTest {
 
         View view = commentsListAdapter.getView(0, convertView, commentsListActivity.getCommentsListView());
 
-        assertEquals("Names should match.", EXPECTED_NAME, commentsListAdapter.getCommentHolder().commentName.getText());
-        assertEquals("Dates should match.", EXPECTED_DATE, commentsListAdapter.getCommentHolder().commentDate.getText());
-        assertEquals("Content should match.", EXPECTED_CONTENT, commentsListAdapter.getCommentHolder().commentContent.getText());
+        String actualName = commentsListAdapter.getCommentHolder().commentName.getText().toString();
+        assertEquals("Names should match.", EXPECTED_NAME, actualName);
+
+        String actualDate = commentsListAdapter.getCommentHolder().commentDate.getText().toString();
+        assertEquals("Dates should match.", EXPECTED_DATE, actualDate);
+
+        String actualContent = commentsListAdapter.getCommentHolder().commentContent.getText().toString();
+        assertEquals("Content should match.", EXPECTED_CONTENT, actualContent);
+
     }
 
 
