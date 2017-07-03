@@ -22,35 +22,41 @@ import static junit.framework.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class CommentsListActivityInstrumentedTest {
 
-    private static final String POST_ID = "0";
+    CommentsListActivity commentsListActivity;
+
+    private static int EXPECTED_HEADER_COUNT = 1;
 
     @Rule
-    public ActivityTestRule<CommentsListActivity> mCommentsListActivityRule = new ActivityTestRule<CommentsListActivity>(CommentsListActivity.class) {
+    public ActivityTestRule<CommentsListActivity> commentsListActivityRule = new ActivityTestRule<CommentsListActivity>(CommentsListActivity.class) {
         @Override
         public Intent getActivityIntent() {
             Intent intent = new Intent();
-            intent.putExtra("postId", "" + POST_ID);
+            intent.putExtra("postId", "" + "0");
             return intent;
         }
     };
 
     @Before
     public void setUp() {
+       commentsListActivity = commentsListActivityRule.getActivity();
     }
 
     @Test
     public void onCreate_checkListViewIsShown() {
-        assertTrue("ListView should be shown.", mCommentsListActivityRule.getActivity().getListView().isShown());
+        boolean listViewIsShown = commentsListActivity.getListView().isShown();
+        assertTrue("ListView should be shown.", listViewIsShown);
     }
 
     @Test
     public void onCreate_checkButtonIsShown() {
-        assertTrue("\"Leave a Comment\" button should be shown.", mCommentsListActivityRule.getActivity().findViewById(R.id.leave_comment).isShown());
+        boolean buttonIsShown = commentsListActivity.findViewById(R.id.leave_comment).isShown();
+        assertTrue("\"Leave a Comment\" button should be shown.", buttonIsShown);
     }
 
     @Test
     public void onCreate_checkHeaderViewTextViewAdded() {
-        assertEquals("One header view should be added", 1, mCommentsListActivityRule.getActivity().getListView().getHeaderViewsCount());
+        int actualHeaderCount = commentsListActivity.getListView().getHeaderViewsCount();
+        assertEquals("One header view should be added", EXPECTED_HEADER_COUNT, actualHeaderCount);
     }
 
 }
