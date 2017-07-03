@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private AlertDialog dialog;
 
     public MainActivity(){
-        webName = "https://www.coveros.com";
+        webName = "https://www.dev.secureci.com/";
     }
 
     public String getWebName(){
@@ -65,28 +65,15 @@ public class MainActivity extends AppCompatActivity {
             @SuppressWarnings("deprecation")
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                //Convert html of web page to string
-                String saved = "";
-                //Try-catch for web page related exceptions
-                try {
-                    String html = getHTML(url);
-                    System.out.println(html);
-                    saved = html;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                //Double check if saved actually "saved" any html information
-                if(saved.equals("")){
-                    saved = url;
-                }
                 //If blog website or blog webspage is categorically loaded (hybrid)
-                if(url.contains("coveros.com/blog/") || url.contains("coveros.com/category/blogs/") || saved.contains("content=\"Blogs\"")){
+                if(url.contains("coveros.com/blog/") || url.contains("coveros.com/category/blogs/") ||
+                        url.contains("dev.secureci.com/blog/") || url.contains("dev.secureci.com/category/blogs/")){
                     //Load new activity
                     Intent startBlogPost = new Intent(getApplicationContext(), PostListActivity.class);
                     startActivity(startBlogPost);
                     return true;
                 }
-                if (url.contains("coveros.com")) {
+                if (url.contains("coveros.com") || url.contains("dev.secureci.com")) {
                     view.loadUrl(url);
                     return true;
                 } else {
@@ -110,24 +97,6 @@ public class MainActivity extends AppCompatActivity {
         if(!isOnline()){
             browser.loadUrl("file:///android_asset/sampleErrorPage.html");
         }
-    }
-
-    private static String getHTML(String url) throws Exception{
-        //Build and set timeout for the request
-        URLConnection connection = (new URL(url)).openConnection();
-        connection.setConnectTimeout(5000);
-        connection.setReadTimeout(5000);
-        connection.connect();
-
-        //Read & store result line by line
-        InputStream in = connection.getInputStream();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-        StringBuilder html = new StringBuilder();
-        for(String line; (line = reader.readLine()) != null; ){
-            html.append(line);
-        }
-        in.close();
-        return html.toString();
     }
 
     /*
