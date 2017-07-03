@@ -6,6 +6,7 @@ import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.ServiceTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.View;
@@ -19,6 +20,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -91,23 +93,27 @@ public class InstrumentedWebViewTest extends LooperTestSuite {
     @UiThreadTest
     public void slideNavigationMenuOpen(){
         DrawerLayout menu = (DrawerLayout) mMainActivity.getActivity().findViewById(R.id.drawer_layout);
-        menu.openDrawer(Gravity.START);
-        assertTrue(menu.isDrawerOpen(Gravity.START));
+        menu.openDrawer(GravityCompat.START);
+        assertEquals(true, menu.isDrawerOpen(GravityCompat.START));
     }
     @Test
     @UiThreadTest
     public void slideNavigationMenuClosed(){
         DrawerLayout menu = (DrawerLayout) mMainActivity.getActivity().findViewById(R.id.drawer_layout);
+        menu.closeDrawer(Gravity.START);
+        assertEquals(false, menu.isDrawerOpen(GravityCompat.START));
         if(menu.isDrawerOpen(Gravity.START)){
             menu.closeDrawer(Gravity.START);
         }
         assertFalse(menu.isDrawerOpen(Gravity.START));
     }
+    /**
     @Test
     public void clickWebsiteTab(){
         ListView drawerList = (ListView) mMainActivity.getActivity().findViewById(R.id.left_drawer);
         TextView website = (TextView) drawerList.getItemAtPosition(0);
         website.performClick();
+    //want to be able to check and see if I navigated to Ethan's Activity howevever getActivity() is not what I want
 
     }
 
@@ -118,4 +124,5 @@ public class InstrumentedWebViewTest extends LooperTestSuite {
         blog.performClick();
 
     }
+    */
 }
