@@ -3,11 +3,14 @@ package com.coveros.coverosmobileapp.blogpost;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.widget.DrawerLayout;
+
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.android.volley.Request;
@@ -16,6 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
+import com.coveros.coverosmobileapp.website.MainActivity;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -34,6 +38,11 @@ public class BlogPostsListActivity extends BlogListActivity {
     private List<BlogPost> blogPosts = new ArrayList<>();
     private SparseArray<String> authors = new SparseArray<>();  // to aggregate the ids and names of the authors of displayed blog posts
     private RequestQueue rQueue;
+
+    private static final String[] menuTitles = new String[]{"Website", "Blog", "Bookmarks"};
+    private DrawerLayout menu;
+    private ListView drawerList;
+    private LinearLayout postList;
 
     private ListView postListView;
     private BlogPostsListAdapter postsAdapter;
@@ -57,6 +66,22 @@ public class BlogPostsListActivity extends BlogListActivity {
         postListView.addHeaderView(createTextViewLabel(BlogPostsListActivity.this, "Blog posts"));  // settings label above blog post list
 
         errorListener = createErrorListener(BlogPostsListActivity.this);
+
+        postList = (LinearLayout) findViewById(R.id.postlist);
+        menu = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerList = (ListView) findViewById(R.id.left_drawer);
+        drawerList.setAdapter(new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1, menuTitles));
+        drawerList.setOnItemClickListener(new BlogPostsListActivity.DrawerItemClickListener());
+        menu.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+                                   @Override
+                                   public void onDrawerSlide(View drawerView, float slideOffset) {
+                                       postList.setTranslationX(slideOffset * drawerView.getWidth());
+                                       menu.bringChildToFront(drawerView);
+                                       menu.requestLayout();
+                                   }
+                               }
+        );
 
         // running these requests on a separate thread for performance
         Thread requestsThread = new RequestsThread();
@@ -196,6 +221,19 @@ public class BlogPostsListActivity extends BlogListActivity {
                     currentListSize = postListView.getAdapter().getCount();
                 }
 
+            }
+        }
+
+    }
+
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            if (position == 0) {
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            } else {
+
+                startActivity(new Intent(getApplicationContext(), BlogPostsListActivity.class));
             }
         }
     }

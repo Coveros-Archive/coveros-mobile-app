@@ -3,21 +3,33 @@ package com.coveros.coverosmobileapp.website;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.coveros.coverosmobileapp.R;
+import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
+
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
 public class MainActivity extends AppCompatActivity {
     //MainActivity
     private String webName;
     private WebView browser;
+
+    private static final String[] menuTitles = new String[]{"Website","Blog","Bookmarks"};
+    private DrawerLayout menu;
+    private ListView drawerList;
 
     //Create Strings for Title, messsage, and buttons
     private static final String ALERT_TTLE = "Alert";
@@ -50,6 +62,22 @@ public class MainActivity extends AppCompatActivity {
         //Link WebView variable with activity_main_webview for Web View Access
         browser = (WebView) findViewById(R.id.activity_main_webview);
         main.setWebViewBrowser(browser);
+
+        //constructing the menu navigation drawer
+        menu = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerList = (ListView)findViewById(R.id.left_drawer);
+        drawerList.setAdapter(new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1 , menuTitles));
+        drawerList.setOnItemClickListener(new DrawerItemClickListener());
+        menu.addDrawerListener(new DrawerLayout.SimpleDrawerListener(){
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset){
+                browser.setTranslationX(slideOffset * drawerView.getWidth());
+                menu.bringChildToFront(drawerView);
+                menu.requestLayout();
+            }}
+        );
+
         //Links open in WebView with Coveros regex check
         browser.setWebViewClient(new CustomWebViewClient() {
             @Override
@@ -145,4 +173,20 @@ public class MainActivity extends AppCompatActivity {
         dialog.setCanceledOnTouchOutside(false);
         return dialog;
     }
+
+    /**
+     * Made to navigate through the menu drawer by click
+     */
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            if (position == 0) {
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            } else {
+
+                startActivity(new Intent(getApplicationContext(), BlogPostsListActivity.class));
+            }
+        }
+    }
+
 }

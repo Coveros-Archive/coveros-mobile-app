@@ -107,6 +107,9 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
+    lintOptions {
+        abortOnError false
+    }
 
 }
 
@@ -117,6 +120,7 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+
 
     // adding for testing Wordpress integration
     compile 'com.google.code.gson:gson:2.7'

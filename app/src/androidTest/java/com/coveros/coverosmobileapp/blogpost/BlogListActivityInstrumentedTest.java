@@ -1,10 +1,12 @@
 package com.coveros.coverosmobileapp.blogpost;
 
+import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.widget.TextView;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
+import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.test.util.LooperTestSuite;
 
 import org.junit.Before;
@@ -16,6 +18,7 @@ import java.util.HashMap;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
+
 
 
 /**
@@ -67,6 +70,7 @@ public class BlogListActivityInstrumentedTest extends LooperTestSuite {
         assertTrue("errorMessage should be displayed.", blogListActivity.getErrorMessage().isShowing());
 
     }
+
 
 
 }
