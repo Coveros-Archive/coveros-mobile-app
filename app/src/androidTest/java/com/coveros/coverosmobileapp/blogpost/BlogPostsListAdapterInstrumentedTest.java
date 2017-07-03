@@ -33,7 +33,7 @@ public class BlogPostsListAdapterInstrumentedTest {
     private static int EXPECTED_ID = 0;
     private static int EXPECTED_COUNT = 1;
     private static String EXPECTED_TITLE = "The Foxkicker--An Autobiography";
-    private static String EXPECTED_AUTHORDATE = "Ryan Kenney\n Jun 27, 2017";
+    private static String EXPECTED_AUTHORDATE = "Ryan Kenney\nJun 27, 2017";
 
 
     @Rule
@@ -84,7 +84,7 @@ public class BlogPostsListAdapterInstrumentedTest {
 
     @Test
     public void getView_withNullConvertView() {
-        View view = blogPostsListAdapter.getView(0, null, blogPostsListActivity.getListView());
+        View view = blogPostsListAdapter.getView(0, null, blogPostsListActivity.getBlogPostsListView());
 
         TextView title = (TextView) view.findViewById(R.id.title);
         TextView authorDate = (TextView) view.findViewById(R.id.author_date);
@@ -110,7 +110,7 @@ public class BlogPostsListAdapterInstrumentedTest {
         blogPostHolder.authorDate = new TextView(blogPostsListActivity);
         convertView.setTag(blogPostHolder);
 
-        View view = blogPostsListAdapter.getView(0, convertView, blogPostsListActivity.getListView());
+        View view = blogPostsListAdapter.getView(0, convertView, blogPostsListActivity.getBlogPostsListView());
 
         String actualTitle = blogPostsListAdapter.getBlogPostHolder().title.getText().toString();
         assertEquals("Names should match.", EXPECTED_TITLE, actualTitle);

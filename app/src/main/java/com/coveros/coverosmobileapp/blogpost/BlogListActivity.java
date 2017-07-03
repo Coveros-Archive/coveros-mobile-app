@@ -23,7 +23,7 @@ public class BlogListActivity extends ListActivity {
 
     AlertDialog errorMessage;
     Response.ErrorListener errorListener;
-    ListView listView;
+    ListView blogPostsListView;
 
     private static final float TEXT_VIEW_TEXT_SIZE = 60;
     private static final int TEXT_VIEW_PADDING_BOTTOM = 30;
@@ -80,8 +80,5 @@ public class BlogListActivity extends ListActivity {
         return errorMessage;
     }
 
-    public ListView getListView() {
-        return listView;
-    }
 
 }

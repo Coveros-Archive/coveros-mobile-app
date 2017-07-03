@@ -43,7 +43,7 @@ public class CommentsListActivityInstrumentedTest {
 
     @Test
     public void onCreate_checkListViewIsShown() {
-        boolean listViewIsShown = commentsListActivity.getListView().isShown();
+        boolean listViewIsShown = commentsListActivity.getCommentsListView().isShown();
         assertTrue("ListView should be shown.", listViewIsShown);
     }
 
@@ -55,7 +55,7 @@ public class CommentsListActivityInstrumentedTest {
 
     @Test
     public void onCreate_checkHeaderViewTextViewAdded() {
-        int actualHeaderCount = commentsListActivity.getListView().getHeaderViewsCount();
+        int actualHeaderCount = commentsListActivity.getCommentsListView().getHeaderViewsCount();
         assertEquals("One header view should be added", EXPECTED_HEADER_COUNT, actualHeaderCount);
     }
 

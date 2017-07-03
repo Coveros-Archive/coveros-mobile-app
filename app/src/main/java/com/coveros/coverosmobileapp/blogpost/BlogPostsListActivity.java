@@ -34,6 +34,8 @@ public class BlogPostsListActivity extends BlogListActivity {
     private SparseArray<String> authors = new SparseArray<>();  // to aggregate the ids and names of the authors of displayed blog posts
     private RequestQueue rQueue;
 
+    private ListView blogPostsListView;
+
     private BlogPostsListAdapter postsAdapter;
 
     private int currentListSize;
@@ -52,8 +54,8 @@ public class BlogPostsListActivity extends BlogListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.post_list);
 
-        listView = getListView();
-        listView.addHeaderView(createTextViewLabel(BlogPostsListActivity.this, getResources().getString(R.string.blogposts_label)));  // settings label above blog post list
+        blogPostsListView = getListView();
+        blogPostsListView.addHeaderView(createTextViewLabel(BlogPostsListActivity.this, getResources().getString(R.string.blogposts_label)));  // settings label above blog post list
 
         errorListener = createErrorListener(BlogPostsListActivity.this);
 
@@ -62,7 +64,7 @@ public class BlogPostsListActivity extends BlogListActivity {
         requestsThread.start();
 
         // when a post is selected, feeds its associated data into a BlogPostReadActivity activity
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        blogPostsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 BlogPost blogPost = blogPosts.get(position - 1);  // -1 because the TextView offsets the blogPosts by one for some reason
@@ -116,9 +118,9 @@ public class BlogPostsListActivity extends BlogListActivity {
                         public void onSuccess(List<BlogPost> newPosts) {
                             blogPosts.addAll(newPosts);
                             postsAdapter = new BlogPostsListAdapter(BlogPostsListActivity.this, R.layout.post_list_text, blogPosts);
-                            listView.setAdapter(postsAdapter);
-                            currentListSize = listView.getAdapter().getCount();
-                            listView.setOnScrollListener(new BlogPostsListOnScrollListener());
+                            blogPostsListView.setAdapter(postsAdapter);
+                            currentListSize = blogPostsListView.getAdapter().getCount();
+                            blogPostsListView.setOnScrollListener(new BlogPostsListOnScrollListener());
                         }
 
                     });
@@ -190,19 +192,24 @@ public class BlogPostsListActivity extends BlogListActivity {
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
             boolean isScrolledToBottom = firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount != 0; // ListView is scrolled to bottom
-            if (listView.getAdapter() != null && isScrolledToBottom) {
+            if (BlogPostsListActivity.this.blogPostsListView.getAdapter() != null && isScrolledToBottom) {
                 // ensures new blogPosts are loaded only once per time the bottom is reached (i.e. if the user continuously scrolls to the bottom, more than "POSTS_PER_PAGE" blogPosts will not be loaded
                 if (firstScroll) {
                     addPosts();
                     firstScroll = false;
-                } else if (listView.getAdapter().getCount() == currentListSize + POSTS_PER_PAGE) {
+                } else if (BlogPostsListActivity.this.blogPostsListView.getAdapter().getCount() == currentListSize + POSTS_PER_PAGE) {
                     addPosts();
-                    currentListSize = listView.getAdapter().getCount();
+                    currentListSize = BlogPostsListActivity.this.blogPostsListView.getAdapter().getCount();
                 }
 
             }
         }
     }
+
+    public ListView getBlogPostsListView() {
+        return blogPostsListView;
+    }
+
 
 }
 
