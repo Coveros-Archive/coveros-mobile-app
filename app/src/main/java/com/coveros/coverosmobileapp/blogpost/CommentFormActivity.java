@@ -20,9 +20,11 @@ import java.util.List;
  */
 
 public class CommentFormActivity extends AppCompatActivity {
-    String author;
-    String email;
-    String message;
+    private String author;
+    private String email;
+    private String message;
+
+    private AlertDialog emptyFieldAlertDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,7 +46,7 @@ public class CommentFormActivity extends AppCompatActivity {
 
                 List<String> emptyFields = checkFieldIsEmpty(author, email, message);
                 if (!emptyFields.isEmpty()) {
-                    AlertDialog emptyFieldAlertDialog = createEmptyFieldAlertDialog(emptyFields);
+                    emptyFieldAlertDialog = createEmptyFieldAlertDialog(emptyFields);
                     emptyFieldAlertDialog.show();
                 }
 
@@ -58,7 +60,7 @@ public class CommentFormActivity extends AppCompatActivity {
 
     }
 
-    private List<String> checkFieldIsEmpty(String author, String email, String message) {
+    static List<String> checkFieldIsEmpty(String author, String email, String message) {
         List<String> emptyFields = new ArrayList<>();
         if (author.isEmpty()) {
             emptyFields.add("name");
@@ -93,6 +95,21 @@ public class CommentFormActivity extends AppCompatActivity {
                         dialog.dismiss();
                     }
                 });
+        return emptyFieldAlertDialog;
+    }
+
+    String getAuthor() {
+        return author;
+    }
+
+    String getEmail() {
+        return email;
+    }
+
+    String getMessage() {
+        return message;
+    }
+    AlertDialog getEmptyFieldAlertDialog() {
         return emptyFieldAlertDialog;
     }
 
