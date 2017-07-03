@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.NetworkResponse;
@@ -23,7 +22,6 @@ public class BlogListActivity extends ListActivity {
 
     AlertDialog errorMessage;
     Response.ErrorListener errorListener;
-    ListView blogPostsListView;
 
     private static final float TEXT_VIEW_TEXT_SIZE = 60;
     private static final int TEXT_VIEW_PADDING_BOTTOM = 30;
