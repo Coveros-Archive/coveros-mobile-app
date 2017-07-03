@@ -11,16 +11,11 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.StringBuilderPrinter;
 import android.webkit.*;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
 //import java.util.function.Function;
@@ -117,13 +112,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static String getHTML(String url) throws Exception{
+    private static String getHTML(String url) throws Exception{
         //Build and set timeout for the request
         URLConnection connection = (new URL(url)).openConnection();
         connection.setConnectTimeout(5000);
         connection.setReadTimeout(5000);
         connection.connect();
-        
+
         //Read & store result line by line
         InputStream in = connection.getInputStream();
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
