@@ -12,17 +12,20 @@ import org.junit.Rule;
 import org.junit.Test;
 
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
 public class BlogPostsListActivityInstrumentedTest{
     @Rule
     public ActivityTestRule<BlogPostsListActivity> mBlogListRule = new ActivityTestRule<>(BlogPostsListActivity.class);
+
     @Test
     @UiThreadTest
     public void slideNavigationMenuOpen(){
         DrawerLayout menu = (DrawerLayout) mBlogListRule.getActivity().findViewById(R.id.drawer_layout);
         menu.openDrawer(Gravity.START);
-        Assert.assertTrue(menu.isDrawerOpen(Gravity.START));
+        assertTrue(menu.isDrawerOpen(Gravity.START));
     }
     @Test
     @UiThreadTest
@@ -35,9 +38,17 @@ public class BlogPostsListActivityInstrumentedTest{
     }
     @Test
     public void clickWebsiteTab(){
-        ListView drawerList = (ListView) mBlogListRule.getActivity().findViewById(R.id.left_drawer);
-        TextView website = (TextView) drawerList.getItemAtPosition(0);
-        website.performClick();
+        final ListView drawerList = (ListView) mBlogListRule.getActivity().findViewById(R.id.left_drawer);
+        getInstrumentation().runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+
+                drawerList.performItemClick(drawerList.getAdapter().getView(0, null, null),
+                        0, drawerList.getAdapter().getItemId(0));
+            }
+
+        });
+    
 
     }
 

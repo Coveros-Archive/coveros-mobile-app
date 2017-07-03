@@ -70,37 +70,7 @@ public class BlogListActivityInstrumentedTest extends LooperTestSuite {
         assertTrue("errorMessage should be displayed.", blogListActivity.getErrorMessage().isShowing());
 
     }
-    @Test
-    @UiThreadTest
-    public void slideNavigationMenuOpen(){
-        DrawerLayout menu = (DrawerLayout) mBlogListRule.getActivity().findViewById(R.id.drawer_layout);
-        menu.openDrawer(Gravity.START);
-        Assert.assertTrue(menu.isDrawerOpen(Gravity.START));
-    }
-    @Test
-    @UiThreadTest
-    public void slideNavigationMenuClosed(){
-        DrawerLayout menu = (DrawerLayout) mBlogListRule.getActivity().findViewById(R.id.drawer_layout);
-        menu.openDrawer(Gravity.START);
-        assertFalse(menu.isDrawerOpen(Gravity.START));
-    }
-    /**
-    @Test
-    public void clickWebsiteTab(){
-        ListView drawerList = (ListView) mBlogListRule.getActivity().findViewById(R.id.left_drawer);
-        TextView website = (TextView) drawerList.getItemAtPosition(0);
-        website.performClick();
-    //want to be able to check and see if I navigated to Ethan's Activity howevever getActivity() is not what I want
-    }
 
-    @Test
-    public void clickBlogTab(){
-        ListView drawerList = (ListView) mBlogListRule.getActivity().findViewById(R.id.left_drawer);
-        TextView blog = (TextView) drawerList.getItemAtPosition(1);
-        blog.performClick();
-
-    }
-    */
 
 
 }

@@ -39,7 +39,7 @@ public class BlogPostsListActivity extends BlogListActivity {
     private SparseArray<String> authors = new SparseArray<>();  // to aggregate the ids and names of the authors of displayed blog posts
     private RequestQueue rQueue;
 
-    private String[] menuTitles = new String[]{"Website","Blog","Bookmarks"};
+    final static private String[] menuTitles = new String[]{"Website","Blog","Bookmarks"};
     private DrawerLayout menu;
     private ListView drawerList;
     private LinearLayout postList;
@@ -225,17 +225,14 @@ public class BlogPostsListActivity extends BlogListActivity {
 
     }
     private class DrawerItemClickListener implements ListView.OnItemClickListener{
+        @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            switch(position) {
-                case 0:
-                    Intent a = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(a);
-                    break;
+            if (position == 0) {
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            }
+            else{
 
-                case 1:
-                    Intent b = new Intent(getApplicationContext(), BlogPostsListActivity.class);
-                    startActivity(b);
-                    break;
+                startActivity(new Intent(getApplicationContext(), BlogPostsListActivity.class));
             }
         }
     }
