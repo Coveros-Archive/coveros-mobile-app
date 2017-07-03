@@ -25,6 +25,7 @@ import static junit.framework.Assert.assertTrue;
 public class BlogListActivityInstrumentedTest extends LooperTestSuite {
 
     private static BlogListActivity blogListActivity;
+
     private static final String EXPECTED_TEXT_VIEW_LABEL = "Comments";
     private static final float EXPECTED_TEXT_SIZE = blogListActivity.getTextViewTextSize();
     private static final int EXPECTED_PADDING_BOTTOM = blogListActivity.getTextViewPaddingBottom();

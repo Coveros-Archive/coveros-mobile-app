@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 public class BlogPostReadActivityInstrumentedTest {
 
     private static BlogPostReadActivity blogPostReadActivity;
+
     private static final String EXPECTED_TITLE = "The Ugly Barnacle";
 
     @Rule
