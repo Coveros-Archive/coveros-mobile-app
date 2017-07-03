@@ -38,7 +38,6 @@ public class CommentsListActivity extends BlogListActivity {
         commentsListView.addHeaderView(createTextViewLabel(CommentsListActivity.this, "Comments"));  // setting label above comments list
 
         errorListener = createErrorListener(CommentsListActivity.this);
-//        final String commentsUrl = "http://www.dev.secureci.com/wp-json/wp/v2/comments?post=" + getIntent().getExtras().getString("postId");
         final String commentsUrl = "http://www.dev.secureci.com/wp-json/wp/v2/comments?post=6600";  // hard coding for development
 
 

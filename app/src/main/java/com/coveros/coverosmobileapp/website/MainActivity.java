@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private String webName;
     private WebView browser;
 
-    final static private String[] menuTitles = new String[]{"Website","Blog","Bookmarks"};
+    private static final String[] menuTitles = new String[]{"Website","Blog","Bookmarks"};
     private DrawerLayout menu;
     private ListView drawerList;
 
@@ -177,16 +177,14 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Made to navigate through the menu drawer by click
      */
-
-    private class DrawerItemClickListener implements ListView.OnItemClickListener{
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             if (position == 0) {
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
-            }
-            else{
+            } else {
 
-                    startActivity(new Intent(getApplicationContext(), BlogPostsListActivity.class));
+                startActivity(new Intent(getApplicationContext(), BlogPostsListActivity.class));
             }
         }
     }

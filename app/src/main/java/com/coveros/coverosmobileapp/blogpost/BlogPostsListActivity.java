@@ -39,7 +39,7 @@ public class BlogPostsListActivity extends BlogListActivity {
     private SparseArray<String> authors = new SparseArray<>();  // to aggregate the ids and names of the authors of displayed blog posts
     private RequestQueue rQueue;
 
-    final static private String[] menuTitles = new String[]{"Website","Blog","Bookmarks"};
+    private static final String[] menuTitles = new String[]{"Website", "Blog", "Bookmarks"};
     private DrawerLayout menu;
     private ListView drawerList;
     private LinearLayout postList;
@@ -69,17 +69,18 @@ public class BlogPostsListActivity extends BlogListActivity {
 
         postList = (LinearLayout) findViewById(R.id.postlist);
         menu = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerList = (ListView)findViewById(R.id.left_drawer);
+        drawerList = (ListView) findViewById(R.id.left_drawer);
         drawerList.setAdapter(new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1 , menuTitles));
+                android.R.layout.simple_list_item_1, menuTitles));
         drawerList.setOnItemClickListener(new BlogPostsListActivity.DrawerItemClickListener());
-        menu.addDrawerListener(new DrawerLayout.SimpleDrawerListener(){
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset){
-                postList.setTranslationX(slideOffset * drawerView.getWidth());
-                menu.bringChildToFront(drawerView);
-                menu.requestLayout();
-            }}
+        menu.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+                                   @Override
+                                   public void onDrawerSlide(View drawerView, float slideOffset) {
+                                       postList.setTranslationX(slideOffset * drawerView.getWidth());
+                                       menu.bringChildToFront(drawerView);
+                                       menu.requestLayout();
+                                   }
+                               }
         );
 
         // running these requests on a separate thread for performance
@@ -224,13 +225,13 @@ public class BlogPostsListActivity extends BlogListActivity {
         }
 
     }
-    private class DrawerItemClickListener implements ListView.OnItemClickListener{
+
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             if (position == 0) {
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
-            }
-            else{
+            } else {
 
                 startActivity(new Intent(getApplicationContext(), BlogPostsListActivity.class));
             }

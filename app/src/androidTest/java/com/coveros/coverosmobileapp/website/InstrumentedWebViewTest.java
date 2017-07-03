@@ -2,26 +2,15 @@ package com.coveros.coverosmobileapp.website;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.ServiceTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.view.Gravity;
-import android.view.View;
-import android.widget.ListView;
-import android.widget.TextView;
-
-import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.test.util.LooperTestSuite;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
@@ -89,38 +78,4 @@ public class InstrumentedWebViewTest extends LooperTestSuite {
     //More AlertView tests necessary but need to access xml ID's
     //which means the creation of Buttons/TextViews in xml activity
     //linking the buttons and strings together
-    @Test
-    @UiThreadTest
-    public void slideNavigationMenuOpen(){
-        DrawerLayout menu = (DrawerLayout) mMainActivity.getActivity().findViewById(R.id.drawer_layout);
-        menu.openDrawer(GravityCompat.START);
-        assertTrue(menu.isDrawerOpen(GravityCompat.START));
-    }
-    @Test
-    @UiThreadTest
-    public void slideNavigationMenuClosed(){
-        DrawerLayout menu = (DrawerLayout) mMainActivity.getActivity().findViewById(R.id.drawer_layout);
-        if(menu.isDrawerOpen(Gravity.START)){
-            menu.closeDrawer(Gravity.START);
-        }
-        assertFalse(menu.isDrawerOpen(Gravity.START));
-    }
-    /**
-    @Test
-    public void clickWebsiteTab(){
-        ListView drawerList = (ListView) mMainActivity.getActivity().findViewById(R.id.left_drawer);
-        TextView website = (TextView) drawerList.getItemAtPosition(0);
-        website.performClick();
-    //want to be able to check and see if I navigated to Ethan's Activity howevever getActivity() is not what I want
-
-    }
-
-    @Test
-    public void clickBlogTab(){
-        ListView drawerList = (ListView) mMainActivity.getActivity().findViewById(R.id.left_drawer);
-        TextView blog = (TextView) drawerList.getItemAtPosition(1);
-        blog.performClick();
-
-    }
-    */
 }
