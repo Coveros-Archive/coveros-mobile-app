@@ -100,8 +100,6 @@ public class InstrumentedWebViewTest extends LooperTestSuite {
     @UiThreadTest
     public void slideNavigationMenuClosed(){
         DrawerLayout menu = (DrawerLayout) mMainActivity.getActivity().findViewById(R.id.drawer_layout);
-        menu.closeDrawer(Gravity.START);
-        assertEquals(false, menu.isDrawerOpen(GravityCompat.START));
         if(menu.isDrawerOpen(Gravity.START)){
             menu.closeDrawer(Gravity.START);
         }
