@@ -29,7 +29,6 @@ import java.util.List;
 public class CommentsListActivity extends BlogListActivity {
 
     private RequestQueue rQueue;
-    private ListView commentsListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +36,8 @@ public class CommentsListActivity extends BlogListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.comment_list);
 
-        commentsListView = getListView();
-        commentsListView.addHeaderView(createTextViewLabel(CommentsListActivity.this, getResources().getString(R.string.comments_label)));  // setting label above comments list
+        listView = getListView();
+        listView.addHeaderView(createTextViewLabel(CommentsListActivity.this, getResources().getString(R.string.comments_label)));  // setting label above comments list
 
         final String postId = getIntent().getExtras().getString("postId");
 
@@ -56,7 +55,7 @@ public class CommentsListActivity extends BlogListActivity {
                             newComments.add(new Comment("", "", "<p>" + getResources().getString(R.string.no_comments_text) + "</p>"));
                         }
                         CommentsListAdapter commentsAdapter = new CommentsListAdapter(CommentsListActivity.this, R.layout.comment_list_text, newComments);
-                        commentsListView.setAdapter(commentsAdapter);
+                        listView.setAdapter(commentsAdapter);
                     }
                 }, commentsUrl);
             }
@@ -93,10 +92,6 @@ public class CommentsListActivity extends BlogListActivity {
             }
         }, errorListener);
         rQueue.add(commentsRequest);
-    }
-
-    ListView getCommentsListView() {
-        return commentsListView;
     }
 
     /**

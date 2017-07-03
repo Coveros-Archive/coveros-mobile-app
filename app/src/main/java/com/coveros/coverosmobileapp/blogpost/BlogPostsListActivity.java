@@ -34,7 +34,6 @@ public class BlogPostsListActivity extends BlogListActivity {
     private SparseArray<String> authors = new SparseArray<>();  // to aggregate the ids and names of the authors of displayed blog posts
     private RequestQueue rQueue;
 
-    private ListView postListView;
     private BlogPostsListAdapter postsAdapter;
 
     private int currentListSize;
@@ -49,11 +48,12 @@ public class BlogPostsListActivity extends BlogListActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.post_list);
 
-        postListView = getListView();
-        postListView.addHeaderView(createTextViewLabel(BlogPostsListActivity.this, getResources().getString(R.string.blogposts_label)));  // settings label above blog post list
+        listView = getListView();
+        listView.addHeaderView(createTextViewLabel(BlogPostsListActivity.this, getResources().getString(R.string.blogposts_label)));  // settings label above blog post list
 
         errorListener = createErrorListener(BlogPostsListActivity.this);
 
@@ -62,7 +62,7 @@ public class BlogPostsListActivity extends BlogListActivity {
         requestsThread.start();
 
         // when a post is selected, feeds its associated data into a BlogPostReadActivity activity
-        postListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 BlogPost blogPost = blogPosts.get(position - 1);  // -1 because the TextView offsets the blogPosts by one for some reason
@@ -77,6 +77,55 @@ public class BlogPostsListActivity extends BlogListActivity {
         });
     }
 
+
+    /**
+     * Adds blogPosts to the list view. Called when user scrolls to the bottom of the listview.
+     */
+    protected void addPosts() {
+        Thread addPostRequest = new Thread() {
+            @Override
+            public void run() {
+                retrieveBlogPosts(new PostListCallback<BlogPost>() {
+                    @Override
+                    public void onSuccess(List<BlogPost> newPosts) {
+                        postsAdapter.addAll(newPosts);
+                        postsAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        };
+        addPostRequest.start();
+    }
+
+    Response.ErrorListener getErrorListener() {
+        return errorListener;
+    }
+
+    /**
+     * Custom thread to run requests for post and author data.
+     */
+    class RequestsThread extends Thread {
+        @Override
+        public void run() {
+            rQueue = Volley.newRequestQueue(BlogPostsListActivity.this);
+            retrieveAuthors(new PostListCallback<String>() {
+                @Override
+                public void onSuccess(List<String> newAuthors) {
+                    retrieveBlogPosts(new PostListCallback<BlogPost>() {
+                        @Override
+                        public void onSuccess(List<BlogPost> newPosts) {
+                            blogPosts.addAll(newPosts);
+                            postsAdapter = new BlogPostsListAdapter(BlogPostsListActivity.this, R.layout.post_list_text, blogPosts);
+                            listView.setAdapter(postsAdapter);
+                            currentListSize = listView.getAdapter().getCount();
+                            listView.setOnScrollListener(new BlogPostsListOnScrollListener());
+                        }
+
+                    });
+                }
+            });
+        }
+    }
     /**
      * Populates List of Authors.
      *
@@ -121,59 +170,16 @@ public class BlogPostsListActivity extends BlogListActivity {
     }
 
     /**
-     * Adds blogPosts to the list view. Called when user scrolls to the bottom of the listview.
-     */
-    protected void addPosts() {
-        Thread addPostRequest = new Thread() {
-            @Override
-            public void run() {
-                retrieveBlogPosts(new PostListCallback<BlogPost>() {
-                    @Override
-                    public void onSuccess(List<BlogPost> newPosts) {
-                        postsAdapter.addAll(newPosts);
-                        postsAdapter.notifyDataSetChanged();
-                    }
-                });
-            }
-        };
-        addPostRequest.start();
-    }
-
-    Response.ErrorListener getErrorListener() {
-        return errorListener;
-    }
-
-    /**
      * Used to ensure StringRequests are completed before their data are used.
      */
     interface PostListCallback<T> {
         void onSuccess(List<T> newItems);
     }
 
-    class RequestsThread extends Thread {
-        @Override
-        public void run() {
-            rQueue = Volley.newRequestQueue(BlogPostsListActivity.this);
-            retrieveAuthors(new PostListCallback<String>() {
-                @Override
-                public void onSuccess(List<String> newAuthors) {
-                    retrieveBlogPosts(new PostListCallback<BlogPost>() {
-                        @Override
-                        public void onSuccess(List<BlogPost> newPosts) {
-                            blogPosts.addAll(newPosts);
-                            postsAdapter = new BlogPostsListAdapter(BlogPostsListActivity.this, R.layout.post_list_text, blogPosts);
-                            postListView.setAdapter(postsAdapter);
-                            currentListSize = postListView.getAdapter().getCount();
-                            postListView.setOnScrollListener(new PostListOnScrollListener());
-                        }
-
-                    });
-                }
-            });
-        }
-    }
-
-    class PostListOnScrollListener implements AbsListView.OnScrollListener {
+    /**
+     * Custom OnScrollListener for blogPostsList.
+     */
+    class BlogPostsListOnScrollListener implements AbsListView.OnScrollListener {
         private boolean firstScroll = true;  // first time scrolling to bottom
 
         @Override
@@ -184,14 +190,14 @@ public class BlogPostsListActivity extends BlogListActivity {
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
             boolean isScrolledToBottom = firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount != 0; // ListView is scrolled to bottom
-            if (postListView.getAdapter() != null && isScrolledToBottom) {
+            if (listView.getAdapter() != null && isScrolledToBottom) {
                 // ensures new blogPosts are loaded only once per time the bottom is reached (i.e. if the user continuously scrolls to the bottom, more than "POSTS_PER_PAGE" blogPosts will not be loaded
                 if (firstScroll) {
                     addPosts();
                     firstScroll = false;
-                } else if (postListView.getAdapter().getCount() == currentListSize + POSTS_PER_PAGE) {
+                } else if (listView.getAdapter().getCount() == currentListSize + POSTS_PER_PAGE) {
                     addPosts();
-                    currentListSize = postListView.getAdapter().getCount();
+                    currentListSize = listView.getAdapter().getCount();
                 }
 
             }

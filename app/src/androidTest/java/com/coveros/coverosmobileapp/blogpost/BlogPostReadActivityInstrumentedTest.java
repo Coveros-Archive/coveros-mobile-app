@@ -26,11 +26,11 @@ public class BlogPostReadActivityInstrumentedTest {
         public Intent getActivityIntent() {
             Intent intent = new Intent();
             BlogPost blogPost = new BlogPost("0", "Marie Kin", "1911-02-03T00:00:00", "<p>Once upon a time there was an ugly barnacle. He was so ugly that everyone died. The end.</p>", "The Ugly Barnacle");
-            ArrayList<String> postData = new ArrayList<>();
-            postData.add(Integer.toString(blogPost.getId()));
-            postData.add(blogPost.getTitle());
-            postData.add(blogPost.getContent());
-            intent.putStringArrayListExtra("postData", postData);
+            ArrayList<String> blogPostData = new ArrayList<>();
+            blogPostData.add(Integer.toString(blogPost.getId()));
+            blogPostData.add(blogPost.getTitle());
+            blogPostData.add(blogPost.getContent());
+            intent.putStringArrayListExtra("postData", blogPostData);
             return intent;
         }
     };
