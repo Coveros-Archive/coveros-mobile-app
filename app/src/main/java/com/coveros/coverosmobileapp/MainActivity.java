@@ -11,10 +11,18 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.StringBuilderPrinter;
 import android.webkit.*;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.net.URL;
+import java.net.URLConnection;
 //import java.util.function.Function;
 
 public class MainActivity extends AppCompatActivity {
@@ -62,19 +70,35 @@ public class MainActivity extends AppCompatActivity {
             @SuppressWarnings("deprecation")
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                //Convert html of web page to string
+                String saved = "";
+                //Try-catch for web page related exceptions
+                try {
+                    String html = getHTML(url);
+                    System.out.println(html);
+                    saved = html;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                //Double check if saved actually "saved" any html information
+                if(saved.equals("")){
+                    saved = url;
+                }
                 //If blog website or blog webspage is categorically loaded (hybrid)
-                if(url.contains("coveros.com/blog")){
+                if(url.contains("coveros.com/blog/") || url.contains("coveros.com/category/blogs/") || saved.contains("content=\"Blogs\"")){
                     //Load new activity
                     Intent startBlogPost = new Intent(getApplicationContext(), PostListActivity.class);
                     startActivity(startBlogPost);
+                    return true;
                 }
                 if (url.contains("coveros.com")) {
                     view.loadUrl(url);
+                    return true;
                 } else {
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     view.getContext().startActivity(i);
+                    return true;
                 }
-                return true;
             }
 
             @Override
@@ -82,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
                 if(webName.equals("https://www.coveros.com/blog/")){
                     onBackPressed();
                 }
-                super.onPageStarted(view, url, fav);
             }
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -92,6 +115,24 @@ public class MainActivity extends AppCompatActivity {
         if(!isOnline()){
             browser.loadUrl("file:///android_asset/sampleErrorPage.html");
         }
+    }
+
+    public static String getHTML(String url) throws Exception{
+        //Build and set timeout for the request
+        URLConnection connection = (new URL(url)).openConnection();
+        connection.setConnectTimeout(5000);
+        connection.setReadTimeout(5000);
+        connection.connect();
+        
+        //Read & store result line by line
+        InputStream in = connection.getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        StringBuilder html = new StringBuilder();
+        for(String line; (line = reader.readLine()) != null; ){
+            html.append(line);
+        }
+        in.close();
+        return html.toString();
     }
 
     /*
