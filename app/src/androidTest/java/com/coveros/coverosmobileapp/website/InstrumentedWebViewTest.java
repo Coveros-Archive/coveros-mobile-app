@@ -8,6 +8,7 @@ import android.support.test.rule.ServiceTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -97,7 +98,9 @@ public class InstrumentedWebViewTest extends LooperTestSuite {
     @UiThreadTest
     public void slideNavigationMenuClosed(){
         DrawerLayout menu = (DrawerLayout) mMainActivity.getActivity().findViewById(R.id.drawer_layout);
-        menu.openDrawer(Gravity.START);
+        if(menu.isDrawerOpen(Gravity.START)){
+            menu.closeDrawer(Gravity.START);
+        }
         assertFalse(menu.isDrawerOpen(Gravity.START));
     }
     @Test

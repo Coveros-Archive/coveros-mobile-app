@@ -28,7 +28,9 @@ public class BlogPostsListActivityInstrumentedTest{
     @UiThreadTest
     public void slideNavigationMenuClosed(){
         DrawerLayout menu = (DrawerLayout) mBlogListRule.getActivity().findViewById(R.id.drawer_layout);
-        menu.openDrawer(Gravity.START);
+        if(menu.isDrawerOpen(Gravity.START)){
+            menu.closeDrawer(Gravity.START);
+        }
         assertFalse(menu.isDrawerOpen(Gravity.START));
     }
     @Test
