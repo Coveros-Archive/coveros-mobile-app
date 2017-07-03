@@ -5,6 +5,7 @@ import android.support.test.rule.ActivityTestRule;
 
 import com.coveros.coverosmobileapp.R;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -15,37 +16,45 @@ import static org.junit.Assert.assertTrue;
 
 public class BlogPostReadActivityInstrumentedTest {
 
-    private static final String TITLE = "The Ugly Barnacle";
-    private static final String CONTENT = "<h3>The Ugly Barnacle</h3><h4>Marie Kin</h4><h5>Jul 4 2005O</h5>Once upon a time there was an ugly barnacle. He was so ugly that everyone died. The end.";
-    private static final String ID = "0";
+    private static BlogPostReadActivity blogPostReadActivity;
+    private static final String EXPECTED_TITLE = "The Ugly Barnacle";
 
     @Rule
-    public ActivityTestRule<BlogPostReadActivity> postReadActivityRule = new ActivityTestRule<BlogPostReadActivity>(BlogPostReadActivity.class) {
+    public ActivityTestRule<BlogPostReadActivity> blogPostReadActivityRule = new ActivityTestRule<BlogPostReadActivity>(BlogPostReadActivity.class) {
         @Override
         public Intent getActivityIntent() {
             Intent intent = new Intent();
+            BlogPost blogPost = new BlogPost("0", "Marie Kin", "1911-02-03T00:00:00", "<p>Once upon a time there was an ugly barnacle. He was so ugly that everyone died. The end.</p>", "The Ugly Barnacle");
             ArrayList<String> postData = new ArrayList<>();
-            postData.add(TITLE);
-            postData.add(CONTENT);
-            postData.add(ID);
+            postData.add(Integer.toString(blogPost.getId()));
+            postData.add(blogPost.getTitle());
+            postData.add(blogPost.getContent());
             intent.putStringArrayListExtra("postData", postData);
             return intent;
         }
     };
 
+    @Before
+    public void setUp() {
+        blogPostReadActivity = blogPostReadActivityRule.getActivity();
+    }
+
     @Test
     public void onCreate_checkTitlesMatch() {
-        assertEquals("Titles should match", TITLE, postReadActivityRule.getActivity().getTitle());
+        String actualTitle = (String) blogPostReadActivity.getTitle();
+        assertEquals("Titles should match", EXPECTED_TITLE, actualTitle);
     }
 
     @Test
     public void onCreate_checkWebViewContentIsShown() {
-        assertTrue("Content should be displayed", postReadActivityRule.getActivity().findViewById(R.id.content).isShown());
+        boolean webViewContentIsShown = blogPostReadActivity.findViewById(R.id.content).isShown();
+        assertTrue("Content should be displayed", webViewContentIsShown);
     }
 
     @Test
     public void onCreate_checkViewCommentsButtonIsShown() {
-        assertTrue("Content should be displayed", postReadActivityRule.getActivity().findViewById(R.id.view_comments).isShown());
+        boolean viewCommentsButtonIsShown = blogPostReadActivity.findViewById(R.id.view_comments).isShown();
+        assertTrue("Content should be displayed", viewCommentsButtonIsShown);
     }
 
 

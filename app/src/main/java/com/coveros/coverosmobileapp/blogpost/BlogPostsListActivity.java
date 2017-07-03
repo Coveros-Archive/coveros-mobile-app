@@ -67,9 +67,9 @@ public class BlogPostsListActivity extends BlogListActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 BlogPost blogPost = blogPosts.get(position - 1);  // -1 because the TextView offsets the blogPosts by one for some reason
                 ArrayList<String> blogPostData = new ArrayList<>();
+                blogPostData.add(String.valueOf(blogPost.getId()));
                 blogPostData.add(blogPost.getTitle());
                 blogPostData.add(blogPost.getContent());
-                blogPostData.add(String.valueOf(blogPost.getId()));
                 Intent intent = new Intent(getApplicationContext(), BlogPostReadActivity.class);
                 intent.putStringArrayListExtra("postData", blogPostData);
                 startActivity(intent);

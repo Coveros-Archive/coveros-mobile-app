@@ -23,6 +23,10 @@ public class BlogPostTest {
     JsonObject outerJson = new JsonObject();
     BlogPost blogPost;
 
+    private static final int EXPECTED_ID = 1234;
+    private static final String EXPECTED_DATE = "Feb 3, 1911";
+    private static final String EXPECTED_CONTENT = "<h3>\u201CBlogPost</h3><h4>Ryan Kenney</h4><h5>Feb 3, 1911</h5><p>I like to make unfunny puns.\u2014</p>";
+
     @Before
     public void setUp() {
         outerJson.addProperty("id", "1234");
@@ -30,7 +34,7 @@ public class BlogPostTest {
         outerJson.addProperty("date", "1911-02-03T00:00:00");
 
         JsonObject innerContentJson = new JsonObject();
-        innerContentJson.addProperty("rendered", "I like to make unfunny puns.&#8212;");
+        innerContentJson.addProperty("rendered", "<p>I like to make unfunny puns.&#8212;</p>");
         outerJson.add("content", innerContentJson);
         JsonObject innerTitleJson = new JsonObject();
         innerTitleJson.addProperty("rendered", "&#8220;BlogPost");
@@ -45,7 +49,8 @@ public class BlogPostTest {
 
     @Test
     public void formatDate_withValidInput() throws ParseException {
-        assertEquals("Feb 3, 1911", blogPost.formatDate("1911-02-03T00:00:00"));
+        String actualDate = blogPost.formatDate("1911-02-03T00:00:00");
+        assertEquals("Dates should be equal.", EXPECTED_DATE, actualDate);
     }
 
     @Test(expected = ParseException.class)
@@ -60,7 +65,13 @@ public class BlogPostTest {
 
     @Test
     public void unescapeContent_withUnicodeSymbol() {
-        assertEquals("<h3>\u201CBlogPost</h3><h4>Ryan Kenney</h4><h5>Feb 3, 1911</h5>I like to make unfunny puns.\u2014", blogPost.getContent());
+        assertEquals(EXPECTED_CONTENT, blogPost.getContent());
+    }
+
+    @Test
+    public void getId_withId() {
+        int actualId = blogPost.getId();
+        assertEquals("ids should be equal", EXPECTED_ID, actualId);
     }
 
 

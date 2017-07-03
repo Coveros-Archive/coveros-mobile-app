@@ -38,6 +38,7 @@ public class Comment {
         try {
             this.date = BlogPost.formatDate(date);
         } catch (ParseException e) {
+            this.date = "Unknown date";
             Log.e("Parse exception", e.toString());
 
         }

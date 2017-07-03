@@ -25,21 +25,33 @@ import static junit.framework.Assert.assertTrue;
 public class BlogListActivityInstrumentedTest extends LooperTestSuite {
 
     private static BlogListActivity blogListActivity;
+    private static final String EXPECTED_TEXT_VIEW_LABEL = "Comments";
+    private static final float EXPECTED_TEXT_SIZE = blogListActivity.getTextViewTextSize();
+    private static final int EXPECTED_PADDING_BOTTOM = blogListActivity.getTextViewPaddingBottom();
+
 
     @Rule
-    public ActivityTestRule<BlogListActivity> mBlogListRule = new ActivityTestRule<>(BlogListActivity.class);
+    public ActivityTestRule<BlogListActivity> blogListRule = new ActivityTestRule<>(BlogListActivity.class);
 
     @Before
     public void setUp() {
-        blogListActivity = mBlogListRule.getActivity();
+
+        blogListActivity = blogListRule.getActivity();
+
     }
 
     @Test
     public void createTextViewLabel_forComments() {
         TextView commentsLabel = blogListActivity.createTextViewLabel(blogListActivity, "Comments");
-        assertEquals("Label should read \"Comments\"", "Comments", commentsLabel.getText());
-        assertEquals("Text sizes should match.", blogListActivity.getTextViewTextSize(), commentsLabel.getTextSize());
-        assertEquals("Padding bottom should match.", blogListActivity.getTextViewPaddingBottom(), commentsLabel.getPaddingBottom());
+
+        String actualTextViewLabel = (String) commentsLabel.getText();
+        assertEquals("Label should read \"Comments\"", EXPECTED_TEXT_VIEW_LABEL, actualTextViewLabel);
+
+        float actualTextSize = commentsLabel.getTextSize();
+        assertEquals("Text sizes should match.", EXPECTED_TEXT_SIZE, actualTextSize);
+
+        int actualPaddingBottom = commentsLabel.getPaddingBottom();
+        assertEquals("Padding bottom should match.", EXPECTED_PADDING_BOTTOM, actualPaddingBottom);
     }
 
     @Test
@@ -55,7 +67,7 @@ public class BlogListActivityInstrumentedTest extends LooperTestSuite {
     }
 
     @Test
-    public void errorListenerOnErrorResposne_withVolleyError() {
+    public void errorListenerOnErrorResponse_withVolleyError() {
         // generate VolleyError to pass into ErrorListener
         byte[] data = {0};
         NetworkResponse networkResponse = new NetworkResponse(401, data, new HashMap<String, String>(), true);
@@ -64,7 +76,9 @@ public class BlogListActivityInstrumentedTest extends LooperTestSuite {
         // trigger error and check if error message (an AlertDialog) is displayed
         blogListActivity.errorListener = blogListActivity.createErrorListener(blogListActivity);
         blogListActivity.errorListener.onErrorResponse(volleyError);
-        assertTrue("errorMessage should be displayed.", blogListActivity.getErrorMessage().isShowing());
+
+        boolean errorMessageIsShowing = blogListActivity.getErrorMessage().isShowing();
+        assertTrue("errorMessage should be displayed.", errorMessageIsShowing);
 
     }
 

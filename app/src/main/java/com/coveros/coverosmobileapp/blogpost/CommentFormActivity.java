@@ -15,6 +15,9 @@ import com.coveros.coverosmobileapp.R;
  */
 
 public class CommentFormActivity extends AppCompatActivity {
+    String author;
+    String email;
+    String message;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,9 +32,9 @@ public class CommentFormActivity extends AppCompatActivity {
                 EditText enterEmail = (EditText) findViewById(R.id.enter_email);
                 EditText enterMessage = (EditText) findViewById(R.id.enter_message);
 
-                String author = enterName.getText().toString();
-                String email = enterEmail.getText().toString();
-                String message = enterMessage.getText().toString();
+                author = enterName.getText().toString();
+                email = enterEmail.getText().toString();
+                message = enterMessage.getText().toString();
 
                 // logging for now until we make the actual request
                 Log.d("AUTHOR", author);

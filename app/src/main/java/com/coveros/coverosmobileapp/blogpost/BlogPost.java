@@ -50,6 +50,23 @@ class BlogPost {
         this.content = "<h3>" + this.title + "</h3><h4>" + author + "</h4><h5>" + this.date + "</h5>" + StringEscapeUtils.unescapeHtml4(blogPostJson.get("content").getAsJsonObject().get("rendered").getAsString());
     }
 
+    // used for testing so creating a JsonObject is not required
+    public BlogPost(String id, String author, String date, String content, String title) {
+        this.id = Integer.parseInt(id);
+        try {
+            this.date = BlogPost.formatDate(date);
+        } catch (ParseException e) {
+            this.date = "Unknown date";
+            Log.e("Parse exception", e.toString());
+
+        }
+        this.content = StringEscapeUtils.unescapeHtml4(content);
+        this.title = StringEscapeUtils.unescapeHtml4(title);
+        this.authorDate = StringEscapeUtils.unescapeHtml4(author + "\n" + this.date);
+        this.content = "<h3>" + this.title + "</h3><h4>" + author + "</h4><h5>" + this.date + "</h5>" + StringEscapeUtils.unescapeHtml4(content);
+
+    }
+
     /**
      * Modifies date from Wordpress to MMM dd YYYY format.
      *

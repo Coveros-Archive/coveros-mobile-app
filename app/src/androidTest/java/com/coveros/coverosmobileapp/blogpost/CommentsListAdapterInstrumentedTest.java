@@ -6,6 +6,8 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.text.Html;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.coveros.coverosmobileapp.R;
@@ -29,17 +31,17 @@ import static junit.framework.Assert.assertNotNull;
 public class CommentsListAdapterInstrumentedTest {
 
     private CommentsListAdapter commentsListAdapter;
-    List<Comment> comments = new ArrayList<>();
-    private Comment comment;
+    private static CommentsListActivity commentsListActivity;
+    private static String EXPECTED_NAME = "Ryan Kenney";
+    private static String EXPECTED_DATE = "Jun 27, 2017";
+    private static String EXPECTED_CONTENT = "<p>I made Sadie get the rotisserie chicken.</p>";
 
-    private static final String POST_ID = "0";
     @Rule
-
     public ActivityTestRule<CommentsListActivity> mCommentsListActivityRule = new ActivityTestRule<CommentsListActivity>(CommentsListActivity.class) {
         @Override
         public Intent getActivityIntent() {
             Intent intent = new Intent();
-            intent.putExtra("postId", "" + POST_ID);
+            intent.putExtra("postId", "0");
             return intent;
         }
     };
@@ -47,15 +49,19 @@ public class CommentsListAdapterInstrumentedTest {
     @Before
     public void setUp() {
 
-        comment = new Comment("Ryan Kenney", "2017-06-27T10:23:18", "<p>I made Sadie get the rotisserie chicken.</p>");
-        comments.add(comment);
-        commentsListAdapter = new CommentsListAdapter(mCommentsListActivityRule.getActivity(), R.layout.comment_list_text, comments);
-    }
+        commentsListActivity = mCommentsListActivityRule.getActivity();
 
+        Comment comment = new Comment("Ryan Kenney", "2017-06-27T10:23:18", "<p>I made Sadie get the rotisserie chicken.</p>");
+
+        List<Comment> comments = new ArrayList<>();
+        comments.add(comment);
+        commentsListAdapter = new CommentsListAdapter(commentsListActivity, R.layout.comment_list_text, comments);
+
+    }
 
     @Test
     public void getItem_checkName() {
-        assertEquals("Ryan Kenney is expected.", comments.get(0).getAuthor(),
+        assertEquals("Ryan Kenney is expected.", EXPECTED_NAME,
                 ((Comment) commentsListAdapter.getItem(0)).getAuthor());
     }
 
@@ -70,8 +76,8 @@ public class CommentsListAdapterInstrumentedTest {
     }
 
     @Test
-    public void getView_checkThreeTextViewsNotNullAndDataMatch() {
-        View view = commentsListAdapter.getView(0, null, mCommentsListActivityRule.getActivity().getCommentsListView());
+    public void getView_withNullConvertView() {
+        View view = commentsListAdapter.getView(0, null, commentsListActivity.getCommentsListView());
 
         TextView name = (TextView) view.findViewById(R.id.comment_name);
         TextView date = (TextView) view.findViewById(R.id.comment_date);
@@ -82,9 +88,25 @@ public class CommentsListAdapterInstrumentedTest {
         assertNotNull("Date TextView should not be null. ", date);
         assertNotNull("Content ImageView should not be null. ", content);
 
-        assertEquals("Names should match.", comment.getAuthor(), name.getText());
-        assertEquals("Dates should match.", comment.getDate(), date.getText());
-        assertEquals("Content should match.", Html.fromHtml(comment.getContent(), Html.FROM_HTML_MODE_LEGACY), content.getText());
+        assertEquals("Names should match.", EXPECTED_NAME, name.getText());
+        assertEquals("Dates should match.", EXPECTED_DATE, date.getText());
+        assertEquals("Content should match.", EXPECTED_CONTENT, content.getText());
+    }
+
+    @Test
+    public void getView_withNonNullConvertView() {
+        ViewGroup convertView = new LinearLayout(commentsListActivity);
+        CommentsListAdapter.CommentHolder mCommentHolder = new CommentsListAdapter.CommentHolder();
+        mCommentHolder.commentName = new TextView(commentsListActivity);
+        mCommentHolder.commentDate = new TextView(commentsListActivity);
+        mCommentHolder.commentContent = new TextView(commentsListActivity);
+        convertView.setTag(mCommentHolder);
+
+        View view = commentsListAdapter.getView(0, convertView, commentsListActivity.getCommentsListView());
+
+        assertEquals("Names should match.", EXPECTED_NAME, commentsListAdapter.getCommentHolder().commentName.getText());
+        assertEquals("Dates should match.", EXPECTED_DATE, commentsListAdapter.getCommentHolder().commentDate.getText());
+        assertEquals("Content should match.", EXPECTED_CONTENT, commentsListAdapter.getCommentHolder().commentContent.getText());
     }
 
 

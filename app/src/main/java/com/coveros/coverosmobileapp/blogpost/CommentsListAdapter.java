@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,8 @@ class CommentsListAdapter extends ArrayAdapter<Comment> {
     private final Context context;
     private final int layoutResourceId;
     private final List<Comment> data;
+    private CommentHolder holder;
+
 
     CommentsListAdapter(Context context, int layoutResourceId, List<Comment> data) {
         super(context, layoutResourceId, data);
@@ -39,7 +42,6 @@ class CommentsListAdapter extends ArrayAdapter<Comment> {
     @NonNull
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View row = convertView;
-        CommentHolder holder;
 
         if (row == null) {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
@@ -48,18 +50,23 @@ class CommentsListAdapter extends ArrayAdapter<Comment> {
             holder.commentName = (TextView) row.findViewById(R.id.comment_name);
             holder.commentDate = (TextView) row.findViewById(R.id.comment_date);
             holder.commentContent = (TextView) row.findViewById(R.id.comment_content);
-
             row.setTag(holder);
+            Log.d("CLADAPTER", "ROW IS NULL");
         } else {
             holder = (CommentHolder) row.getTag();
+            Log.d("CLADAPTER", "ROW IS NOT NULL");
         }
 
         Comment comment = data.get(position);
-        holder.getCommentName().setText(comment.getAuthor());
-        holder.getCommentDate().setText(comment.getDate());
-        holder.getCommentContent().setText(Html.fromHtml(comment.getContent(), Html.FROM_HTML_MODE_LEGACY));
+        holder.commentName.setText(comment.getAuthor());
+        holder.commentDate.setText(comment.getDate());
+        holder.commentContent.setText(Html.fromHtml(comment.getContent(), Html.FROM_HTML_MODE_LEGACY));
 
         return row;
+    }
+
+    CommentHolder getCommentHolder() {
+        return holder;
     }
 
     /**
@@ -69,18 +76,6 @@ class CommentsListAdapter extends ArrayAdapter<Comment> {
         TextView commentName;
         TextView commentDate;
         TextView commentContent;
-
-        TextView getCommentName() {
-            return commentName;
-        }
-
-        TextView getCommentDate() {
-            return commentDate;
-        }
-
-        TextView getCommentContent() {
-            return commentContent;
-        }
 
     }
 }
