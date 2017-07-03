@@ -8,16 +8,21 @@ import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.support.annotation.RequiresPermission;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.*;
 import android.widget.Toast;
-import java.io.BufferedReader;
-import java.io.InputStream;
+
+import com.android.volley.toolbox.HttpClientStack;
+
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 //import java.util.function.Function;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private AlertDialog dialog;
 
     public MainActivity(){
-        webName = "https://www.dev.secureci.com/";
+        webName = "https://www.coveros.com/"; //https://www.dev.secureci.com/";
     }
 
     public String getWebName(){
@@ -82,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
             }
-
             @Override
             public void onPageStarted(WebView view, String url, Bitmap fav){
                 if(webName.equals("https://www.coveros.com/blog/")){
