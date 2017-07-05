@@ -160,12 +160,7 @@ public class MainActivity extends AppCompatActivity {
         NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
 
         //No internet connection
-        if(netInfo != null && netInfo.isConnected() && netInfo.isAvailable()){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return (netInfo != null && netInfo.isConnected() && netInfo.isAvailable());
     }
 
     /*
