@@ -26,11 +26,10 @@ public class MainActivity extends AppCompatActivity {
     //MainActivity
     private String webName;
     private WebView browser;
+    private AlertDialog dialog;
 
-    private static final String[] menuTitles = new String[]{"Home","Blog","Bookmarks"};
-    private DrawerLayout menu;
     private ListView drawerList;
-    private static final String[] MENU_TITLES = new String[]{"Website","Blog","Bookmarks"};
+    private static final String[] MENU_TITLES = new String[]{"Home","Blog","Bookmarks"};
     private DrawerLayout menu;
 
     public MainActivity(){
