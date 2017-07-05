@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.coveros.coverosmobileapp.R;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -52,8 +54,9 @@ public class CommentsListAdapterInstrumentedTest {
     public void setUp() {
 
         commentsListActivity = commentsListActivityRule.getActivity();
+        JsonObject commentJson = new Gson().fromJson("{\"author_name\": \"Ryan Kenney\", \"date\": \"2017-06-27T10:23:18\", \"content\": {\"rendered\": \"&#8220;I made Sadie get the rotisserie chicken.\"}}", JsonObject.class);
 
-        Comment comment = new Comment("Ryan Kenney", "2017-06-27T10:23:18", "&#8220;I made Sadie get the rotisserie chicken.");
+        Comment comment = new Comment(commentJson);
 
         List<Comment> comments = new ArrayList<>();
         comments.add(comment);
