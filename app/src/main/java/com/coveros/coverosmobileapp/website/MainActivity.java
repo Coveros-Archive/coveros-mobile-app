@@ -11,14 +11,12 @@ import android.net.Uri;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.webkit.*;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
 
@@ -160,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
 
         //No internet connection
-        return (netInfo != null && netInfo.isConnected() && netInfo.isAvailable());
+        return netInfo != null && netInfo.isConnected() && netInfo.isAvailable();
     }
 
     /*
