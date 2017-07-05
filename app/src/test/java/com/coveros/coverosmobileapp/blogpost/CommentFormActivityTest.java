@@ -12,7 +12,6 @@ import static junit.framework.Assert.assertEquals;
 
 public class CommentFormActivityTest {
 
-    private static final int EXPECTED_EMPTY_FIELDS_LIST_SIZE = 3;
     private static final String EXPECTED_AUTHOR_STRING = "name";
     private static final String EXPECTED_EMAIL_STRING = "email";
     private static final String EXPECTED_MESSAGE_STRING = "message";
