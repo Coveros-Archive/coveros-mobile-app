@@ -51,10 +51,8 @@ class CommentsListAdapter extends ArrayAdapter<Comment> {
             holder.commentDate = (TextView) row.findViewById(R.id.comment_date);
             holder.commentContent = (TextView) row.findViewById(R.id.comment_content);
             row.setTag(holder);
-            Log.d("CLADAPTER", "ROW IS NULL");
         } else {
             holder = (CommentHolder) row.getTag();
-            Log.d("CLADAPTER", "ROW IS NOT NULL");
         }
 
         Comment comment = data.get(position);

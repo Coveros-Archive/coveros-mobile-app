@@ -84,4 +84,11 @@ public class CommentFormActivityInstrumentedTest {
         String actualMessage = commentFormActivity.getMessage();
         assertEquals("Messages should match.", EXPECTED_MESSAGE, actualMessage);
     }
+
+    @Test
+    public void onClick_withEmptyFields() {
+        onView(withId(R.id.send_button)).perform(click());
+        boolean emptyFieldsAlertDialogIsShowing = commentFormActivity.getEmptyFieldAlertDialog().isShowing();
+        assertTrue("Empty fields alert dialog should be showing.", emptyFieldsAlertDialogIsShowing);
+    }
 }

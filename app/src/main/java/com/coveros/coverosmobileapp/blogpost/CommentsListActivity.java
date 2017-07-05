@@ -46,7 +46,7 @@ public class CommentsListActivity extends BlogListActivity {
         final String postId = getIntent().getExtras().getString("postId");
 
         errorListener = createErrorListener(CommentsListActivity.this);
-        final String commentsUrl = "http://www.dev.secureci.com/wp-json/wp/v2/comments?post=" + postId;
+        final String commentsUrl = "http://www3.dev.secureci.com/wp-json/wp/v2/comments?post=" + postId;
 
         Thread commentRequest = new Thread() {
             @Override

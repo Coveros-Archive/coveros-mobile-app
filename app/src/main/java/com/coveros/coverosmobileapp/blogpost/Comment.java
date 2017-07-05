@@ -25,7 +25,7 @@ public class Comment {
         try {
             this.date = BlogPost.formatDate(commentJson.get("date").getAsString());
         } catch (ParseException e) {
-            this.date = "Unknown date";
+            this.date = "";
             Log.e("Parse exception", e.toString());
 
         }
