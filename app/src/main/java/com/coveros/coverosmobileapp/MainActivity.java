@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.webkit.*;
 import android.widget.Toast;
-//import java.util.function.Function;
 
 public class MainActivity extends AppCompatActivity {
     //MainActivity
@@ -23,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private AlertDialog dialog;
 
     public MainActivity(){
-        webName = "https://www.coveros.com/"; //https://www.dev.secureci.com/";
+        webName = "https://www.coveros.com/";
     }
 
     public String getWebName(){
@@ -67,19 +66,18 @@ public class MainActivity extends AppCompatActivity {
                     Intent startBlogPost = new Intent(getApplicationContext(), PostListActivity.class);
                     startActivity(startBlogPost);
                     return true;
-                }
-                if (url.contains("coveros.com") || url.contains("dev.secureci.com")) {
+                } if (url.contains("coveros.com") || url.contains("dev.secureci.com")) {
                     view.loadUrl(url);
                     return true;
                 } else {
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     view.getContext().startActivity(i);
-                    return true;
+                    return false;
                 }
             }
             @Override
             public void onPageStarted(WebView view, String url, Bitmap fav){
-                if(webName.equals("https://www.coveros.com/blog/")){
+                if("https://www.coveros.com/blog/".equals(webName)){
                     onBackPressed();
                 }
             }
@@ -112,8 +110,8 @@ public class MainActivity extends AppCompatActivity {
                 alertView();
             }
             catch(Exception e){
-                //Save logs if necessary
                 Log.d("Error: ", "Show Dialog: " + e.getMessage());
+                throw e;
             }
         }
         super.onStart();
@@ -137,16 +135,16 @@ public class MainActivity extends AppCompatActivity {
      */
     public boolean isOnline(){
         //Get Connectivity Manager and network info
-        ConnectivityManager conMgr = (ConnectivityManager)
-                getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager conMgr = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
 
         //No internet connection
         if(netInfo == null || !netInfo.isConnected() || !netInfo.isAvailable()){
             return false;
         }
-        //Otherwise, must be connected
-        return true;
+        else{
+            return true;
+        }
     }
 
     /*
