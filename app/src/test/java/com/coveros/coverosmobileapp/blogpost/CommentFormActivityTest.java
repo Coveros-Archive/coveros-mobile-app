@@ -13,11 +13,20 @@ import static junit.framework.Assert.assertEquals;
 public class CommentFormActivityTest {
 
     private static final int EXPECTED_EMPTY_FIELDS_LIST_SIZE = 3;
+    private static final String EXPECTED_AUTHOR_STRING = "name";
+    private static final String EXPECTED_EMAIL_STRING = "email";
+    private static final String EXPECTED_MESSAGE_STRING = "message";
 
     @Test
     public void checkFieldIsEmpty_withThreeEmptyStrings() {
         List<String> actualEmptyFields = CommentFormActivity.checkFieldIsEmpty("", "", "");
-        int actualEmptyFieldsListSize = actualEmptyFields.size();
-        assertEquals("Number of empty fields should equal 3", EXPECTED_EMPTY_FIELDS_LIST_SIZE, actualEmptyFieldsListSize);
+        String actualAuthorString = actualEmptyFields.get(0);
+        String actualEmailString = actualEmptyFields.get(1);
+        String actualMessageString = actualEmptyFields.get(2);
+        assertEquals("\"Author\" strings should match", EXPECTED_AUTHOR_STRING, actualAuthorString);
+        assertEquals("\"Email\" strings should match", EXPECTED_EMAIL_STRING, actualEmailString);
+        assertEquals("\"Message\" strings should match", EXPECTED_MESSAGE_STRING, actualMessageString);
+
     }
+
 }
