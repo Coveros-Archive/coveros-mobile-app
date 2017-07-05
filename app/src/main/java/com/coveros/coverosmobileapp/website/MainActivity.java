@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout menu;
 
     public MainActivity(){
-        webName = "https://www.coveros.com/"; //https://www.dev.secureci.com/";
+        webName = "https://www.coveros.com/";
     }
 
     public String getWebName(){
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
             }
             @Override
             public void onPageStarted(WebView view, String url, Bitmap fav){
-                if(webName.equals("https://www.coveros.com/blog/")){
+                if(("https://www.coveros.com/blog/").equals(webName)){
                     onBackPressed();
                 }
             }
@@ -132,14 +132,7 @@ public class MainActivity extends AppCompatActivity {
             browser.loadUrl(webName);
         }
         else{
-            try{
-                //AlertDialog
-                alertView();
-            }
-            catch(Exception e){
-                //Save logs if necessary
-                Log.d("Error: ", "Show Dialog: " + e.getMessage());
-            }
+            alertView();
         }
         super.onStart();
     }
@@ -167,11 +160,12 @@ public class MainActivity extends AppCompatActivity {
         NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
 
         //No internet connection
-        if(netInfo == null || !netInfo.isConnected() || !netInfo.isAvailable()){
+        if(netInfo != null && netInfo.isConnected() && netInfo.isAvailable()){
+            return true;
+        }
+        else{
             return false;
         }
-        //Otherwise, must be connected
-        return true;
     }
 
     /*
