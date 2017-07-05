@@ -75,13 +75,13 @@ public class CommentFormActivityInstrumentedTest {
 
         onView(withId(R.id.send_button)).perform(click());
 
-        String actualName = commentFormActivity.author;
+        String actualName = commentFormActivity.getAuthor();
         assertEquals("Names should match.", EXPECTED_NAME, actualName);
 
-        String actualEmail = commentFormActivity.email;
+        String actualEmail = commentFormActivity.getEmail();
         assertEquals("Emails should match.", EXPECTED_EMAIL, actualEmail);
 
-        String actualMessage = commentFormActivity.message;
+        String actualMessage = commentFormActivity.getMessage();
         assertEquals("Messages should match.", EXPECTED_MESSAGE, actualMessage);
     }
 }

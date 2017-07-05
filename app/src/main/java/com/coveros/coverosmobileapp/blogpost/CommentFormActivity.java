@@ -15,9 +15,9 @@ import com.coveros.coverosmobileapp.R;
  */
 
 public class CommentFormActivity extends AppCompatActivity {
-    String author;
-    String email;
-    String message;
+    private String author;
+    private String email;
+    private String message;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,10 +40,20 @@ public class CommentFormActivity extends AppCompatActivity {
                 Log.d("AUTHOR", author);
                 Log.d("EMAIL", email);
                 Log.d("MESSAGE", message);
-
             }
         });
+    }
 
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getMessage() {
+        return message;
     }
 
 }
