@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private String webName;
     private WebView browser;
 
-    private static final String[] menuTitles = new String[]{"Website","Blog","Bookmarks"};
+    private static final String[] menuTitles = new String[]{"Home","Blog","Bookmarks"};
     private DrawerLayout menu;
     private ListView drawerList;
 
