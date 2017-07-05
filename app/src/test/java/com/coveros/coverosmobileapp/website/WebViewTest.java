@@ -17,7 +17,7 @@ public class WebViewTest {
         String savedUrl;
         MainActivity ma = new MainActivity();
         savedUrl = ma.getWebName();
-        assertEquals("https://www.coveros.com", savedUrl);
+        assertEquals("https://www.coveros.com/", savedUrl);
     }
 
     /**
