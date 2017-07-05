@@ -22,6 +22,8 @@ class BlogPostsListAdapter extends ArrayAdapter<BlogPost> {
 
     private final Context context;
     private final int layoutResourceId;
+    private BlogPostHolder holder;
+
 
     BlogPostsListAdapter(Context context, int layoutResourceId, List<BlogPost> data) {
         super(context, layoutResourceId, data);
@@ -38,29 +40,34 @@ class BlogPostsListAdapter extends ArrayAdapter<BlogPost> {
     @NonNull
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View row = convertView;
-        PostViewHolder holder;
 
         if (row == null) {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
-            holder = new PostViewHolder();
-            holder.heading = (TextView) row.findViewById(R.id.title);
-            holder.subheading = (TextView) row.findViewById(R.id.author_date);
+            holder = new BlogPostHolder();
+            holder.title = (TextView) row.findViewById(R.id.title);
+            holder.authorDate = (TextView) row.findViewById(R.id.author_date);
             row.setTag(holder);
         } else {
-            holder = (PostViewHolder) row.getTag();
+            holder = (BlogPostHolder) row.getTag();
         }
 
         BlogPost blogPost = getItem(position);
-        holder.heading.setText(blogPost.getTitle());
-        holder.subheading.setText(blogPost.getAuthorDate());
+        holder.title.setText(blogPost.getTitle());
+        holder.authorDate.setText(blogPost.getAuthorDate());
 
         return row;
     }
 
-    private static class PostViewHolder {
-        TextView heading;
-        TextView subheading;
+    BlogPostHolder getBlogPostHolder() {
+        return holder;
     }
+
+    static class BlogPostHolder {
+        TextView title;
+        TextView authorDate;
+    }
+
+
 
 }

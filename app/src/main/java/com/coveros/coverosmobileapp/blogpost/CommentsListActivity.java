@@ -1,6 +1,9 @@
 package com.coveros.coverosmobileapp.blogpost;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.android.volley.Request;
@@ -9,6 +12,7 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -28,6 +32,7 @@ public class CommentsListActivity extends BlogListActivity {
     private RequestQueue rQueue;
     private ListView commentsListView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -35,11 +40,13 @@ public class CommentsListActivity extends BlogListActivity {
         setContentView(R.layout.comment_list);
 
         commentsListView = getListView();
-        commentsListView.addHeaderView(createTextViewLabel(CommentsListActivity.this, "Comments"));  // setting label above comments list
+
+        commentsListView.addHeaderView(createTextViewLabel(CommentsListActivity.this, getResources().getString(R.string.comments_label)));  // setting label above comments list
+
+        final String postId = getIntent().getExtras().getString("postId");
 
         errorListener = createErrorListener(CommentsListActivity.this);
-        final String commentsUrl = "http://www.dev.secureci.com/wp-json/wp/v2/comments?post=6600";  // hard coding for development
-
+        final String commentsUrl = "http://www.dev.secureci.com/wp-json/wp/v2/comments?post=" + postId;
 
         Thread commentRequest = new Thread() {
             @Override
@@ -49,7 +56,8 @@ public class CommentsListActivity extends BlogListActivity {
                     @Override
                     public void onSuccess(List<Comment> newComments) {
                         if (newComments.isEmpty()) {
-                            newComments.add(new Comment("", "", "No comments to display."));
+                            JsonObject noCommentsJson = new Gson().fromJson("{\"author_name\": \"\", \"date\": \"\", \"content\": {\"rendered\": \"<p>No comments to display.</p>\"}}", JsonObject.class);
+                            newComments.add(new Comment(noCommentsJson));
                         }
                         CommentsListAdapter commentsAdapter = new CommentsListAdapter(CommentsListActivity.this, R.layout.comment_list_text, newComments);
                         commentsListView.setAdapter(commentsAdapter);
@@ -58,6 +66,17 @@ public class CommentsListActivity extends BlogListActivity {
             }
         };
         commentRequest.start();
+
+        // when "Leave a Comment" button is clicked, will open comment form
+        Button openCommentFormButton = (Button) findViewById(R.id.leave_comment);
+        openCommentFormButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), CommentFormActivity.class);
+                intent.putExtra("postId", postId);
+                startActivity(intent);
+            }
+        });
     }
 
     /**
@@ -80,14 +99,15 @@ public class CommentsListActivity extends BlogListActivity {
         rQueue.add(commentsRequest);
     }
 
-    ListView getCommentsListView() {
-        return commentsListView;
-    }
-
     /**
      * Used to ensure StringRequests are completed before their data are used.
      */
     interface PostReadCallback<T> {
         void onSuccess(List<T> newItems);
     }
+
+    public ListView getCommentsListView() {
+        return commentsListView;
+    }
+
 }

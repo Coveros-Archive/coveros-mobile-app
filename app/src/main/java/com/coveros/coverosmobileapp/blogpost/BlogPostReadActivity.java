@@ -18,9 +18,9 @@ import java.util.List;
  */
 public class BlogPostReadActivity extends AppCompatActivity {
 
-    static final int TITLE_KEY = 0;
-    static final int CONTENT_KEY = 1;
-    static final int ID_KEY = 2;
+    private static final int ID_KEY = 0;
+    private static final int TITLE_KEY = 1;
+    private static final int CONTENT_KEY = 2;
 
     /**
      * Grabs post data from Intent and displays it and its comments.

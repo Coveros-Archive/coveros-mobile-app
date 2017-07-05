@@ -32,18 +32,6 @@ public class Comment {
         this.content = StringEscapeUtils.unescapeHtml4(commentJson.get("content").getAsJsonObject().get("rendered").getAsString());
     }
 
-    // for adding example comments for development purposes
-    public Comment(String author, String date, String content) {
-        this.author = StringEscapeUtils.unescapeHtml4(author);
-        try {
-            this.date = BlogPost.formatDate(date);
-        } catch (ParseException e) {
-            Log.e("Parse exception", e.toString());
-
-        }
-        this.content = StringEscapeUtils.unescapeHtml4(content);
-    }
-
     String getAuthor() {
         return author;
     }
