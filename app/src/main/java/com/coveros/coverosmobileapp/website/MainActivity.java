@@ -4,14 +4,16 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
+import android.webkit.*;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -20,40 +22,41 @@ import android.widget.Toast;
 import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
 
-
-@SuppressWarnings("squid:MaximumInheritanceDepth")
 public class MainActivity extends AppCompatActivity {
     //MainActivity
     private String webName;
     private WebView browser;
-
-    private static final String[] menuTitles = new String[]{"Website","Blog","Bookmarks"};
-    private DrawerLayout menu;
+    //Alerts
+    private AlertDialog dialog;
     private ListView drawerList;
+    private static final String[] MENU_TITLES = new String[]{"Website","Blog","Bookmarks"};
+    private DrawerLayout menu;
 
-    //Create Strings for Title, messsage, and buttons
-    private static final String ALERT_TTLE = "Alert";
-    private static final String ALERT_MESSAGE = "Sorry, we cannot currently retrieve the requested information.";
-    private static final String ALLERT_BUTTON_1 = "Exit App";
-    private static final String ALLERT_BUTTON_2 = "Reload App";
-    private static final String ALLERT_BUTTON_3 = "OK";
-
-    public MainActivity() {
-        webName = "https://www.coveros.com";
+    public MainActivity(){
+        webName = "https://www.coveros.com/"; //https://www.dev.secureci.com/";
     }
 
-    public String getWebName() {
+    public String getWebName(){
         return webName;
     }
 
-    public void setWebName(String website) {
+    public void setWebName(String website){
         webName = website;
     }
 
-    public void setWebViewBrowser(WebView br) {
+    public WebView getWebViewBrowser(){ return browser; }
+
+    public void setWebViewBrowser(WebView br){
         browser = br;
     }
 
+    public AlertDialog getDialog(){
+        return dialog;
+    }
+
+    /*
+     * On Creation/Declaration of App/Activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,12 +66,11 @@ public class MainActivity extends AppCompatActivity {
         browser = (WebView) findViewById(R.id.activity_main_webview);
         main.setWebViewBrowser(browser);
 
-        //constructing the menu navigation drawer
         menu = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerList = (ListView)findViewById(R.id.left_drawer);
         drawerList.setAdapter(new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1 , menuTitles));
-        drawerList.setOnItemClickListener(new DrawerItemClickListener());
+                android.R.layout.simple_list_item_1 , MENU_TITLES));
+        drawerList.setOnItemClickListener(new MainActivity.DrawerItemClickListener());
         menu.addDrawerListener(new DrawerLayout.SimpleDrawerListener(){
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset){
@@ -79,60 +81,100 @@ public class MainActivity extends AppCompatActivity {
         );
 
         //Links open in WebView with Coveros regex check
-        browser.setWebViewClient(new CustomWebViewClient() {
+        browser.setWebViewClient(new CustomWebViewClient(){
+            @SuppressWarnings("deprecation")
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                //If blog website or blog webspage is categorically loaded (hybrid)
+                if(url.contains("coveros.com/blog/") || url.contains("coveros.com/category/blogs/") ||
+                        url.contains("dev.secureci.com/blog/") || url.contains("dev.secureci.com/category/blogs/")){
+                    //Load new activity
+                    Intent startBlogPost = new Intent(getApplicationContext(), BlogPostsListActivity.class);
+                    startActivity(startBlogPost);
+                    return true;
+                }
+                if (url.contains("coveros.com") || url.contains("dev.secureci.com")) {
+                    view.loadUrl(url);
+                    return true;
+                } else {
+                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    view.getContext().startActivity(i);
+                    return true;
+                }
+            }
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap fav){
+                if(webName.equals("https://www.coveros.com/blog/")){
+                    onBackPressed();
+                }
+            }
             @Override
             public void onPageFinished(WebView view, String url) {
                 setWebName(url);
-                super.onPageFinished(view, url);
             }
         });
-        if (!isOnline()) {
+        if(!isOnline()){
             browser.loadUrl("file:///android_asset/sampleErrorPage.html");
         }
     }
 
+    /*
+     * On App StartUp
+     */
     @Override
-    protected void onStart() {
+    protected void onStart(){
         //Phone is online & Connected to a server
-        if (isOnline()) {
+        if(isOnline()){
             //Enable Javascript (Plugins)
             WebSettings webSettings = browser.getSettings();
             webSettings.setJavaScriptEnabled(true);
             //Can be changed by either using setWebName or changing value in constructor
             browser.loadUrl(webName);
-        } else {
-            AlertDialog dialog = generateAlertView();
-            dialog.show();
+        }
+        else{
+            try{
+                //AlertDialog
+                alertView();
+            }
+            catch(Exception e){
+                //Save logs if necessary
+                Log.d("Error: ", "Show Dialog: " + e.getMessage());
+            }
         }
         super.onStart();
     }
 
-    /**
+    /*
      * Back button is pressed in the app. Default implementation
      */
     @Override
-    public void onBackPressed() {
-        if (browser.canGoBack()) {
+    public void onBackPressed(){
+        if(browser.canGoBack()){
             browser.goBack();
-        } else {
+        }
+        else{
             super.onBackPressed();
         }
     }
 
-    /**
+    /*
      * Checks if the user is connected to the Internet
      */
-    public boolean isOnline() {
+    public boolean isOnline(){
         //Get Connectivity Manager and network info
         ConnectivityManager conMgr = (ConnectivityManager)
                 getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
 
-        // NetInfo must be connected and available
-        return netInfo != null && netInfo.isConnected() && netInfo.isAvailable();
+        //No internet connection
+        if(netInfo == null || !netInfo.isConnected() || !netInfo.isAvailable()){
+            return false;
+        }
+        //Otherwise, must be connected
+        return true;
     }
 
-    /**
+    /*
      * Provides AlertDialog box if an error occurs in internet connectivity
      * Three options:   Reload App (Reload's Activity, NOT THE ENTIRE APP)
      *                  Exit App (Quits the Activity and closes the app)
@@ -141,37 +183,44 @@ public class MainActivity extends AppCompatActivity {
      * OK option provided to immediately close the dialog box if the user's wifi loads
      *      the Coveros website in the background
      */
-    private AlertDialog generateAlertView() {
-        // Init Alert Dialog menu & Cancel only if pressed on button
-        AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
-                .setTitle(ALERT_TTLE)
-                .setMessage(ALERT_MESSAGE)
-                .setCancelable(false)
-                .setNeutralButton(ALLERT_BUTTON_2, new DialogInterface.OnClickListener() {
+    private void alertView(){
+        //Create Strings for Title, messsage, and buttons
+        String title = "Alert";
+        String message = "Sorry, we cannot currently retrieve the requested information.";
+        String button1 = "Exit App";
+        String button2 = "Reload App";
+        String button3 = "OK";
+
+        //Init Alert Dialog menu & Cancel only if pressed on button
+        dialog = new AlertDialog.Builder(MainActivity.this)
+                .setNeutralButton(button2, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(getApplicationContext(), "Loading App", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+                recreate();
+            }
+        })
+                .setNegativeButton(button3, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(), "Loading App", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
-                        recreate();
-                    }
+                        dialog.dismiss(); }
                 })
-                .setNegativeButton(ALLERT_BUTTON_3, new DialogInterface.OnClickListener() {
+                .setPositiveButton(button1, new DialogInterface.OnClickListener(){
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .setPositiveButton(ALLERT_BUTTON_1, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(DialogInterface dialog, int which){
                         Toast.makeText(getApplicationContext(), "Thank You", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                         finish();
                     }
-                })
-                .create();
+                }).create();
+        dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
-        return dialog;
+        //Setters (title, default message, button 1 -> Exit, button2 -> Reload)
+        dialog.setTitle(title);
+        dialog.setMessage(message);
+        //Show dialog and make text changes (font color, size, etc.)
+        dialog.show();
     }
 
     /**
@@ -183,10 +232,8 @@ public class MainActivity extends AppCompatActivity {
             if (position == 0) {
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
             } else {
-
                 startActivity(new Intent(getApplicationContext(), BlogPostsListActivity.class));
             }
         }
     }
-
 }
