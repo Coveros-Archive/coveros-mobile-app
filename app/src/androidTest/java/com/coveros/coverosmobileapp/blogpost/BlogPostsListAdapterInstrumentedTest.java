@@ -3,12 +3,15 @@ package com.coveros.coverosmobileapp.blogpost;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.coveros.coverosmobileapp.R;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -20,6 +23,8 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Maria Kim
@@ -32,7 +37,7 @@ public class BlogPostsListAdapterInstrumentedTest {
 
     private static int EXPECTED_ID = 0;
     private static int EXPECTED_COUNT = 1;
-    private static String EXPECTED_TITLE = "The Foxkicker--An Autobiography";
+    private static String EXPECTED_TITLE = "\u201CMy Disdain for the Feline Race--an Autobiography";
     private static String EXPECTED_AUTHORDATE = "Ryan Kenney\nJun 27, 2017";
 
 
@@ -40,7 +45,11 @@ public class BlogPostsListAdapterInstrumentedTest {
     public ActivityTestRule<BlogPostsListActivity> blogPostsListActivityRule = new ActivityTestRule<BlogPostsListActivity>(BlogPostsListActivity.class) {
         @Override
         public Intent getActivityIntent() {
-            BlogPost blogPost = new BlogPost("0", "Marie Kin", "1911-02-03T00:00:00", "<p>Once upon a time there was an ugly barnacle. He was so ugly that everyone died. The end.</p>", "The Ugly Barnacle");
+            JsonObject blogJson = new Gson().fromJson("{\"id\": 1234, \"author\": 14, \"date\": \"2017-06-27T10:23:18\", \"content\": {\"rendered\": \"&#8220;Cats are objectively the worst animal.\"}, \"title\": {\"rendered\": \"&#8220;My Disdain for the Feline Race--an Autobiography\"}}", JsonObject.class);
+            SparseArray authors = new SparseArray();
+            authors.append(14, "Ryan Kenney");
+            BlogPost blogPost = new BlogPost(blogJson, authors);
+
             ArrayList<String> blogPostData = new ArrayList<>();
             blogPostData.add(String.valueOf(blogPost.getId()));
             blogPostData.add(blogPost.getTitle());
@@ -56,7 +65,10 @@ public class BlogPostsListAdapterInstrumentedTest {
 
         blogPostsListActivity = blogPostsListActivityRule.getActivity();
 
-        BlogPost blogPost = new BlogPost("0", "Ryan Kenney", "2017-06-27T10:23:18", "&#8220;I like kicking cute animals in the face.", "The Foxkicker--An Autobiography");
+        JsonObject blogJson = new Gson().fromJson("{\"id\": 1234, \"author\": 14, \"date\": \"2017-06-27T10:23:18\", \"content\": {\"rendered\": \"&#8220;Cats are objectively the worst animal.\"}, \"title\": {\"rendered\": \"&#8220;My Disdain for the Feline Race--an Autobiography\"}}", JsonObject.class);
+        SparseArray authors = new SparseArray();
+        authors.append(14, "Ryan Kenney");
+        BlogPost blogPost = new BlogPost(blogJson, authors);
 
         List<BlogPost> blogPosts = new ArrayList<>();
         blogPosts.add(blogPost);

@@ -3,8 +3,10 @@ package com.coveros.coverosmobileapp.blogpost;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.util.SparseArray;
 
-import com.coveros.coverosmobileapp.R;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -14,7 +16,6 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
 /**
@@ -32,7 +33,11 @@ public class BlogPostsListActivityInstrumentedTest {
     public ActivityTestRule<BlogPostsListActivity> blogPostsListActivityRule = new ActivityTestRule<BlogPostsListActivity>(BlogPostsListActivity.class) {
         @Override
         public Intent getActivityIntent() {
-            BlogPost blogPost = new BlogPost("0", "Marie Kin", "1911-02-03T00:00:00", "<p>Once upon a time there was an ugly barnacle. He was so ugly that everyone died. The end.</p>", "The Ugly Barnacle");
+            JsonObject blogJson = new Gson().fromJson("{\"id\": 1234, \"author\": 14, \"date\": \"1911-02-03T00:00:00\", \"content\": {\"rendered\": \"<p>I like to make unfunny puns.&#8212;</p>\"}, \"title\": {\"rendered\": \"&#8220;BlogPost\"}}", JsonObject.class);
+            SparseArray authors = new SparseArray();
+            authors.append(14, "Ryan Kenney");
+            BlogPost blogPost = new BlogPost(blogJson, authors);
+
             ArrayList<String> blogPostData = new ArrayList<>();
             blogPostData.add(String.valueOf(blogPost.getId()));
             blogPostData.add(blogPost.getTitle());
