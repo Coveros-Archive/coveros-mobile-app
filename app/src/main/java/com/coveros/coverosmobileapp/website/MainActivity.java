@@ -1,4 +1,4 @@
-package com.coveros.coverosmobileapp;
+package com.coveros.coverosmobileapp.website;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -8,14 +8,19 @@ import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.webkit.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
-import com.coveros.coverosmobileapp.website.CustomWebViewClient;
-//import java.util.function.Function;
+import com.coveros.coverosmobileapp.R;
+import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
 
 public class MainActivity extends AppCompatActivity {
     //MainActivity
@@ -23,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
     private WebView browser;
     //Alerts
     private AlertDialog dialog;
+    private ListView drawerList;
+    private static final String[] MENU_TITLES = new String[]{"Website","Blog","Bookmarks"};
+    private DrawerLayout menu;
 
     public MainActivity(){
         webName = "https://www.coveros.com/"; //https://www.dev.secureci.com/";
@@ -57,6 +65,21 @@ public class MainActivity extends AppCompatActivity {
         //Link WebView variable with activity_main_webview for Web View Access
         browser = (WebView) findViewById(R.id.activity_main_webview);
         main.setWebViewBrowser(browser);
+
+        menu = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerList = (ListView)findViewById(R.id.left_drawer);
+        drawerList.setAdapter(new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1 , MENU_TITLES));
+        drawerList.setOnItemClickListener(new MainActivity.DrawerItemClickListener());
+        menu.addDrawerListener(new DrawerLayout.SimpleDrawerListener(){
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset){
+                browser.setTranslationX(slideOffset * drawerView.getWidth());
+                menu.bringChildToFront(drawerView);
+                menu.requestLayout();
+            }}
+        );
+
         //Links open in WebView with Coveros regex check
         browser.setWebViewClient(new CustomWebViewClient(){
             @SuppressWarnings("deprecation")
@@ -66,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                 if(url.contains("coveros.com/blog/") || url.contains("coveros.com/category/blogs/") ||
                         url.contains("dev.secureci.com/blog/") || url.contains("dev.secureci.com/category/blogs/")){
                     //Load new activity
-                    Intent startBlogPost = new Intent(getApplicationContext(), PostListActivity.class);
+                    Intent startBlogPost = new Intent(getApplicationContext(), BlogPostsListActivity.class);
                     startActivity(startBlogPost);
                     return true;
                 }
@@ -200,17 +223,17 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    /*
-     * Purpose: Saving Scrolled position on Web Pages and coming back to for later viewing(onPause)
-     * Calculates Scrolling Percentage to return to precisely same location
-     * on webpage. Previously onResume after onPause results in user being
-     * pushed to the top of a webpage, losing track of where/what they were
-     * looking at
+    /**
+     * Made to navigate through the menu drawer by click
      */
-    private float calculateProgression(WebView content){
-        float contentHeight = content.getContentHeight();
-        float currentScrollPosition = content.getScrollY();
-        float percentWebview = currentScrollPosition / contentHeight;
-        return percentWebview;
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            if (position == 0) {
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            } else {
+                startActivity(new Intent(getApplicationContext(), BlogPostsListActivity.class));
+            }
+        }
     }
 }

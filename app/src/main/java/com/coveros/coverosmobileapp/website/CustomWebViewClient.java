@@ -1,7 +1,5 @@
-package com.coveros.coverosmobileapp;
+package com.coveros.coverosmobileapp.website;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.util.Log;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;

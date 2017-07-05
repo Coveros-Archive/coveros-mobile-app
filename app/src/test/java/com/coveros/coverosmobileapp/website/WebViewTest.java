@@ -1,7 +1,5 @@
 package com.coveros.coverosmobileapp.website;
 
-import com.coveros.coverosmobileapp.R;
-
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
