@@ -1,12 +1,16 @@
-package com.coveros.coverosmobileapp;
+package com.coveros.coverosmobileapp.blogpost;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.coveros.coverosmobileapp.R;
 
 import java.util.List;
 
@@ -14,27 +18,27 @@ import java.util.List;
  * Custom adapter to handle multi-line items in the postListView.
  * @author Maria Kim
  */
-public class PostListAdapter extends ArrayAdapter<Post> {
+class BlogPostsListAdapter extends ArrayAdapter<BlogPost> {
 
-    static Context context;
-    static int layoutResourceId;
-    List<Post> data = null;
+    private final Context context;
+    private final int layoutResourceId;
 
-    public PostListAdapter(Context context, int layoutResourceId, List<Post> data) {
+    BlogPostsListAdapter(Context context, int layoutResourceId, List<BlogPost> data) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
-        this.data = data;
     }
 
+    @Override
     public long getItemId(int position) {
         return position;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    @NonNull
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View row = convertView;
-        PostViewHolder holder = null;
+        PostViewHolder holder;
 
         if (row == null) {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
@@ -47,16 +51,16 @@ public class PostListAdapter extends ArrayAdapter<Post> {
             holder = (PostViewHolder) row.getTag();
         }
 
-        Post post = data.get(position);
-        holder.heading.setText(post.getHeading());
-        holder.subheading.setText(post.getSubheading());
+        BlogPost blogPost = getItem(position);
+        holder.heading.setText(blogPost.getTitle());
+        holder.subheading.setText(blogPost.getAuthorDate());
 
         return row;
-
     }
 
-    static class PostViewHolder {
+    private static class PostViewHolder {
         TextView heading;
         TextView subheading;
     }
+
 }

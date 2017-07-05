@@ -4,6 +4,7 @@ plugins {
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco'
 apply plugin: 'jacoco-android'
+apply plugin: 'maven'
 
 sonarqube {
     properties {
@@ -21,24 +22,57 @@ sonarqube {
     }
 }
 
-//created to put files for testing in one directory
-task copyFiles {
-    copy {
-        from "$buildDir/test-results/testDebugUnitTest"
-        into "$buildDir/aggregatedReports/tests"
+ext.nexus = {
+    credentials {
+        username nexusUser
+        password nexusPass
     }
-    copy {
-        from "$buildDir/outputs/androidTest-results/connected"
-        into "$buildDir/aggregatedReports/tests"
-    }
-    copy {
-        from "$buildDir/outputs/code-coverage/connected"
-        into "$buildDir/aggregatedReports/coverage"
-        rename {
-            fileName ->
-            "InstrumentedCoverage.exec"
+    url nexusRepoURL
+}
+
+repositories {
+    maven(nexus)
+    jcenter()
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            snapshotRepository(url: nexusRepoURL) {
+                authentication(userName: nexusUser, password: nexusPass);
+            }
         }
     }
+}
+
+task aggregateUnitTestResults(type: Copy) {
+    from "$buildDir/test-results/testDebugUnitTest"
+    from "$buildDir/outputs/androidTest-results/connected"
+    into "$buildDir/aggregatedReports/tests"
+}
+
+task aggregateCoverageResults(type: Copy) {
+    from "$buildDir/outputs/code-coverage/connected"
+    into "$buildDir/aggregatedReports/coverage"
+    rename {
+        fileName ->
+            "InstrumentedCoverage.exec"
+    }
+}
+
+task aggregateTestData {
+    dependsOn 'aggregateUnitTestResults'
+    dependsOn 'aggregateCoverageResults'
+}
+
+task fullSonarAnalysis {
+    dependsOn 'jacocoTestReport'
+    dependsOn 'connectedAndroidTest'
+    dependsOn 'aggregateTestData'
+    dependsOn 'sonarqube'
+    tasks.findByName('aggregateTestData').mustRunAfter 'jacocoTestReport'
+    tasks.findByName('aggregateTestData').mustRunAfter 'connectedAndroidTest'
+    tasks.findByName('sonarqube').mustRunAfter 'aggregateTestData'
 }
 
 //App version to track differences
@@ -70,6 +104,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+    lintOptions {
+        abortOnError false
+    }
 
 }
 
@@ -80,6 +120,7 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+
 
     // adding for testing Wordpress integration
     compile 'com.google.code.gson:gson:2.7'
@@ -92,6 +133,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     // for testing error message
     testCompile 'org.mockito:mockito-core:2.1.0'
+
 }
 
 //Defined reports generated

@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.webkit.*;
 import android.widget.Toast;
+
+import com.coveros.coverosmobileapp.website.CustomWebViewClient;
 //import java.util.function.Function;
 
 public class MainActivity extends AppCompatActivity {
