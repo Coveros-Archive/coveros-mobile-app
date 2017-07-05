@@ -54,7 +54,6 @@ public class CommentFormActivity extends AppCompatActivity {
                 Log.d("AUTHOR", author);
                 Log.d("EMAIL", email);
                 Log.d("MESSAGE", message);
-
             }
         });
 

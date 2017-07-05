@@ -2,6 +2,7 @@ package com.coveros.coverosmobileapp.blogpost;
 
 import android.util.SparseArray;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import org.junit.Before;
@@ -20,7 +21,7 @@ import static org.mockito.Mockito.when;
  */
 public class BlogPostTest {
 
-    JsonObject outerJson = new JsonObject();
+//    JsonObject outerJson = new JsonObject();
     BlogPost blogPost;
 
     private static final int EXPECTED_ID = 1234;
@@ -29,20 +30,11 @@ public class BlogPostTest {
 
     @Before
     public void setUp() {
-        outerJson.addProperty("id", "1234");
-        outerJson.addProperty("author", "14");
-        outerJson.addProperty("date", "1911-02-03T00:00:00");
 
-        JsonObject innerContentJson = new JsonObject();
-        innerContentJson.addProperty("rendered", "<p>I like to make unfunny puns.&#8212;</p>");
-        outerJson.add("content", innerContentJson);
-        JsonObject innerTitleJson = new JsonObject();
-        innerTitleJson.addProperty("rendered", "&#8220;BlogPost");
-        outerJson.add("title", innerTitleJson);
-
+        JsonObject blogJson = new Gson().fromJson("{\"id\": 1234, \"author\": 14, \"date\": \"1911-02-03T00:00:00\", \"content\": {\"rendered\": \"<p>I like to make unfunny puns.&#8212;</p>\"}, \"title\": {\"rendered\": \"&#8220;BlogPost\"}}", JsonObject.class);
         SparseArray authors = mock(SparseArray.class);
         when(authors.get(14)).thenReturn("Ryan Kenney");
-        blogPost = new BlogPost(outerJson, authors);
+        blogPost = new BlogPost(blogJson, authors);
     }
     @Rule
     public ExpectedException thrown = ExpectedException.none();
