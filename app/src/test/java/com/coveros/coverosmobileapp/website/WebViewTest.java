@@ -1,7 +1,5 @@
 package com.coveros.coverosmobileapp.website;
 
-import com.coveros.coverosmobileapp.R;
-
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -19,7 +17,7 @@ public class WebViewTest {
         String savedUrl;
         MainActivity ma = new MainActivity();
         savedUrl = ma.getWebName();
-        assertEquals("https://www.coveros.com", savedUrl);
+        assertEquals("https://www.coveros.com/", savedUrl);
     }
 
     /**
