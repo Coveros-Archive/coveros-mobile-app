@@ -39,7 +39,7 @@ public class BlogPostsListActivity extends BlogListActivity {
     private SparseArray<String> authors = new SparseArray<>();  // to aggregate the ids and names of the authors of displayed blog posts
     private RequestQueue rQueue;
 
-    private static final String[] menuTitles = new String[]{"Website", "Blog", "Bookmarks"};
+    private static final String[] MENU_TITLES = new String[]{"Home", "Blog"};
     private DrawerLayout menu;
     private ListView drawerList;
     private LinearLayout postList;
@@ -72,7 +72,7 @@ public class BlogPostsListActivity extends BlogListActivity {
         menu = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerList = (ListView) findViewById(R.id.left_drawer);
         drawerList.setAdapter(new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, menuTitles));
+                android.R.layout.simple_list_item_1, MENU_TITLES));
         drawerList.setOnItemClickListener(new BlogPostsListActivity.DrawerItemClickListener());
         menu.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
                                    @Override
