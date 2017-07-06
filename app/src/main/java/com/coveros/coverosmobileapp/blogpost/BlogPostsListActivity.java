@@ -67,6 +67,7 @@ public class BlogPostsListActivity extends BlogListActivity {
 
         errorListener = createErrorListener(BlogPostsListActivity.this);
 
+        //creates the sliding navigation drawer menu
         postList = (LinearLayout) findViewById(R.id.postlist);
         menu = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerList = (ListView) findViewById(R.id.left_drawer);
@@ -227,6 +228,13 @@ public class BlogPostsListActivity extends BlogListActivity {
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        /**
+         * This method implements navigating to the corresponding activity when a position is selected on the navigation menu drawer
+         * @param parent the current placing of the adapter
+         * @param view the current layout shown
+         * @param position the int the describes the placing in the list
+         * @param id the specified value of the layout
+         */
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             if (position == 0) {

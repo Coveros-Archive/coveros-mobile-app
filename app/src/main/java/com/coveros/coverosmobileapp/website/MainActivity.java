@@ -10,8 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
+import android.webkit.*;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -27,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private String webName;
     private WebView browser;
 
-    private static final String[] menuTitles = new String[]{"Website","Blog","Bookmarks"};
+    private static final String[] MENU_TITLES = new String[]{"Website","Blog","Bookmarks"};
     private DrawerLayout menu;
     private ListView drawerList;
 
@@ -67,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         menu = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerList = (ListView)findViewById(R.id.left_drawer);
         drawerList.setAdapter(new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1 , menuTitles));
+                android.R.layout.simple_list_item_1 , MENU_TITLES));
         drawerList.setOnItemClickListener(new DrawerItemClickListener());
         menu.addDrawerListener(new DrawerLayout.SimpleDrawerListener(){
             @Override
@@ -178,6 +177,13 @@ public class MainActivity extends AppCompatActivity {
      * Made to navigate through the menu drawer by click
      */
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        /**
+         * This method implements navigating to the corresponding activity when a position is selected on the navigation menu drawer
+         * @param parent the current placing of the adapter
+         * @param view the current layout shown
+         * @param position the int the describes the placing in the list
+         * @param id the specified value of the layout
+         */
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             if (position == 0) {
