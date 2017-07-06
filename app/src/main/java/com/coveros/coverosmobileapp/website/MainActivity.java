@@ -22,6 +22,8 @@ import android.widget.Toast;
 import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
 
+import java.net.URLConnection;
+
 public class MainActivity extends AppCompatActivity {
     //MainActivity
     private String webName;
@@ -35,21 +37,16 @@ public class MainActivity extends AppCompatActivity {
     public MainActivity(){
         webName = "https://www.coveros.com/";
     }
-
     public String getWebName(){
         return webName;
     }
-
     public void setWebName(String website){
         webName = website;
     }
-
     public WebView getWebViewBrowser(){ return browser; }
-
     public void setWebViewBrowser(WebView br){
         browser = br;
     }
-
     public AlertDialog getDialog(){
         return dialog;
     }
@@ -65,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
         //Link WebView variable with activity_main_webview for Web View Access
         browser = (WebView) findViewById(R.id.activity_main_webview);
         main.setWebViewBrowser(browser);
-
         menu = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerList = (ListView)findViewById(R.id.left_drawer);
         drawerList.setAdapter(new ArrayAdapter<>(this,
@@ -79,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 menu.requestLayout();
             }}
         );
-
+        //URLContent html = new URLContent();
         //Links open in WebView with Coveros regex check
         browser.setWebViewClient(new CustomWebViewClient(){
             @SuppressWarnings("deprecation")
@@ -179,7 +175,6 @@ public class MainActivity extends AppCompatActivity {
         String button1 = "Exit App";
         String button2 = "Reload App";
         String button3 = "OK";
-
         //Init Alert Dialog menu & Cancel only if pressed on button
         dialog = new AlertDialog.Builder(MainActivity.this)
                 .setNeutralButton(button2, new DialogInterface.OnClickListener() {

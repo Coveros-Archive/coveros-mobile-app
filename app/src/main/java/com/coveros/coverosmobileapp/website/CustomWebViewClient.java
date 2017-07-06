@@ -17,6 +17,9 @@ import static android.content.ContentValues.TAG;
 public class CustomWebViewClient extends WebViewClient {
 
     private boolean weAreConnected;
+    public CustomWebViewClient() {
+        weAreConnected = true;
+    }
     public boolean getConnection(){
         return weAreConnected;
     }
