@@ -112,16 +112,16 @@ public class BlogPostsListActivity extends BlogListActivity {
     protected void retrieveAuthors(final PostListCallback<String> postListCallback) {
         StringRequest authorsRequest = new StringRequest(Request.Method.GET, AUTHORS_URL, new Response.Listener<String>() {
             @Override
-            public void onResponse(String response) {
-                JsonArray authorsJson = new JsonParser().parse(response).getAsJsonArray();
-                for (JsonElement author : authorsJson) {
-                    JsonObject authorJson = (JsonObject) author;
-                    Integer id = authorJson.get("id").getAsInt();
-                    authors.put(id, authorJson.get("name").getAsString());
-                }
-                postListCallback.onSuccess(null);
+        public void onResponse(String response) {
+            JsonArray authorsJson = new JsonParser().parse(response).getAsJsonArray();
+            for (JsonElement author : authorsJson) {
+                JsonObject authorJson = (JsonObject) author;
+                Integer id = authorJson.get("id").getAsInt();
+                authors.put(id, authorJson.get("name").getAsString());
             }
-        }, errorListener);
+            postListCallback.onSuccess(null);
+        }
+    }, errorListener);
         rQueue.add(authorsRequest);
     }
 
