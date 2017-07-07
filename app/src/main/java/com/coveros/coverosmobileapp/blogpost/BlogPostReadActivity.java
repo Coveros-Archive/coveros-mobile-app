@@ -16,6 +16,7 @@ import java.util.List;
  *
  * @author Maria Kim
  */
+@SuppressWarnings("squid:MaximumInheritanceDepth")
 public class BlogPostReadActivity extends AppCompatActivity {
 
     private static final int ID_KEY = 0;
