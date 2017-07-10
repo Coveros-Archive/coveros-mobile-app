@@ -49,7 +49,7 @@ If all went well and OAuth2.0 has been set up properly, you should see a JSON th
 > For some reason, while POST requests that edit existing posts and comments work, DELETE requests for posts and comments do not. This is an issue that must be resolved in the future during the "Delete Comments" story.
 
 # Things That Need to Be Addressed in the Future
-# Delete Requests
+## Delete Requests
 
 For some reason, while POST requests that edit existing posts and comments work, DELETE requests for posts and comments do not. This is an issue that must be resolved in the future during the "Delete Comments" story. 
 Looking at the JSON returned by a GET request at https://www3.dev.secureci.com/wp-json suggests that DELETE requests are possible--in the `routes: {}` entry, `/wp/v2/comments/(?P<id>[\\d]+)` and `/wp/v2/posts/(?P<id>[\\d]+)` both list DELETE under their methods. 
