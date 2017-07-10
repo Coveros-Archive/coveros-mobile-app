@@ -51,8 +51,9 @@ If all went well and OAuth2.0 has been set up properly, you should see a JSON th
 # What Did Not Work
 Initially, we tried using the OAuth that is available natively through Wordpress via the [Jetpack](https://wordpress.org/plugins/jetpack/) plug-in. This involved linking a Wordpress Account within Jetpack's UI within the Wordpress Dashboard, and creating an application (i.e. Client) at https://developer.wordpress.com/apps/ using the linked account. While the OAuth2.0 authentication process seemed to work via Postman (an access token was successfully receieved), requests that required authentication (e.g. POST request for a post) were unsuccessful. 
 Two differences between the request for an access token using the WP OAuth Server plug-in and the request for an access token using the natively OAuth available through Wordpress were the Auth URL and the Access Token URL.
+
 |   | Plug-in  | Jetpack  | 
-|---|---|---|
+| :---: | :---: | :---: |
 | Auth URL  |   https://www3.dev.secureci.com/oauth/authorize   |  	https://public-api.wordpress.com/oauth2/authorize |   
 | Access Token URL  | https://www3.dev.secureci.com/oauth/token  | 	https://public-api.wordpress.com/oauth2/token  |   
 
