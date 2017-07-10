@@ -1,0 +1,58 @@
+# Allowing Anonymous Comments Through the Wordpress Backend Files
+Since Wordpress 4.7.0., the posting of anonymous comments, or comments that are not associated with a Wordpress account, is natively disabled. To allow anonymous comments, you will need to modify a backend file, which can be accessed by SSHing into the machine hosting the website. 
+
+- In the `functions.php` file, found in the `/var/www/html/wp-content/themes/illdy/functions.php` directory, paste the following code:
+```
+function filter_rest_allow_anonymous_comments() {
+	return true;
+}
+add_filter('rest_allow_anonymous_comments', 'filter_rest_allow_anonymous_comments');
+```
+
+This should allow POST comment requests without the need for authentication.
+
+##### The following instructions are for the Coveros development website found at: https://www3.dev.secureci.com. If this URL changes (i.e. a new development website is created), substitute the above link with the appropriate link in the instructions below.
+# Setting Up OAuth2.0 on Wordpress Using the WP OAuth Server Plug-in and Testing With Postman
+
+## Setting up the WP OAuth Server Plug-in
+- To set-up the use of OAuth2.0 on Wordpress, install the plug-in [WP OAuth Server](https://wordpress.org/plugins/oauth2-provider/), either through the Wordpress Dashboard or through the console into the `/var/www/html/wp-content/plugins/` directory.
+
+
+- Once WP OAuth Server plug-in has been installed, navigate to the plug-in by selecting the `OAuth Server` tab in the Wordpress Dashboard. Then, to add a new "Client," or application, select the `Clients` tab and press the `Add New Client` button.
+
+
+- Fill in the Client name (e.g. "Coveros Mobile App"), the Redirect URI (`https://www.getpostman.com/oauth2/callback` for this example testing with Postman), and a Client description (e.g. "An app for the Mobile Applications Testing course"). Press the `Create Client` button to continue.
+
+At this stage, you will have set up the Wordpress side of using OAuth2.0. For the Client you just created, you should see a "Client ID," as well as a "Client Secret," when you hover under the name of the Client and press the `Show Secret` link. You will use the "Client ID" and "Client Secret" in the next step--testing the OAuth2.0 connection with Postman.
+
+## Testing the OAuth2.0 Connection with Postman
+
+- Open Postman, or [install](https://www.getpostman.com/) the application if you have not already.
+
+
+- To start a test request, under the `Authorization` tab, which should already be selected, under the dropdown `Type` select `OAuth 2.0`. Press the `Get New Access Token` button that appears.
+
+
+- Fill out the Token Name (e.g. Coveros Dev Wordpress), the Auth URL (https://www3.dev.secureci.com/oauth/authorize), the Access Token URL (https://www3.dev.secureci.com/oauth/token), the Client ID and Client Secret (from above), and select `Authorization Code` as the Grant Type. Then press the `Request Token` button.
+
+This should bring up a  log-in window, in which you may enter your credentials and approve the OAuth2.0 connection. Note: only users with "Administrator" status will have credentials that will allow for a successful OAuth2.0 connection.
+
+- After logging in, given that valid credentials were used, Postman should now list the new token under "Existing Tokens." Select the token you just created, and then in the "Add token to" dropdown, select the "Header" option. Then, press the "Use Token" button.
+
+
+Now, let's make a request to test the OAuth2.0 connection. 
+
+- Select "POST" as the request type, then input `https://www3.dev.secureci.com/wp-json/wp/v2/comments?post=7509&content=<Some+comment+content>&author_name=A+fellow+cat+lover&author_email=catsrus@catlovers.com` as the URL. Then, press `Send`. 
+
+If all went well and OAuth2.0 has been set up properly, you should see a JSON that contains the information you provided in the URL above.
+
+> For some reason, while POST requests that edit existing posts and comments work, DELETE requests for posts and comments do not. This is an issue that must be resolved in the future during the "Delete Comments" story.
+
+# What Did Not Work
+Initially, we tried using the OAuth that is available natively through Wordpress via the [Jetpack](https://wordpress.org/plugins/jetpack/) plug-in. This involved linking a Wordpress Account within Jetpack's UI within the Wordpress Dashboard, and creating an application (i.e. Client) at https://developer.wordpress.com/apps/ using the linked account. While the OAuth2.0 authentication process seemed to work via Postman (an access token was successfully receieved), requests that required authentication (e.g. POST request for a post) were unsuccessful. 
+Two differences between the request for an access token using the WP OAuth Server plug-in and the request for an access token using the natively OAuth available through Wordpress were the Auth URL and the Access Token URL.
+|   | Plug-in  | Jetpack  | 
+|---|---|---|
+| Auth URL  |   https://www3.dev.secureci.com/oauth/authorize   |  	https://public-api.wordpress.com/oauth2/authorize |   
+| Access Token URL  | https://www3.dev.secureci.com/oauth/token  | 	https://public-api.wordpress.com/oauth2/token  |   
+
