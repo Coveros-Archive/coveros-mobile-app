@@ -11,7 +11,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.coveros.coverosmobileapp.R;
 
-class BlogPostErrorListener implements Response.ErrorListener {
+public class BlogPostErrorListener implements Response.ErrorListener {
 
     private AlertDialog errorMessageDialog;
     private Context context;

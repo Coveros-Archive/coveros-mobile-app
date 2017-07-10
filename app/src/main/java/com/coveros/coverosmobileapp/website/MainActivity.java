@@ -16,8 +16,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
 import com.coveros.coverosmobileapp.R;
+import com.coveros.coverosmobileapp.blogpost.BlogPostErrorListener;
 import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
+
 
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
@@ -30,12 +36,15 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout menu;
     private ListView drawerList;
 
+    private RequestQueue rQueue;
+
     //Create Strings for Title, messsage, and buttons
     private static final String ALERT_TTLE = "Alert";
     private static final String ALERT_MESSAGE = "Sorry, we cannot currently retrieve the requested information.";
     private static final String ALLERT_BUTTON_1 = "Exit App";
     private static final String ALLERT_BUTTON_2 = "Reload App";
     private static final String ALLERT_BUTTON_3 = "OK";
+
 
     public MainActivity() {
         webName = "https://www.coveros.com";
@@ -61,6 +70,17 @@ public class MainActivity extends AppCompatActivity {
         //Link WebView variable with activity_main_webview for Web View Access
         browser = (WebView) findViewById(R.id.activity_main_webview);
         main.setWebViewBrowser(browser);
+
+        final int blogId = getIntent().getIntExtra("blogId", 0);
+        final String authors = "https://www.dev.secureci.com/wp-json/wp/v2/users?orderby=id=" + blogId;
+        /**StringRequest authorRequest = new StringRequest(Request.Method.GET, authors, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+            }
+        }, new BlogPostErrorListener(MainActivity.this));
+        rQueue.add(authorRequest);
+         */
 
         //constructing the menu navigation drawer
         menu = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -194,5 +214,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
 
 }
