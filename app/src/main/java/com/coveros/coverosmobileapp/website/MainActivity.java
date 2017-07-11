@@ -78,7 +78,8 @@ public class MainActivity extends AppCompatActivity {
         rQueue = Volley.newRequestQueue(MainActivity.this);
         final int blogId = getIntent().getIntExtra("blogId", 0);
         final String authors = "https://www.dev.secureci.com/wp-json/wp/v2/users?orderby=id=" + blogId;
-       /** StringRequest authorRequest = new StringRequest(Request.Method.GET, authors, new Response.Listener<String>() {
+
+        /** StringRequest authorRequest = new StringRequest(Request.Method.GET, authors, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
             JsonObject blogPostsJson = new JsonParser().parse(response).getAsJsonObject();
