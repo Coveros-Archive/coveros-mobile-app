@@ -37,7 +37,7 @@ class BlogPost {
         try {
             this.date = formatDate(blogPostJson.get("date").getAsString());
         } catch (ParseException e) {
-            this.date = "Unknown date";
+            this.date = "";
             Log.e("Parse exception", e.toString());
         }
         String author = StringEscapeUtils.unescapeHtml4(authors.get(blogPostJson.get("author").getAsInt()));

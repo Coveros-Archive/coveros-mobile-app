@@ -25,23 +25,11 @@ public class Comment {
         try {
             this.date = BlogPost.formatDate(commentJson.get("date").getAsString());
         } catch (ParseException e) {
-            this.date = "Unknown date";
+            this.date = "";
             Log.e("Parse exception", e.toString());
 
         }
         this.content = StringEscapeUtils.unescapeHtml4(commentJson.get("content").getAsJsonObject().get("rendered").getAsString());
-    }
-
-    // for adding example comments for development purposes
-    public Comment(String author, String date, String content) {
-        this.author = StringEscapeUtils.unescapeHtml4(author);
-        try {
-            this.date = BlogPost.formatDate(date);
-        } catch (ParseException e) {
-            Log.e("Parse exception", e.toString());
-
-        }
-        this.content = StringEscapeUtils.unescapeHtml4(content);
     }
 
     String getAuthor() {

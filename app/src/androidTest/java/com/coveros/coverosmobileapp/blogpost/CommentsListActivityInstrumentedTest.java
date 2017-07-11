@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.coveros.coverosmobileapp.R;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -11,6 +13,7 @@ import org.junit.runner.RunWith;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * @author Maria Kim
@@ -19,30 +22,41 @@ import static junit.framework.Assert.assertNotNull;
 @RunWith(AndroidJUnit4.class)
 public class CommentsListActivityInstrumentedTest {
 
-    private static final String POST_ID = "0";
+    CommentsListActivity commentsListActivity;
+
+    private static int EXPECTED_HEADER_COUNT = 1;
 
     @Rule
-    public ActivityTestRule<CommentsListActivity> mCommentsListActivityRule = new ActivityTestRule<CommentsListActivity>(CommentsListActivity.class) {
+    public ActivityTestRule<CommentsListActivity> commentsListActivityRule = new ActivityTestRule<CommentsListActivity>(CommentsListActivity.class) {
         @Override
         public Intent getActivityIntent() {
             Intent intent = new Intent();
-            intent.putExtra("postId", "" + POST_ID);
+            intent.putExtra("postId", "" + "0");
             return intent;
         }
     };
 
     @Before
     public void setUp() {
+       commentsListActivity = commentsListActivityRule.getActivity();
     }
 
     @Test
-    public void onCreate_checkListViewNotNull() {
-        assertNotNull("ListView should not be null.", mCommentsListActivityRule.getActivity().getListView());
+    public void onCreate_checkListViewIsShown() {
+        boolean listViewIsShown = commentsListActivity.getCommentsListView().isShown();
+        assertTrue("ListView should be shown.", listViewIsShown);
     }
 
     @Test
-    public void onCreate_checkHeaderViewTextViewNotNull() {
-        assertEquals("Header view should not be null", 1, mCommentsListActivityRule.getActivity().getListView().getHeaderViewsCount());
+    public void onCreate_checkButtonIsShown() {
+        boolean buttonIsShown = commentsListActivity.findViewById(R.id.leave_comment).isShown();
+        assertTrue("\"Leave a Comment\" button should be shown.", buttonIsShown);
+    }
+
+    @Test
+    public void onCreate_checkHeaderViewTextViewAdded() {
+        int actualHeaderCount = commentsListActivity.getCommentsListView().getHeaderViewsCount();
+        assertEquals("One header view should be added", EXPECTED_HEADER_COUNT, actualHeaderCount);
     }
 
 }

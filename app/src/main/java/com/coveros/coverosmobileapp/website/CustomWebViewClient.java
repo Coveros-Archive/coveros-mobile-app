@@ -1,6 +1,5 @@
 package com.coveros.coverosmobileapp.website;
 
-import android.content.Intent;
 import android.util.Log;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -10,21 +9,22 @@ import android.webkit.WebViewClient;
 import static android.content.ContentValues.TAG;
 
 /**
- * Custom WebViewClient implementation that differentiates between coveros and non-coveros urls.
- * @author Ethan Painter
+ * Created by EPainter on 6/16/2017.
+ * Provides Custom WebView Client that only loads Coveros-related content through WebView.
+ * All externally related information is processed in a web browser
  */
-class CustomWebViewClient extends WebViewClient {
 
-    @Override
-    public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-        boolean override = !request.getUrl().toString().contains("coveros.com");
+public class CustomWebViewClient extends WebViewClient {
 
-        // Handle the override here: This should probably go somewhere else
-        if (override) {
-            Intent i = new Intent(Intent.ACTION_VIEW, request.getUrl());
-            view.getContext().startActivity(i);
-        }
-        return override;
+    private boolean weAreConnected;
+    public CustomWebViewClient() {
+        weAreConnected = true;
+    }
+    public boolean getConnection(){
+        return weAreConnected;
+    }
+    public void setConnection(boolean answer){
+        weAreConnected = answer;
     }
 
     @Override
