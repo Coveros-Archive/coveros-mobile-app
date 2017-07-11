@@ -12,30 +12,31 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.*;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
 
-import java.net.URLConnection;
+
 
 public class MainActivity extends AppCompatActivity {
     //MainActivity
     private String webName;
     private WebView browser;
     private AlertDialog dialog;
+    private static final String TAG = "MainActivity";
 
     private ListView drawerList;
     private static final String[] MENU_TITLES = new String[]{"Home","Blog","Bookmarks"};
     private DrawerLayout menu;
 
     public MainActivity(){
-        webName = "https://www.coveros.com/";
+        webName = "https://www3.dev.secureci.com";
     }
     public String getWebName(){
         return webName;
@@ -75,21 +76,55 @@ public class MainActivity extends AppCompatActivity {
                 menu.requestLayout();
             }}
         );
-        //URLContent html = new URLContent();
+        browser.setOnTouchListener(new View.OnTouchListener(){
+            public boolean onTouch(View v, MotionEvent event){
+                WebView.HitTestResult hr = ((WebView) v).getHitTestResult();
+                return false;
+            }
+        });
         //Links open in WebView with Coveros regex check
         browser.setWebViewClient(new CustomWebViewClient(){
             @SuppressWarnings("deprecation")
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 //If blog website or blog webspage is categorically loaded (hybrid)
-                if(url.contains("coveros.com/blog/") || url.contains("coveros.com/category/blogs/") ||
-                        url.contains("dev.secureci.com/blog/") || url.contains("dev.secureci.com/category/blogs/")){
-                    //Load new activity
+                boolean isBlogPost = false;
+                String value = "";
+                URLContent content = new URLContent(url);
+
+                //Create new thread to handle network operations
+                Thread th = new Thread(content);
+                th.start();
+                try {
+                    th.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                value = content.getHtmlClassName();
+                Log.d("URLContent", "Content.htmlStuff: " + content.getHtmlStuff());
+                Log.d("MainActivity", "Content Value: " + content.getHtmlClassName());;
+
+                //Only Blog posts have this body class name listed, Check off that the url is a Blog Post Link
+                if(value.substring(0,21).equals("post-template-default")){
+                    isBlogPost = true;
+                }
+
+                //If a Blog Post was clicked on from the home page, redirect to native blog associated with post
+                if(isBlogPost){
+                    //Load Clicked
                     Intent startBlogPost = new Intent(getApplicationContext(), BlogPostsListActivity.class);
                     startActivity(startBlogPost);
                     return true;
                 }
-                if (url.contains("coveros.com") || url.contains("dev.secureci.com")) {
+                //If blog website or blog web page is categorically loaded (hybrid)
+                else if(url.contains("coveros.com/blog/") || url.contains("coveros.com/category/blogs/") ||
+                        url.contains("dev.secureci.com/blog/") || url.contains("dev.secureci.com/category/blogs/")){
+                    //Load Blog List
+                    Intent startBlogPost = new Intent(getApplicationContext(), BlogPostsListActivity.class);
+                    startActivity(startBlogPost);
+                    return true;
+                }
+                else if (url.contains("coveros.com") || url.contains("dev.secureci.com")){
                     view.loadUrl(url);
                     return true;
                 } else {
@@ -123,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         if(isOnline()){
             //Enable Javascript (Plugins)
             WebSettings webSettings = browser.getSettings();
-            webSettings.setJavaScriptEnabled(true);
+            webSettings.setJavaScriptEnabled(false);
             //Can be changed by either using setWebName or changing value in constructor
             browser.loadUrl(webName);
         }
@@ -220,4 +255,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+
 }

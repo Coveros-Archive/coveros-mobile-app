@@ -145,7 +145,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
     // for testing error message
     testCompile 'org.mockito:mockito-core:2.1.0'
-
+    // https://mvnrepository.com/artifact/org.jsoup/jsoup
+    compile group: 'org.jsoup', name: 'jsoup', version: '1.8.3'
 }
 
 //Defined reports generated

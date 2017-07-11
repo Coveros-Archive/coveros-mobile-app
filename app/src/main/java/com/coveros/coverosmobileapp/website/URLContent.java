@@ -1,44 +1,46 @@
 package com.coveros.coverosmobileapp.website;
 
-import java.io.BufferedReader;
+import android.util.Log;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 
-public class URLContent{
+public class URLContent implements Runnable{
     private String htmlStuff;
-    public URLContent(String saved){ htmlStuff = ""; }
+    private String htmlClassName = "null";
+    private String longClassName = "null";
 
-    public static void main(String[] args) throws Exception{
-        //String content = URLConnectionReader.getText("https://www.coveros.com");
-        //System.out.println(content);
-    }
+    public URLContent(String saved){ htmlStuff = saved; }
 
-    public static String getText(String link) throws Exception{
-        URL url;
-        try {
-            // get URL content
-            url = new URL(link);
-            URLConnection conn = url.openConnection();
-            // open the stream and put it into BufferedReader
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+    public String getHtmlStuff() { return htmlStuff; }
+    public void setHtmlStuff(String newUrl) { htmlStuff = newUrl; }
+    public String getHtmlClassName(){ return htmlClassName; }
 
-            StringBuilder response = new StringBuilder();
-            String inputLine;
-
-            while ((inputLine = br.readLine()) != null) {
-                System.out.println(inputLine);
+    @Override
+    public void run() {
+        try{
+            Document document = Jsoup.connect(getHtmlStuff()).get();
+            htmlClassName = document.body().className();
+            /*
+            Log.d("URLContent", "Document Body Classname 0: " + document.body().className().substring(0,21));
+            if(document.body().className().substring(0,21).equals("post-template-default")){
+                longClassName = document.body().className();
+                htmlClassName = ".post-template-default";
             }
-            br.close();
-            return response.toString();
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            else{
+                //default
+                htmlClassName = document.body().className();
+            }
+            */
         }
-        return null;
+        catch (IOException i){
+            i.printStackTrace();
+            htmlClassName = "failed with IOException";
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            htmlClassName = "failed with Exception";
+        }
     }
 }
