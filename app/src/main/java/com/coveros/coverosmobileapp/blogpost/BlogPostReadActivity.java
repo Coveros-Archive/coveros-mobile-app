@@ -24,8 +24,6 @@ import com.google.gson.JsonParser;
  */
 public class BlogPostReadActivity extends AppCompatActivity {
 
-    private RequestQueue rQueue;
-
     /**
      * Grabs post data from Intent and displays it and its comments.
      *
@@ -36,8 +34,8 @@ public class BlogPostReadActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.post);
         final int blogId = getIntent().getIntExtra("blogId", 0);
-        final String blogPost = "https://www.dev.secureci.com/wp-json/wp/v2/posts?id=" + blogId;
-        rQueue = Volley.newRequestQueue(BlogPostReadActivity.this);
+        final String blogPost = "https://www3.dev.secureci.com/wp-json/wp/v2/posts/" + blogId;
+        RequestQueue rQueue = Volley.newRequestQueue(BlogPostReadActivity.this);
         StringRequest blogPostsRequest = new StringRequest(Request.Method.GET, blogPost, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
