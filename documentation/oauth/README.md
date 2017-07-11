@@ -51,7 +51,7 @@ If all went well and OAuth2.0 has been set up properly, you should see a JSON th
 # Things That Need to Be Addressed in the Future
 ## Delete Requests
 
-For some reason, while POST requests that edit existing posts and comments work, DELETE requests for posts and comments do not. This is an issue that must be resolved in the future during the "Delete Comments" story. 
+For some reason, while POST requests that edit existing posts and comments work, DELETE requests for posts and comments do not (they return a 403 access error). This is an issue that must be resolved in the future during the "Delete Comments" story. 
 Looking at the JSON returned by a GET request at https://www3.dev.secureci.com/wp-json suggests that DELETE requests are possible--in the `routes: {}` entry, `/wp/v2/comments/(?P<id>[\\d]+)` and `/wp/v2/posts/(?P<id>[\\d]+)` both list DELETE under their methods. 
 
 ## System user
@@ -59,6 +59,9 @@ One glaring issue is that the OAuth2.0 flow involves inputting user credentials;
 
 ## Redirect URL
 This is related to the system user problem. The redirect URL is where the user enters their credentials. In Android, this may be a WebView that will display a log-in screen. If a system user is used, and the application will automatically log-in with its credentials, then the page that brought up by the Redirect URL should never be displayed. Otherwise, if another solution is used for the System user issue discussed above, the redirect URL will need to be considered.
+
+## File permissions
+In our attempts at getting OAuth2.0 to work, we changed the file permissions of all the website files so that everyone can read, write, and execute (`chmod 777`). Since we cannot do this to the production site, file permissions may need to be more selectively changed to allow for CRUD requests via OAuth2.0.. 
 
 # What Did Not Work
 Initially, we tried using the OAuth that is available natively through Wordpress via the [Jetpack](https://wordpress.org/plugins/jetpack/) plug-in. This involved linking a Wordpress Account within Jetpack's UI within the Wordpress Dashboard, and creating an application (i.e. Client) at https://developer.wordpress.com/apps/ using the linked account. While the OAuth2.0 authentication process seemed to work via Postman (an access token was successfully receieved), requests that required authentication (e.g. POST request for a post) were unsuccessful. 
