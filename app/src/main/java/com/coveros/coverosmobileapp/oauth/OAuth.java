@@ -31,7 +31,7 @@ public class OAuth {
     public static final String PASSWORD_PARAM_NAME = "password";
 
     public static final String PASSWORD_GRANT_TYPE = "password";
-    public static final String BEARER_GRANT_TYPE = "bearer";
+    public static final String BEARER_GRANT_TYPE = "refresh_token";
     public static final String AUTHORIZATION_CODE_GRANT_TYPE = "authorization_code";
 
     private String mAppId;

@@ -8,12 +8,21 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.coveros.coverosmobileapp.R;
+import com.coveros.coverosmobileapp.website.CustomWebViewClient;
 
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -22,47 +31,66 @@ import java.util.List;
 
 public class OAuthRequest extends AppCompatActivity {
 
-    OAuth oAuth;
+    private String authCode;
+    private WebView authorization;
+    private OAuth oAuth;
+
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.oauth);
         oAuth = new OAuth("ZIgsZCSNWZ0R869u10Y7ZNFSpn4y2S", "w1ANtApmollpctwlYxmXFlKke9HiIK", "com.coveros.coverosmobileapp://oauthresponse");
-        Log.d("IS VIEW AVAILABLE: ", "" + isAvailable(OAuthRequest.this, new Intent(Intent.ACTION_VIEW,
-                Uri.parse(oAuth.getAppRedirectURI() + "&response_type=code") )));
+
+        authorization = (WebView) findViewById(R.id.authorization);
+        authorization.loadUrl(oAuth.getAuthorizationURL());
+        setAuthorizationWebViewClient(new OAuthCallback() {
+            @Override
+            public void onSuccess(boolean isRedirected) {
+                Log.d("isRedirected", "" + isRedirected);
+                Log.d("Auth Code", authCode);
+                OAuth.BearerRequest bearerRequest = (OAuth.BearerRequest) oAuth.makeRequest(authCode, new OAuth.Listener() {
+                    @Override
+                    public void onResponse(OAuth.Token response) {
+                        Log.d("Token", response.toString());
+                    }
+                }, new OAuth.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("Error", error.toString());
+                    }
+                });
+                RequestQueue requestQueue = Volley.newRequestQueue(OAuthRequest.this);
+                requestQueue.add(bearerRequest);
+            }
+        });
 
 
     }
 
-    public static boolean isAvailable(Context ctx, Intent intent) {
-        final PackageManager mgr = ctx.getPackageManager();
-        List<ResolveInfo> list =
-                mgr.queryIntentActivities(intent,
-                        PackageManager.MATCH_DEFAULT_ONLY);
-        return list.size() > 0;
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent)
-    {
-        Uri uri = intent.getData();
-
-        if (uri != null && uri.toString()
-                .startsWith("com.coveros.coverosmobileapp://oauthresponse"))
-        {
-            String code = uri.getQueryParameter("code");
-            OAuth.BearerRequest bearerRequest = (OAuth.BearerRequest) oAuth.makeRequest(code, new OAuth.Listener() {
-                @Override
-                public void onResponse(OAuth.Token response) {
-                    Log.d("Token: ", response.toString());
+    private void setAuthorizationWebViewClient(final OAuthCallback oAuthCallback) {
+        authorization.setWebViewClient(new CustomWebViewClient() {
+            @SuppressWarnings("deprecation")
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (url.startsWith(oAuth.getAppRedirectURI())) {
+                    Uri uri = Uri.parse(url);
+                    Log.d("URI", uri.toString());
+                    setAuthCode(uri.getQueryParameter("code"));
+                    oAuthCallback.onSuccess(true);
+                    return true;
+                } else {
+                    return false;
                 }
-            }, new OAuth.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d("Error: ", error.toString());
-                }
-            });
-
-            RequestQueue requestQueue = Volley.newRequestQueue(OAuthRequest.this);
-            requestQueue.add(bearerRequest);
-        }
+            }
+        });
     }
+
+    private void setAuthCode(String authCode) {
+        this.authCode = authCode;
+    }
+
+
+    interface OAuthCallback {
+        void onSuccess(boolean isRedirected);
+    }
+
 }
