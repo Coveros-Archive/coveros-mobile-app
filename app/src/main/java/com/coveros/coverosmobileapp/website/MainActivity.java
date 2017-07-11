@@ -112,9 +112,13 @@ public class MainActivity extends AppCompatActivity {
                 if(isBlogPost){
                     //view.loadUrl("https://www3.dev.secureci.com/wp-json/wp/v2/posts/7520");
                     Log.d(TAG, "Value: " + value);
+                    int loopCounter = 0;            //Loop max is 5. Anything greater is not allowed
                     Intent startBlogPostList = new Intent(getApplicationContext(), BlogPostsListActivity.class);
                     startActivity(startBlogPostList);
+                    while(loopCounter<6){
 
+                        loopCounter++;
+                    }
                     return true;
                 }
                 //If blog website or blog web page is categorically loaded (hybrid)
