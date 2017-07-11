@@ -33,7 +33,6 @@ public class BlogPostReadActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.post);
 
-
         final List<String> post = getIntent().getStringArrayListExtra("postData");
 
         WebView content = (WebView) findViewById(R.id.content);

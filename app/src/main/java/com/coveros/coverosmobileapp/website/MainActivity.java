@@ -21,7 +21,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
-
+import com.coveros.coverosmobileapp.blogpost.BlogPostReadActivity;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "Value: " + value);
                     Intent startBlogPostList = new Intent(getApplicationContext(), BlogPostsListActivity.class);
                     startActivity(startBlogPostList);
+
                     return true;
                 }
                 //If blog website or blog web page is categorically loaded (hybrid)
