@@ -50,7 +50,6 @@ class BlogPost {
         this.content = "<h3>" + this.title + "</h3><h4>" + author + "</h4><h5>" + this.date + "</h5>" + StringEscapeUtils.unescapeHtml4(blogPostJson.get("content").getAsJsonObject().get("rendered").getAsString());
     }
 
-
     /**
      * Modifies date from Wordpress to MMM dd YYYY format.
      *

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.AbsListView;
@@ -105,7 +106,6 @@ public class BlogPostsListActivity extends BlogListActivity {
         });
     }
 
-
     /**
      * Adds blogPosts to the list view. Called when user scrolls to the bottom of the listview.
      */
@@ -154,6 +154,7 @@ public class BlogPostsListActivity extends BlogListActivity {
             });
         }
     }
+
     /**
      * Populates List of Authors.
      *
@@ -227,10 +228,8 @@ public class BlogPostsListActivity extends BlogListActivity {
                     addPosts();
                     currentListSize = BlogPostsListActivity.this.blogPostsListView.getAdapter().getCount();
                 }
-
             }
         }
-
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
@@ -248,8 +247,6 @@ public class BlogPostsListActivity extends BlogListActivity {
     public ListView getBlogPostsListView() {
         return blogPostsListView;
     }
-
-
 }
 
 

@@ -77,6 +77,4 @@ public class BlogListActivity extends ListActivity {
     AlertDialog getErrorMessage() {
         return errorMessage;
     }
-
-
 }

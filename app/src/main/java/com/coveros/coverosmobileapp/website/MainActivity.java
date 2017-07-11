@@ -101,8 +101,7 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 value = content.getHtmlClassName();
-                Log.d("URLContent", "Content.htmlStuff: " + content.getHtmlStuff());
-                Log.d("MainActivity", "Content Value: " + content.getHtmlClassName());;
+                Log.d(TAG, "Value: " + value);
 
                 //Only Blog posts have this body class name listed, Check off that the url is a Blog Post Link
                 if(value.substring(0,21).equals("post-template-default")){
@@ -111,9 +110,10 @@ public class MainActivity extends AppCompatActivity {
 
                 //If a Blog Post was clicked on from the home page, redirect to native blog associated with post
                 if(isBlogPost){
-                    //Load Clicked
-                    Intent startBlogPost = new Intent(getApplicationContext(), BlogPostsListActivity.class);
-                    startActivity(startBlogPost);
+                    //view.loadUrl("https://www3.dev.secureci.com/wp-json/wp/v2/posts/7520");
+                    Log.d(TAG, "Value: " + value);
+                    Intent startBlogPostList = new Intent(getApplicationContext(), BlogPostsListActivity.class);
+                    startActivity(startBlogPostList);
                     return true;
                 }
                 //If blog website or blog web page is categorically loaded (hybrid)
