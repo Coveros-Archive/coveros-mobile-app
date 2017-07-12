@@ -40,9 +40,9 @@ This should bring up a  log-in window, in which you may enter your credentials a
 - After logging in, given that valid credentials were used, Postman should now list the new token under "Existing Tokens." Select the token you just created, and then in the "Add token to" dropdown, select the "Header" option. Then, press the "Use Token" button.
 
 
-Now, let's make a request to test the OAuth2.0 connection. 
+Now, let's make an authenticated request to test the OAuth2.0 connection. 
 
-- Select "POST" as the request type, then input `https://www3.dev.secureci.com/wp-json/wp/v2/comments?post=7509&content=<SOME_COMMENT_CONTENT>&author_name=<A_NAME>&author_email=<AN_EMAIL>` as the URL. Then, press `Send`. 
+- Select "POST" as the request type, then input `https://www3.dev.secureci.com/wp-json/wp/v2/posts/7509?content=<SOME_NEW_CONTENT_FOR_BLOG_POST>` as the URL. Then, press `Send`. 
 
 If all went well and OAuth2.0 has been set up properly, you should see a JSON that contains the information you provided in the URL above.
 
