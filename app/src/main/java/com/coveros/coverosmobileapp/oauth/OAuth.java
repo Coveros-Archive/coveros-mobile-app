@@ -139,7 +139,7 @@ public class OAuth {
                              ErrorListener errorListener) {
             super(appId, appSecret, redirectUri, listener, errorListener);
             mParams.put(CODE_PARAM_NAME, code);
-            mParams.put(GRANT_TYPE_PARAM_NAME, BEARER_GRANT_TYPE);
+            mParams.put(GRANT_TYPE_PARAM_NAME, AUTHORIZATION_CODE_GRANT_TYPE);
         }
     }
 
@@ -157,10 +157,8 @@ public class OAuth {
         private String mBlogUrl;
         private String mBlogId;
 
-        public Token(String accessToken, String blogUrl, String blogId, String scope, String tokenType) {
+        public Token(String accessToken, String scope, String tokenType) {
             mAccessToken = accessToken;
-            mBlogUrl = blogUrl;
-            mBlogId = blogId;
             mScope = scope;
             mTokenType = tokenType;
         }
@@ -174,8 +172,7 @@ public class OAuth {
         }
 
         public static Token fromJSONObject(JSONObject tokenJSON) throws JSONException {
-            return new Token(tokenJSON.getString(ACCESS_TOKEN_FIELD_NAME), tokenJSON.getString(BLOG_URL_FIELD_NAME),
-                    tokenJSON.getString(BLOG_ID_FIELD_NAME), tokenJSON.getString(SCOPE_FIELD_NAME), tokenJSON.getString(
+            return new Token(tokenJSON.getString(ACCESS_TOKEN_FIELD_NAME), tokenJSON.getString(SCOPE_FIELD_NAME), tokenJSON.getString(
                     TOKEN_TYPE_FIELD_NAME));
         }
     }
