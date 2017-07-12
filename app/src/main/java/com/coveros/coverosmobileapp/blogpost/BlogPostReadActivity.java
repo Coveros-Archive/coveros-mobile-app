@@ -36,7 +36,7 @@ public class BlogPostReadActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.post);
         final int blogId = getIntent().getIntExtra("blogId", 0);
-        final String blogPost = "https://www.dev.secureci.com/wp-json/wp/v2/posts?id=" + blogId;
+        final String blogPost = "https://www3.dev.secureci.com/wp-json/wp/v2/posts/" + blogId;
         rQueue = Volley.newRequestQueue(BlogPostReadActivity.this);
         StringRequest blogPostsRequest = new StringRequest(Request.Method.GET, blogPost, new Response.Listener<String>() {
             @Override
@@ -48,8 +48,6 @@ public class BlogPostReadActivity extends AppCompatActivity {
             }
         }, new BlogPostErrorListener(BlogPostReadActivity.this));
         rQueue.add(blogPostsRequest);
-
-
 
         Button viewComments = (Button) findViewById(R.id.view_comments);
 

@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.support.annotation.IntegerRes;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -147,10 +148,20 @@ public class MainActivity extends AppCompatActivity {
 
                 //If a Blog Post was clicked on from the home page, redirect to native blog associated with post
                 if(isBlogPost){
-                    //view.loadUrl("https://www3.dev.secureci.com/wp-json/wp/v2/posts/7520");
-                    Log.d(TAG, "Value: " + value);
-                    Intent startBlogPostList = new Intent(getApplicationContext(), BlogPostsListActivity.class);
-                    startActivity(startBlogPostList);
+                    //Index at 48 used because each blog post has the same index length up until post id numbers
+                    value = value.substring(48);
+                    String saveID = "";
+                    //Get only numbers after post id (stops when empty space is present)
+                    while(value.charAt(0) != ' '){
+                        saveID += value.charAt(0);
+                        value = value.substring(1);
+                    }
+                    Log.d(TAG, "SaveID: " + saveID);
+                    //Start blog
+                    Intent startBlogPostRead = new Intent(getApplicationContext(), BlogPostReadActivity.class);
+                    int sendingPostID = Integer.parseInt(saveID);
+                    startBlogPostRead.putExtra("blogId", sendingPostID);
+                    startActivity(startBlogPostRead);
                     return true;
                 }
                 //If blog website or blog web page is categorically loaded (hybrid)
@@ -195,7 +206,8 @@ public class MainActivity extends AppCompatActivity {
         if(isOnline()){
             //Enable Javascript (Plugins)
             WebSettings webSettings = browser.getSettings();
-            webSettings.setJavaScriptEnabled(false);
+            //JS settings enable/disable hamburger menu, videos, and other media
+            webSettings.setJavaScriptEnabled(true);
             //Can be changed by either using setWebName or changing value in constructor
             browser.loadUrl(webName);
         }
