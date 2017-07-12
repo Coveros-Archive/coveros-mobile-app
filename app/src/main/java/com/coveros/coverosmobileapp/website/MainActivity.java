@@ -49,12 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     private RequestQueue rQueue;
 
-    //Create Strings for Title, messsage, and buttons
-    private static final String ALERT_TTLE = "Alert";
-    private static final String ALERT_MESSAGE = "Sorry, we cannot currently retrieve the requested information.";
-    private static final String ALLERT_BUTTON_1 = "Exit App";
-    private static final String ALLERT_BUTTON_2 = "Reload App";
-    private static final String ALLERT_BUTTON_3 = "OK";
+
 
     public MainActivity(){
         webName = "https://www3.dev.secureci.com";
@@ -84,11 +79,11 @@ public class MainActivity extends AppCompatActivity {
         //Link WebView variable with activity_main_webview for Web View Access
         browser = (WebView) findViewById(R.id.activity_main_webview);
         main.setWebViewBrowser(browser);
-        rQueue = Volley.newRequestQueue(MainActivity.this);
+        /**rQueue = Volley.newRequestQueue(MainActivity.this);
         final int blogId = getIntent().getIntExtra("blogId", 0);
         final String authors = "https://www.dev.secureci.com/wp-json/wp/v2/users?orderby=id=" + blogId;
 
-        /** StringRequest authorRequest = new StringRequest(Request.Method.GET, authors, new Response.Listener<String>() {
+         StringRequest authorRequest = new StringRequest(Request.Method.GET, authors, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
             JsonObject blogPostsJson = new JsonParser().parse(response).getAsJsonObject();
@@ -124,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
             @SuppressWarnings("deprecation")
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                //If blog website or blog webspage is categorically loaded (hybrid)
+                //If blog website or blog webpage is categorically loaded (hybrid)
                 boolean isBlogPost = false;
                 String value = "";
                 URLContent content = new URLContent(url);
