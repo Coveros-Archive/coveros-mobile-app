@@ -4,14 +4,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.*;
@@ -23,7 +20,6 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
-import com.coveros.coverosmobileapp.blogpost.BlogPostReadActivity;
 import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
 
 
@@ -43,9 +39,9 @@ public class MainActivity extends AppCompatActivity {
     //Create Strings for Title, messsage, and buttons
     private static final String ALERT_TTLE = "Alert";
     private static final String ALERT_MESSAGE = "Sorry, we cannot currently retrieve the requested information.";
-    private static final String ALLERT_BUTTON_1 = "Exit App";
-    private static final String ALLERT_BUTTON_2 = "Reload App";
-    private static final String ALLERT_BUTTON_3 = "OK";
+    private static final String ALERT_BUTTON_1 = "Exit App";
+    private static final String ALERT_BUTTON_2 = "Reload App";
+    private static final String ALERT_BUTTON_3 = "OK";
 
     public MainActivity(){
         webName = "https://www3.dev.secureci.com";
@@ -174,11 +170,11 @@ public class MainActivity extends AppCompatActivity {
      */
     private void alertView(){
         //Create Strings for Title, messsage, and buttons
-        String title = "Alert";
-        String message = "Sorry, we cannot currently retrieve the requested information.";
-        String button1 = "Exit App";
-        String button2 = "Reload App";
-        String button3 = "OK";
+        String title = ALERT_TTLE;
+        String message = ALERT_MESSAGE;
+        String button1 = ALERT_BUTTON_1;
+        String button2 = ALERT_BUTTON_2;
+        String button3 = ALERT_BUTTON_3;
         //Init Alert Dialog menu & Cancel only if pressed on button
         dialog = new AlertDialog.Builder(MainActivity.this)
                 .setNeutralButton(button2, new DialogInterface.OnClickListener() {

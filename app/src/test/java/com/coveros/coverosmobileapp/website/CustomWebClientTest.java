@@ -10,7 +10,7 @@ public class CustomWebClientTest {
      * Check on Getter/Setter for getConnection()
      */
     @Test
-    public void check_Connection() throws Exception{
+    public void checkConnection() throws Exception{
         CustomWebViewClient cwvc = new CustomWebViewClient();
         boolean connected = cwvc.getConnection();
         assertTrue(connected);
@@ -18,4 +18,9 @@ public class CustomWebClientTest {
         assertFalse(cwvc.getConnection());
     }
 
+    @Test
+    public void checkMainActivity() throws Exception {
+        MainActivity ma = new MainActivity();
+
+    }
 }

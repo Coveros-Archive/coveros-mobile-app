@@ -35,6 +35,7 @@ public class CustomWebViewClient extends WebViewClient {
 
     @SuppressWarnings("deprecation")
     @Override
+    //Logs in this method
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
         //If blog website or blog webspage is categorically loaded (hybrid)
         boolean isBlogPost = false;
@@ -50,7 +51,6 @@ public class CustomWebViewClient extends WebViewClient {
             e.printStackTrace();
         }
         value = content.getHtmlClassName();
-        Log.d(TAG, "Value: " + value);
 
         //Only Blog posts have this body class name listed, Check off that the url is a Blog Post Link
         if(value.substring(0,21).equals("post-template-default")){
@@ -68,7 +68,6 @@ public class CustomWebViewClient extends WebViewClient {
                 saveID += value.charAt(0);
                 value = value.substring(1);
             }
-            Log.d(TAG, "SaveID: " + saveID);
             //Start blog
             Intent startBlogPostRead = new Intent(view.getContext(), BlogPostReadActivity.class);
             int sendingPostID = Integer.parseInt(saveID);
