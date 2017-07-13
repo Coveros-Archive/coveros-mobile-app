@@ -20,6 +20,7 @@ public class AccessTokenRequest extends com.android.volley.toolbox.StringRequest
 
     public interface Listener extends Response.Listener<String> {
     }
+
     public interface ErrorListener extends Response.ErrorListener {
     }
 

@@ -24,7 +24,6 @@ public class AuthUrl {
 
     public String toString() {
         return endpoint + "?" + CLIENT_ID_KEY + "=" + clientId + "&" + REDIRECT_URL_KEY + "=" + redirectUri + "&" + RESPONSE_TYPE_KEY + "=" + responseType;
-
     }
 
 }

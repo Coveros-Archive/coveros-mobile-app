@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
@@ -21,7 +20,7 @@ import org.json.JSONObject;
  * @author Maria Kim
  */
 
-public class BlogPostUpdater extends AppCompatActivity {
+public class BlogPostUpdateActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +40,7 @@ public class BlogPostUpdater extends AppCompatActivity {
                 JSONObject body = new JSONObject();
                 try {
                     body.put("content", newContent);
-                } catch(JSONException e) {
+                } catch (JSONException e) {
                     Log.e("JSON Exception", e.toString());
                 }
 
@@ -57,17 +56,17 @@ public class BlogPostUpdater extends AppCompatActivity {
                     }
                 });
 
-                Log.d("BODY",restRequest.getBody().toString());
+                Log.d("BODY", restRequest.getBody().toString());
                 restRequest.setOnAuthFailedListener(new RestRequest.OnAuthFailedListener() {
                     @Override
                     public void onAuthFailed() {
-                        Intent intent = new Intent(getApplicationContext(), BlogPostUpdater.class);
+                        Intent intent = new Intent(getApplicationContext(), BlogPostUpdateActivity.class);
                         startActivity(intent);
                         finish();
                     }
                 });
 
-                RequestQueue requestQueue = Volley.newRequestQueue(BlogPostUpdater.this);
+                RequestQueue requestQueue = Volley.newRequestQueue(BlogPostUpdateActivity.this);
                 requestQueue.add(restRequest);
 
 

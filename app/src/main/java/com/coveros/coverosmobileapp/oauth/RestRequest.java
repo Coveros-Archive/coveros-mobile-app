@@ -29,6 +29,7 @@ public class RestRequest extends Request<JSONObject> {
 
     public interface Listener extends Response.Listener<JSONObject> {
     }
+
     public interface ErrorListener extends Response.ErrorListener {
     }
 
@@ -79,7 +80,7 @@ public class RestRequest extends Request<JSONObject> {
     public void deliverError(VolleyError error) {
         super.deliverError(error);
 
-        // Fire OnAuthFailedListener if we receive an invalid token error
+        // fire OnAuthFailedListener if we receive an invalid token error
         if (error.networkResponse != null && error.networkResponse.statusCode >= 400 && onAuthFailedListener != null) {
             String jsonString;
             try {

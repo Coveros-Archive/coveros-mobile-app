@@ -10,24 +10,16 @@ import android.webkit.ValueCallback;
 import android.webkit.WebView;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
-import com.coveros.coverosmobileapp.blogpost.BlogPostReadActivity;
 import com.coveros.coverosmobileapp.website.CustomWebViewClient;
-
-
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Maria Kim
  */
 
-public class OAuthLogin extends AppCompatActivity {
+public class OAuthLoginActivity extends AppCompatActivity {
 
     private final String AUTH_ENDPOINT = "https://www3.dev.secureci.com/oauth/authorize";
     private final String TOKEN_ENDPOINT = "https://www3.dev.secureci.com/oauth/token";
@@ -38,7 +30,7 @@ public class OAuthLogin extends AppCompatActivity {
 
     private WebView login;
 
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.oauth);
 
@@ -57,7 +49,7 @@ public class OAuthLogin extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         clearCookies();
-                        Intent intent = new Intent(getApplicationContext(), BlogPostUpdater.class);
+                        Intent intent = new Intent(getApplicationContext(), BlogPostUpdateActivity.class);
                         intent.putExtra("accessToken", response);
                         startActivity(intent);
                         finish();
@@ -69,7 +61,7 @@ public class OAuthLogin extends AppCompatActivity {
                     }
                 });
 
-                RequestQueue requestQueue = Volley.newRequestQueue(OAuthLogin.this);
+                RequestQueue requestQueue = Volley.newRequestQueue(OAuthLoginActivity.this);
                 requestQueue.add(accessTokenRequest);
             }
         });
@@ -91,7 +83,7 @@ public class OAuthLogin extends AppCompatActivity {
         });
     }
 
-    public void clearCookies(){
+    public void clearCookies() {
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeAllCookies(new ValueCallback<Boolean>() {
             @Override

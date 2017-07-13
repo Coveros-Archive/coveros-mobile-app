@@ -51,11 +51,11 @@
             android:label="CoverosMobileApp"
             android:exported="true">
         </activity>
-        <activity android:name=".oauth.OAuthLogin"
+        <activity android:name=".oauth.OAuthLoginActivity"
             android:label="CoverosMobileApp"
             android:exported="true">
         </activity>
-        <activity android:name=".oauth.BlogPostUpdater"
+        <activity android:name=".oauth.BlogPostUpdateActivity"
             android:label="CoverosMobileApp"
             android:exported="true">
         </activity>
