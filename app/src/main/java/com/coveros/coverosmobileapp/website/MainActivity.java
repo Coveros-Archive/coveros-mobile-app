@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.*;
@@ -19,24 +20,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
-import com.coveros.coverosmobileapp.blogpost.BlogPostReadActivity;
-import com.coveros.coverosmobileapp.errorlistener.ErrorListener;
 import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import org.apache.commons.text.StringEscapeUtils;
-
-import static android.R.attr.author;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -45,12 +32,14 @@ public class MainActivity extends AppCompatActivity {
     private WebView browser;
     private AlertDialog dialog;
     private static final String TAG = "MainActivity";
-
     private static final String[] MENU_TITLES = new String[]{"Home","Blog"};
     private DrawerLayout menu;
     private ListView drawerList;
+
     public MainActivity(){
+
         webName = "https://www3.dev.secureci.com";
+
     }
     public String getWebName(){
         return webName;
@@ -79,17 +68,6 @@ public class MainActivity extends AppCompatActivity {
         main.setWebViewBrowser(browser);
         RequestQueue rQueue = Volley.newRequestQueue(MainActivity.this);
         final int blogId = getIntent().getIntExtra("blogId", 0);
-        final String authors = "https://www.dev.secureci.com/wp-json/wp/v2/users?orderby=id=" + blogId;
-
-         StringRequest authorRequest = new StringRequest(Request.Method.GET, authors, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                JsonObject authorsJson = new JsonParser().parse(response).getAsJsonObject();
-                authorsJson.get(authorsJson.get("author").getAsString());
-            }
-        }, new ErrorListener(MainActivity.this));
-        rQueue.add(authorRequest);
-
 
         //constructing the menu navigation drawer
         menu = (DrawerLayout) findViewById(R.id.drawer_layout);
