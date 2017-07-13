@@ -7,7 +7,7 @@ import static junit.framework.Assert.assertTrue;
 public class CustomWebClientTest {
 
     /*
-     * Check on Getter/Setter for getConnection()
+     * Check on Getter/Setter for Connection
      */
     @Test
     public void checkConnection() throws Exception{
@@ -18,9 +18,17 @@ public class CustomWebClientTest {
         assertFalse(cwvc.getConnection());
     }
 
+    /*
+     * Check on Getter/Setter for MainActivity
+     */
     @Test
-    public void checkMainActivity() throws Exception {
-        MainActivity ma = new MainActivity();
-
+    public void checkMainActivitySet() throws Exception {
+        MainActivity first = new MainActivity();
+        MainActivity substitute = new MainActivity();
+        CustomWebViewClient testClient = first.getCustomClient();
+        assertTrue(testClient.getMainActivity() == first);
+        substitute.setCustomClient(testClient);
+        testClient.setMainActivity(substitute);
+        assertTrue(testClient.getMainActivity() == substitute);
     }
 }

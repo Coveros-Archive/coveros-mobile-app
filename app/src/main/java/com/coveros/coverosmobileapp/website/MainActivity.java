@@ -22,12 +22,15 @@ import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
 
+import org.apache.commons.lang3.ObjectUtils;
+
 
 public class MainActivity extends AppCompatActivity {
     //MainActivity
     private String webName;
     private WebView browser;
     private AlertDialog dialog;
+    private CustomWebViewClient cwvc = new CustomWebViewClient();
     private static final String TAG = "MainActivity";
 
     private static final String[] MENU_TITLES = new String[]{"Home","Blog"};
@@ -43,22 +46,16 @@ public class MainActivity extends AppCompatActivity {
     private static final String ALERT_BUTTON_2 = "Reload App";
     private static final String ALERT_BUTTON_3 = "OK";
 
-    public MainActivity(){
-        webName = "https://www3.dev.secureci.com";
-    }
-    public String getWebName(){
-        return webName;
-    }
-    public void setWebName(String website){
-        webName = website;
-    }
+    public MainActivity(){ webName = "https://www3.dev.secureci.com"; }
+    public MainActivity(String specificUrl) { webName = specificUrl; }
+
+    public String getWebName(){ return webName; }
+    public void setWebName(String website){ webName = website; }
     public WebView getWebViewBrowser(){ return browser; }
-    public void setWebViewBrowser(WebView br){
-        browser = br;
-    }
-    public AlertDialog getDialog(){
-        return dialog;
-    }
+    public void setWebViewBrowser(WebView br){ browser = br; }
+    public AlertDialog getDialog() throws NullPointerException { return dialog; }
+    public CustomWebViewClient getCustomClient() { return cwvc; }
+    public void setCustomClient(CustomWebViewClient cc) { cwvc = cc;}
 
     /*
      * On Creation/Declaration of App/Activity
@@ -107,7 +104,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //Links open in WebView with Coveros regex check
-        browser.setWebViewClient(new CustomWebViewClient(main));
+        cwvc.setMainActivity(main);
+        browser.setWebViewClient(cwvc);
         if(!isOnline()){
             browser.loadUrl("file:///android_asset/sampleErrorPage.html");
         }

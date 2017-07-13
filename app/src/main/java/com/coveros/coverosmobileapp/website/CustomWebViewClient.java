@@ -25,6 +25,7 @@ public class CustomWebViewClient extends WebViewClient {
     private boolean weAreConnected;
     private MainActivity mainActivity;
     private final String TAG = "CustomWebViewClient";
+
     public CustomWebViewClient(MainActivity ma) { mainActivity = ma; weAreConnected = true; }
     public CustomWebViewClient() { weAreConnected = true; }
 

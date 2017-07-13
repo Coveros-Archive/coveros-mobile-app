@@ -7,6 +7,7 @@ import java.io.IOException;
 public class URLContent implements Runnable{
     private String htmlStuff;
     private String htmlClassName = "null";
+    private static final String TAG = "URLContent";
 
     public URLContent(String saved){ htmlStuff = saved; }
 
