@@ -53,7 +53,6 @@ public class OAuthLogin extends AppCompatActivity {
         setWebViewClient(login, new AuthCallback() {
             @Override
             public void onSuccess(String authCode) {
-                Log.d("Auth successful CODE", authCode);
                 AccessTokenRequest accessTokenRequest = new AccessTokenRequest(TOKEN_ENDPOINT, CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, authCode, GRANT_TYPE, new AccessTokenRequest.Listener() {
                     @Override
                     public void onResponse(String response) {

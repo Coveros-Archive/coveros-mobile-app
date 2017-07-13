@@ -27,8 +27,6 @@ public class RestRequest extends Request<JSONObject> {
 
     public static final String ORIGINAL_RESPONSE = "originalResponse";  // NOT SURE IF I NEED THIS
 
-    private static OnAuthFailedListener onAuthFailedListener;
-
     public interface Listener extends Response.Listener<JSONObject> {
     }
     public interface ErrorListener extends Response.ErrorListener {
@@ -41,12 +39,17 @@ public class RestRequest extends Request<JSONObject> {
     private final Map<String, String> headers = new HashMap<String, String>(2);
 
     private final Listener listener;
+    private static OnAuthFailedListener onAuthFailedListener;
+
     private final Map<String, String> params = null;
 
     private String body;
 
     public RestRequest(String url, String accessToken, JSONObject body, Listener listener, ErrorListener errorListener) {
         super(body == null ? Method.GET : Method.POST, url, errorListener);
+        if (body != null) {
+            this.body = body.toString();
+        }
         this.listener = listener;
         headers.put(AUTHORIZATION_HEADER, String.format(AUTHORIZATION_FORMAT, accessToken));
     }
