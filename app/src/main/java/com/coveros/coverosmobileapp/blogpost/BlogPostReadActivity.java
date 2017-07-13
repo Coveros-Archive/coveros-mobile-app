@@ -3,7 +3,6 @@ package com.coveros.coverosmobileapp.blogpost;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -13,9 +12,11 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
-import com.google.gson.JsonArray;
+import com.coveros.coverosmobileapp.errorlistener.ErrorListener;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import org.apache.commons.text.StringEscapeUtils;
 
 /**
  * Creates and displays a single blog post when it is selected from the list of blog post_list.
@@ -24,7 +25,6 @@ import com.google.gson.JsonParser;
  */
 public class BlogPostReadActivity extends AppCompatActivity {
 
-    private RequestQueue rQueue;
 
     /**
      * Grabs post data from Intent and displays it and its comments.
@@ -43,13 +43,12 @@ public class BlogPostReadActivity extends AppCompatActivity {
             public void onResponse(String response) {
                 JsonObject blogPostsJson = new JsonParser().parse(response).getAsJsonObject();
                 WebView content = (WebView) findViewById(R.id.content);
-                content.loadData(blogPostsJson.get("content").getAsJsonObject().get("rendered").getAsString(), "text/html, charset=utf-8", "UTF-8");
+                String textContent = StringEscapeUtils.unescapeHtml4(blogPostsJson.get("content").getAsJsonObject().get("rendered").getAsString());
+                content.loadData(textContent, "text/html; charset=utf-8", "UTF-8");
                 setTitle(blogPostsJson.get("title").getAsJsonObject().get("rendered").getAsString());
             }
-        }, new BlogPostErrorListener(BlogPostReadActivity.this));
+        }, new ErrorListener(BlogPostReadActivity.this));
         rQueue.add(blogPostsRequest);
-
-
 
         Button viewComments = (Button) findViewById(R.id.view_comments);
 

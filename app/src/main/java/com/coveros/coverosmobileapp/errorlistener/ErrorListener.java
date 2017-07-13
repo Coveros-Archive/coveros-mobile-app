@@ -1,4 +1,4 @@
-package com.coveros.coverosmobileapp.blogpost;
+package com.coveros.coverosmobileapp.errorlistener;
 
 
 import android.content.Context;
@@ -11,12 +11,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.coveros.coverosmobileapp.R;
 
-public class BlogPostErrorListener implements Response.ErrorListener {
+public class ErrorListener implements Response.ErrorListener {
 
     private AlertDialog errorMessageDialog;
     private Context context;
 
-    BlogPostErrorListener(Context context) {
+    public ErrorListener(Context context) {
         this.context = context;
     }
 

@@ -26,14 +26,17 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
-import com.coveros.coverosmobileapp.blogpost.BlogPostErrorListener;
 import com.coveros.coverosmobileapp.blogpost.BlogPostReadActivity;
+import com.coveros.coverosmobileapp.errorlistener.ErrorListener;
 import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import org.apache.commons.text.StringEscapeUtils;
+
 import static android.R.attr.author;
-import com.coveros.coverosmobileapp.blogpost.BlogPostReadActivity;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -46,11 +49,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String[] MENU_TITLES = new String[]{"Home","Blog"};
     private DrawerLayout menu;
     private ListView drawerList;
-
-    private RequestQueue rQueue;
-
-
-
     public MainActivity(){
         webName = "https://www3.dev.secureci.com";
     }
@@ -79,20 +77,19 @@ public class MainActivity extends AppCompatActivity {
         //Link WebView variable with activity_main_webview for Web View Access
         browser = (WebView) findViewById(R.id.activity_main_webview);
         main.setWebViewBrowser(browser);
-        /**rQueue = Volley.newRequestQueue(MainActivity.this);
+        RequestQueue rQueue = Volley.newRequestQueue(MainActivity.this);
         final int blogId = getIntent().getIntExtra("blogId", 0);
         final String authors = "https://www.dev.secureci.com/wp-json/wp/v2/users?orderby=id=" + blogId;
 
          StringRequest authorRequest = new StringRequest(Request.Method.GET, authors, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-            JsonObject blogPostsJson = new JsonParser().parse(response).getAsJsonObject();
-            authors.get(blogPostsJson.get("author").getAsJsonObject());
-
+                JsonObject authorsJson = new JsonParser().parse(response).getAsJsonObject();
+                authorsJson.get(authorsJson.get("author").getAsString());
             }
-        }, new BlogPostErrorListener(MainActivity.this));
+        }, new ErrorListener(MainActivity.this));
         rQueue.add(authorRequest);
-*/
+
 
         //constructing the menu navigation drawer
         menu = (DrawerLayout) findViewById(R.id.drawer_layout);
