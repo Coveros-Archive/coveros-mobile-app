@@ -74,16 +74,19 @@ Two differences between the request for an access token using the WP OAuth Serve
 
 # Sending an OAuth2.0 Request In Android
 There are two articles that helped tremendously in learning how to make OAuth2.0 requests.
-[Auth 2 Simplified](https://aaronparecki.com/oauth-2-simplified/) - lists example requests and their required parameters
-[OAuth2 Authentication] (https://developer.wordpress.com/docs/oauth2/) - more specific to native OAuth2.0 (provided by Wordpress), but another good resource with example requests and instructions on validating tokens
+- [Auth 2 Simplified](https://aaronparecki.com/oauth-2-simplified/) - lists example requests and their required parameters
+- [OAuth2 Authentication] (https://developer.wordpress.com/docs/oauth2/) - more specific to native OAuth2.0 (provided by Wordpress), but another good resource with example requests and instructions on validating tokens
 To summarize these articles, there are 3 requests that are made during an OAuth2.0 request.
 1. Request for an authorization code
+
 This is a GET request (i.e. load) at the Auth URL with the client id, redirect URL, response code, and scope passed in as parameters. This request will simply take the user to a log-in page where they can log-in and if they have valid credentials to make authenticated requests, their log-in will take what is housing these requests (e.g. a WebView) to the redirect URL, which will now contain the authorization code as a parameter.
 
 2. Request to exchange authorization code for access token
+
 This is a POST request to exchange the authorization code gained from the last request for an access token that, when passed in the header, will allow you to make authenticated requests. This request is made at the Access Token URL, with the client id, redirect URI, client secret, authorization code, and grant type (which should be "authorization_code") passed in as parameters. This POST request should return a JSON that will contain the access token.
 
 3. The actual authenticated request
+
 The access token received in the previous request can now be passed into the header of a request that requires authentication. An example authenticated request is a POST request to posts/<POST_ID>, which will modify the content of the post with the POST_ID.
  
 

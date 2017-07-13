@@ -2,7 +2,7 @@ package com.coveros.coverosmobileapp.oauth;
 
 import android.text.TextUtils;
 
-import com.android.volley.NetworkResponse;
+import com.android.volley.NetworkResponse;g
 import com.android.volley.ParseError;
 import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
