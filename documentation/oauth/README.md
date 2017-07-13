@@ -75,7 +75,7 @@ Two differences between the request for an access token using the WP OAuth Serve
 # Sending an OAuth2.0 Request In Android
 There are two articles that helped tremendously in learning how to make OAuth2.0 requests.
 - [Auth 2 Simplified](https://aaronparecki.com/oauth-2-simplified/) - lists example requests and their required parameters
-- [OAuth2 Authentication] (https://developer.wordpress.com/docs/oauth2/) - more specific to native OAuth2.0 (provided by Wordpress), but another good resource with example requests and instructions on validating tokens
+- [OAuth2 Authentication](https://developer.wordpress.com/docs/oauth2/) - more specific to native OAuth2.0 (provided by Wordpress), but another good resource with example requests and instructions on validating tokens
 To summarize these articles, there are 3 requests that are made during an OAuth2.0 request.
 1. Request for an authorization code
 
