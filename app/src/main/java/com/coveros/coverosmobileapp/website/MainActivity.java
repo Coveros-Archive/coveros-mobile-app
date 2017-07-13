@@ -22,8 +22,6 @@ import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
 
-import org.apache.commons.lang3.ObjectUtils;
-
 
 public class MainActivity extends AppCompatActivity {
     //MainActivity
@@ -39,12 +37,12 @@ public class MainActivity extends AppCompatActivity {
 
     private RequestQueue rQueue;
 
-    //Create Strings for Title, messsage, and buttons
-    private static final String ALERT_TTLE = "Alert";
+    //Create Strings for Title, message, and buttons
+    private static final String ALERT_TITLE = "Alert";
     private static final String ALERT_MESSAGE = "Sorry, we cannot currently retrieve the requested information.";
-    private static final String ALERT_BUTTON_1 = "Exit App";
-    private static final String ALERT_BUTTON_2 = "Reload App";
-    private static final String ALERT_BUTTON_3 = "OK";
+    private static final String ALERT_BUTTON_EXIT = "Exit App";
+    private static final String ALERT_BUTTON_RELOAD= "Reload App";
+    private static final String ALERT_BUTTON_OK = "OK";
 
     public MainActivity(){ webName = "https://www3.dev.secureci.com"; }
     public MainActivity(String specificUrl) { webName = specificUrl; }
@@ -53,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     public void setWebName(String website){ webName = website; }
     public WebView getWebViewBrowser(){ return browser; }
     public void setWebViewBrowser(WebView br){ browser = br; }
-    public AlertDialog getDialog() throws NullPointerException { return dialog; }
+    public AlertDialog getDialog() { return dialog; }
     public CustomWebViewClient getCustomClient() { return cwvc; }
     public void setCustomClient(CustomWebViewClient cc) { cwvc = cc;}
 
@@ -81,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }, new BlogPostErrorListener(MainActivity.this));
         rQueue.add(authorRequest);
-*/
+         */
 
         //constructing the menu navigation drawer
         menu = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -97,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 menu.requestLayout();
             }}
         );
+        //Debugging Purposes (Useful for tracking clicks in Logcat
         browser.setOnTouchListener(new View.OnTouchListener(){
             public boolean onTouch(View v, MotionEvent event){
                 WebView.HitTestResult hr = ((WebView) v).getHitTestResult();
@@ -118,7 +117,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart(){
         //Phone is online & Connected to a server
         if(isOnline()){
-            //Enable Javascript (Plugins)
             WebSettings webSettings = browser.getSettings();
             //JS settings enable/disable hamburger menu, videos, and other media
             webSettings.setJavaScriptEnabled(true);
@@ -166,41 +164,35 @@ public class MainActivity extends AppCompatActivity {
      * OK option provided to immediately close the dialog box if the user's wifi loads
      *      the Coveros website in the background
      */
-    private void alertView(){
-        //Create Strings for Title, messsage, and buttons
-        String title = ALERT_TTLE;
-        String message = ALERT_MESSAGE;
-        String button1 = ALERT_BUTTON_1;
-        String button2 = ALERT_BUTTON_2;
-        String button3 = ALERT_BUTTON_3;
+    protected void alertView(){
         //Init Alert Dialog menu & Cancel only if pressed on button
         dialog = new AlertDialog.Builder(MainActivity.this)
-                .setNeutralButton(button2, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getApplicationContext(), "Loading App", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
-                recreate();
-            }
-        })
-                .setNegativeButton(button3, new DialogInterface.OnClickListener() {
+                .setNeutralButton(ALERT_BUTTON_RELOAD, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss(); }
+                    public void onClick(DialogInterface dialogs, int which) {
+                        Toast.makeText(getApplicationContext(), "Loading App", Toast.LENGTH_SHORT).show();
+                        dialogs.dismiss();
+                        recreate();
+                    }
                 })
-                .setPositiveButton(button1, new DialogInterface.OnClickListener(){
+                .setNegativeButton(ALERT_BUTTON_OK, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which){
+                    public void onClick(DialogInterface dialogs, int which) {
+                        dialogs.dismiss(); }
+                })
+                .setPositiveButton(ALERT_BUTTON_EXIT, new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialogs, int which){
                         Toast.makeText(getApplicationContext(), "Thank You", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
+                        dialogs.dismiss();
                         finish();
                     }
                 }).create();
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
         //Setters (title, default message, button 1 -> Exit, button2 -> Reload)
-        dialog.setTitle(title);
-        dialog.setMessage(message);
+        dialog.setTitle(ALERT_TITLE);
+        dialog.setMessage(ALERT_MESSAGE);
         //Show dialog and make text changes (font color, size, etc.)
         dialog.show();
     }

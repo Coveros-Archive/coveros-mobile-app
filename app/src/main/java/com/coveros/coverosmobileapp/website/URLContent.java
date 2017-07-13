@@ -6,10 +6,11 @@ import java.io.IOException;
 
 public class URLContent implements Runnable{
     private String htmlStuff;
-    private String htmlClassName = "null";
+    private String htmlClassName;
     private static final String TAG = "URLContent";
 
-    public URLContent(String saved){ htmlStuff = saved; }
+    public URLContent(String saved){ htmlStuff = saved; htmlClassName = "null"; }
+    public URLContent() { htmlClassName = "null"; }
 
     public String getHtmlStuff() { return htmlStuff; }
     public void setHtmlStuff(String newUrl) { htmlStuff = newUrl; }

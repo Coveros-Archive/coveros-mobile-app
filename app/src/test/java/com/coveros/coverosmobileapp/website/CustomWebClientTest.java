@@ -19,16 +19,14 @@ public class CustomWebClientTest {
     }
 
     /*
-     * Check on Getter/Setter for MainActivity
+     * Check on Getter/Setter for MainActivity/CustomWebViewClient
      */
     @Test
-    public void checkMainActivitySet() throws Exception {
+    public void checkMainActivityFromClient() throws Exception {
         MainActivity first = new MainActivity();
-        MainActivity substitute = new MainActivity();
-        CustomWebViewClient testClient = first.getCustomClient();
-        assertTrue(testClient.getMainActivity() == first);
-        substitute.setCustomClient(testClient);
-        testClient.setMainActivity(substitute);
-        assertTrue(testClient.getMainActivity() == substitute);
+        CustomWebViewClient testClient = new CustomWebViewClient();
+        CustomWebViewClient testClientSet = new CustomWebViewClient(first);
+        assertTrue(testClient.getMainActivity() == null);
+        assertTrue(testClientSet.getMainActivity() == first);
     }
 }

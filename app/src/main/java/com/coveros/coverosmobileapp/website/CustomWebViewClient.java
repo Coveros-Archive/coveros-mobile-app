@@ -23,6 +23,9 @@ import static android.content.ContentValues.TAG;
 public class CustomWebViewClient extends WebViewClient {
 
     private boolean weAreConnected;
+    private boolean errorFound;
+    String value;
+    int postID;
     private MainActivity mainActivity;
     private final String TAG = "CustomWebViewClient";
 
@@ -38,9 +41,9 @@ public class CustomWebViewClient extends WebViewClient {
     @Override
     //Logs in this method
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        //If blog website or blog webspage is categorically loaded (hybrid)
+        //If blog website or blog web page is categorically loaded (hybrid)
         boolean isBlogPost = false;
-        String value = "";
+        value = "";
         URLContent content = new URLContent(url);
 
         //Create new thread to handle network operations
@@ -71,8 +74,8 @@ public class CustomWebViewClient extends WebViewClient {
             }
             //Start blog
             Intent startBlogPostRead = new Intent(view.getContext(), BlogPostReadActivity.class);
-            int sendingPostID = Integer.parseInt(saveID);
-            startBlogPostRead.putExtra("blogId", sendingPostID);
+            postID = Integer.parseInt(saveID);
+            startBlogPostRead.putExtra("blogId", postID);
             view.getContext().startActivity(startBlogPostRead);
             return true;
         }
@@ -89,7 +92,7 @@ public class CustomWebViewClient extends WebViewClient {
             view.loadUrl(url);
             return true;
         }
-        //Otherwise, resort to WebView for external content
+        //Otherwise, resort to Browser for external content
         else {
             Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             view.getContext().startActivity(i);
@@ -112,6 +115,7 @@ public class CustomWebViewClient extends WebViewClient {
         Log.e(TAG, "Error occurred while loading the web page at URL: " + request.getUrl().toString());
         //Load Blank Page - Could use html substitute error page here
         view.loadUrl("file:///android_asset/sampleErrorPage.html");
+        errorFound = true;
         super.onReceivedError(view, request, error);
     }
 }
