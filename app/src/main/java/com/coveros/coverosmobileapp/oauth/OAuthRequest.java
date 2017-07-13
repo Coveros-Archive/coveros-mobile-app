@@ -8,6 +8,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
+import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -87,8 +90,7 @@ public class OAuthRequest extends AppCompatActivity {
                 requestQueue.add(bearerRequest);
             }
         });
-
-
+        clearCookies();
     }
 
     private void setAuthorizationWebViewClient(final OAuthCallback oAuthCallback) {
@@ -113,6 +115,15 @@ public class OAuthRequest extends AppCompatActivity {
         this.authCode = authCode;
     }
 
+    public void clearCookies(){
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.removeAllCookies(new ValueCallback<Boolean>() {
+            @Override
+            public void onReceiveValue(Boolean value) {
+                Log.d("Removing cookes", value + "");
+            }
+        });
+    }
 
     interface OAuthCallback {
         void onSuccess(boolean isRedirected);
