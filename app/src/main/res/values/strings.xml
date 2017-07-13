@@ -26,4 +26,9 @@
     <string name="empty_field_alert_dialog_title">Error</string>
     <string name="empty_field_alert_dialog_message">All fields are required. Please provide your</string>
     <string name="empty_field_alert_dialog_dismiss_message">Dismiss</string>
+
+    <!-- text for post update form -->
+    <string name="post_update_form_new_content_hint">New content</string>
+    <string name="post_update_form_post_id_hint">Post ID (####)</string>
+    <string name="post_update_form_post_button">Post</string>
 </resources>

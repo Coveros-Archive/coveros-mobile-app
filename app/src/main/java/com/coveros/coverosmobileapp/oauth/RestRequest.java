@@ -5,6 +5,7 @@ import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
 
 import org.json.JSONArray;
@@ -17,69 +18,58 @@ import java.util.HashMap;
 import java.io.UnsupportedEncodingException;
 
 public class RestRequest extends Request<JSONObject> {
-    public static final String USER_AGENT_HEADER = "User-Agent";
-    public static final String REST_AUTHORIZATION_HEADER = "Authorization";
-    public static final String REST_AUTHORIZATION_FORMAT = "Bearer %s";
-    public static final String ORIGINAL_RESPONSE = "originalResponse";
 
-    private static OnAuthFailedListener mOnAuthFailedListener;
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private static final String AUTHORIZATION_FORMAT = "Bearer %s";
+    private static final String PROTOCOL_CHARSET = "utf-8";
+    private static final String PROTOCOL_CONTENT_TYPE = String.format("application/json; charset=%s", PROTOCOL_CHARSET);
+
+
+    public static final String ORIGINAL_RESPONSE = "originalResponse";  // NOT SURE IF I NEED THIS
+
+    private static OnAuthFailedListener onAuthFailedListener;
 
     public interface Listener extends Response.Listener<JSONObject> {
-    } //This is just a shortcut for Response.Listener<JSONObject>
+    }
     public interface ErrorListener extends Response.ErrorListener {
-    } //This is just a shortcut for Response.ErrorListener
+    }
 
     public interface OnAuthFailedListener {
         void onAuthFailed();
     }
 
-    private final com.android.volley.Response.Listener<JSONObject> mListener;
-    private final Map<String, String> mParams;
-    private final Map<String, String> mHeaders = new HashMap<String, String>(2);
+    private final Map<String, String> headers = new HashMap<String, String>(2);
 
-    public RestRequest(int method, String url, Map<String, String> params,
-                       com.android.volley.Response.Listener<JSONObject> listener,
-                       com.android.volley.Response.ErrorListener errorListener) {
-        super(method, url, errorListener);
-        mParams = params;
-        mListener = listener;
-    }
+    private final Listener listener;
+    private final Map<String, String> params = null;
 
-    public void removeAccessToken() {
-        setAccessToken(null);
-    }
+    private String body;
 
-    public void setAccessToken(String token) {
-        if (token == null) {
-            mHeaders.remove(REST_AUTHORIZATION_HEADER);
-        } else {
-            mHeaders.put(REST_AUTHORIZATION_HEADER, String.format(REST_AUTHORIZATION_FORMAT, token));
-        }
-    }
-
-    public void setUserAgent(String userAgent) {
-        mHeaders.put(USER_AGENT_HEADER, userAgent);
+    public RestRequest(String url, String accessToken, JSONObject body, Listener listener, ErrorListener errorListener) {
+        super(body == null ? Method.GET : Method.POST, url, errorListener);
+        this.listener = listener;
+        headers.put(AUTHORIZATION_HEADER, String.format(AUTHORIZATION_FORMAT, accessToken));
     }
 
     public void setOnAuthFailedListener(OnAuthFailedListener onAuthFailedListener) {
-        mOnAuthFailedListener = onAuthFailedListener;
+        this.onAuthFailedListener = onAuthFailedListener;
     }
 
     @Override
     public Map<String, String> getHeaders() {
-        return mHeaders;
+        return headers;
     }
 
     @Override
     protected void deliverResponse(JSONObject response) {
-        if (mListener != null) {
-            mListener.onResponse(response);
+        if (listener != null) {
+            listener.onResponse(response);
         }
     }
 
     @Override
     protected Map<String, String> getParams() {
-        return mParams;
+        return params;
     }
 
     @Override
@@ -87,7 +77,7 @@ public class RestRequest extends Request<JSONObject> {
         super.deliverError(error);
 
         // Fire OnAuthFailedListener if we receive an invalid token error
-        if (error.networkResponse != null && error.networkResponse.statusCode >= 400 && mOnAuthFailedListener != null) {
+        if (error.networkResponse != null && error.networkResponse.statusCode >= 400 && onAuthFailedListener != null) {
             String jsonString;
             try {
                 jsonString = new String(error.networkResponse.data, HttpHeaderParser.parseCharset(error.networkResponse.headers));
@@ -104,7 +94,7 @@ public class RestRequest extends Request<JSONObject> {
 
             String restError = responseObject.optString("error", "");
             if (restError.equals("authorization_required") || restError.equals("invalid_token")) {
-                mOnAuthFailedListener.onAuthFailed();
+                onAuthFailedListener.onAuthFailed();
             }
         }
     }
@@ -160,4 +150,21 @@ public class RestRequest extends Request<JSONObject> {
             throw new JSONException("Not a valid JSON response: " + jsonString);
         }
     }
+
+    @Override
+    public String getBodyContentType() {
+        return PROTOCOL_CONTENT_TYPE;
+    }
+
+    @Override
+    public byte[] getBody() {
+        try {
+            return body == null ? null : body.getBytes(PROTOCOL_CHARSET);
+        } catch (UnsupportedEncodingException uee) {
+            VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
+                    body, PROTOCOL_CHARSET);
+            return null;
+        }
+    }
+
 }
