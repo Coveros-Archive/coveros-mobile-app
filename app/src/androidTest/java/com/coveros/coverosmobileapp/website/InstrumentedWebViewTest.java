@@ -39,7 +39,7 @@ public class InstrumentedWebViewTest extends LooperTestSuite {
      * Checks if the app/device is connected to the internet
      */
     @Test
-    public void check_isOnlineTrue() {
+    public void isOnlineTrue() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         MainActivity newMain = mMainActivity.launchActivity(intent);
         boolean theTruth = newMain.isOnline();
@@ -51,7 +51,7 @@ public class InstrumentedWebViewTest extends LooperTestSuite {
      * WORKS WITH OR WITHOUT INTERNET
      */
     @Test
-    public void check_AlertShowingWithInternet() {
+    public void alertShowingWithInternet() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         MainActivity newMain = mMainActivity.launchActivity(intent);
         mAlertDialog = new AlertDialog.Builder(newMain).create();
@@ -70,7 +70,7 @@ public class InstrumentedWebViewTest extends LooperTestSuite {
      */
     @Test
     //Check Alert Dialog runs
-    public void check_alertView_1() {
+    public void alertView_1() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         MainActivity newMain = mMainActivity.launchActivity(intent);
         mAlertDialog = new AlertDialog.Builder(mMainActivity.getActivity()).create();
@@ -78,4 +78,7 @@ public class InstrumentedWebViewTest extends LooperTestSuite {
     //More AlertView tests necessary but need to access xml ID's
     //which means the creation of Buttons/TextViews in xml activity
     //linking the buttons and strings together
+
+
+
 }

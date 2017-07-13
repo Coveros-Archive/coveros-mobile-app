@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.support.annotation.IntegerRes;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,20 +20,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
-import com.coveros.coverosmobileapp.blogpost.BlogPostErrorListener;
 import com.coveros.coverosmobileapp.blogpost.BlogPostReadActivity;
 import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import static android.R.attr.author;
-import com.coveros.coverosmobileapp.blogpost.BlogPostReadActivity;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -148,7 +138,8 @@ public class MainActivity extends AppCompatActivity {
 
                 //If a Blog Post was clicked on from the home page, redirect to native blog associated with post
                 if(isBlogPost){
-                    //Index at 48 used because each blog post has the same index length up until post id numbers
+                    //Index at 48 because each blog post has the same index length up until post id numbers
+                    //Post ID numbers could be n number of digits. Read values until space
                     value = value.substring(48);
                     String saveID = "";
                     //Get only numbers after post id (stops when empty space is present)
@@ -172,10 +163,13 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(startBlogPost);
                     return true;
                 }
+                //Default stay in WebView (Recognizes url associated with Coveros content)
                 else if (url.contains("coveros.com") || url.contains("dev.secureci.com")){
                     view.loadUrl(url);
                     return true;
-                } else {
+                }
+                //Otherwise, resort to WebView for external content
+                else {
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     view.getContext().startActivity(i);
                     return true;

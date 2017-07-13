@@ -17,4 +17,5 @@ public class CustomWebClientTest {
         cwvc.setConnection(false);
         assertFalse(cwvc.getConnection());
     }
+
 }

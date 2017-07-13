@@ -14,7 +14,7 @@ public class WebViewTest {
      * Check on Getter/Setter for WebName()
      */
     @Test
-    public void check_GetWebsiteAddressName() throws Exception {
+    public void getWebsiteAddressName() throws Exception {
         String savedUrl;
         MainActivity ma = new MainActivity();
         savedUrl = ma.getWebName();
@@ -22,4 +22,5 @@ public class WebViewTest {
         ma.setWebName("http://www.html5rocks.com/");
         assertEquals("http://www.html5rocks.com/", ma.getWebName());
     }
+
 }
