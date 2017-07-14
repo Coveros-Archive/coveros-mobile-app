@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * A request for an access token in the form of a String.
  * @author Maria Kim
  */
 
@@ -34,12 +35,22 @@ public class AccessTokenRequest extends com.android.volley.toolbox.StringRequest
 
     private final String CLIENT_ID_KEY = "client_id";
     private final String CLIENT_SECRET_KEY = "client_secret";
-    private final String REDIRECT_URI_KEY = "redirect_urI";
+    private final String REDIRECT_URI_KEY = "redirect_uri";
     private final String CODE_KEY = "code";
     private final String GRANT_TYPE_KEY = "grant_type";
 
     private Listener listener;
 
+    /**
+     * @param endpoint    url the POST request is made to
+     * @param clientId    client id provided by WP OAuth Server
+     * @param clientSecret    client secret provided by WP OAuth Server
+     * @param redirectUri    redirect uri that was used to gain authorization code in the WebView in OAuthLoginActivity
+     * @param authCode    authorization code received after user logs in
+     * @param grantType    grant type ("authorization_code")
+     * @param listener    listener that responds on request success
+     * @param errorListener    error listener that responds on request error
+     */
     AccessTokenRequest(String endpoint, String clientId, String clientSecret, String redirectUri, String authCode, String grantType, Listener listener, ErrorListener errorListener) {
         super(Method.POST, endpoint, listener, errorListener);
 

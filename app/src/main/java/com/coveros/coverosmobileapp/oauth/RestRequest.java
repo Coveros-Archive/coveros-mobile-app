@@ -1,5 +1,7 @@
 package com.coveros.coverosmobileapp.oauth;
 
+import android.support.annotation.Nullable;
+
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
@@ -17,6 +19,10 @@ import java.util.HashMap;
 
 import java.io.UnsupportedEncodingException;
 
+/**
+ * Request that takes in and passes on an access to make an authenticated REST call.
+ * @author Maria Kim
+ */
 public class RestRequest extends Request<JSONObject> {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
@@ -33,6 +39,9 @@ public class RestRequest extends Request<JSONObject> {
     public interface ErrorListener extends Response.ErrorListener {
     }
 
+    /**
+     * Listener for an authorization failure.
+     */
     public interface OnAuthFailedListener {
         void onAuthFailed();
     }
@@ -46,7 +55,14 @@ public class RestRequest extends Request<JSONObject> {
 
     private String body;
 
-    public RestRequest(String url, String accessToken, JSONObject body, Listener listener, ErrorListener errorListener) {
+    /**
+     * @param url    url the request is made to
+     * @param accessToken    access token for authentication that is passed with the request
+     * @param body    content for POST request
+     * @param listener    listener that responds on request success
+     * @param errorListener    listener that responds on request error
+     */
+    public RestRequest(String url, String accessToken, @Nullable JSONObject body, Listener listener, ErrorListener errorListener) {
         super(body == null ? Method.GET : Method.POST, url, errorListener);
         if (body != null) {
             this.body = body.toString();
@@ -55,6 +71,10 @@ public class RestRequest extends Request<JSONObject> {
         headers.put(AUTHORIZATION_HEADER, String.format(AUTHORIZATION_FORMAT, accessToken));
     }
 
+    /**
+     * Sets the OnAuthFailedListener for the request.
+     * @param onAuthFailedListener
+     */
     public void setOnAuthFailedListener(OnAuthFailedListener onAuthFailedListener) {
         this.onAuthFailedListener = onAuthFailedListener;
     }

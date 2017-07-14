@@ -16,6 +16,7 @@ import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.website.CustomWebViewClient;
 
 /**
+ * Displays a WebView that presents user with log-in page.
  * @author Maria Kim
  */
 
@@ -28,15 +29,12 @@ public class OAuthLoginActivity extends AppCompatActivity {
     private final String REDIRECT_URI = "com.coveros.coverosmobileapp://oauthresponse";
     private final String GRANT_TYPE = "authorization_code";
 
-    private WebView login;
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.oauth);
 
         String responseType = "code";
-        String scope = "global";
-        AuthUrl authUrl = new AuthUrl(AUTH_ENDPOINT, CLIENT_ID, REDIRECT_URI, responseType, scope);
+        AuthUrl authUrl = new AuthUrl(AUTH_ENDPOINT, CLIENT_ID, REDIRECT_URI, responseType);
 
         WebView login = (WebView) findViewById(R.id.login);
         Log.d("Auth url", authUrl.toString());
@@ -67,6 +65,11 @@ public class OAuthLoginActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Sets the WebViewClient that watches the WebView for the redirect URI that contains the authorization code.
+     * @param webView    WebView for which the WebViewClient is set
+     * @param authCallback    callback to wait for the parsing of the authorization code from the redirect uri
+     */
     private void setWebViewClient(WebView webView, final AuthCallback authCallback) {
         webView.setWebViewClient(new CustomWebViewClient() {
             @SuppressWarnings("deprecation")
@@ -83,6 +86,9 @@ public class OAuthLoginActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Clears cookies so that user has to log-in each time to perform the authorization.
+     */
     public void clearCookies() {
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeAllCookies(new ValueCallback<Boolean>() {

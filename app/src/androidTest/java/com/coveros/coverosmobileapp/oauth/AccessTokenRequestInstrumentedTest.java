@@ -12,24 +12,25 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
+ * Running this as an instrumented test because running as a unit test gives a UnsatisfiedLinkError
  * @author Maria Kim
  */
 
 public class AccessTokenRequestInstrumentedTest {
 
     AccessTokenRequest accessTokenRequest;
+    boolean isListenerOnResponseCalled = false;
 
     @Before
     public void setUp() {
         accessTokenRequest = new AccessTokenRequest("https://rtykl525.com", "12345", "54321", "https://rtykl525.com/redirect", "525", "authorization_code", new AccessTokenRequest.Listener() {
             @Override
             public void onResponse(String response) {
-                System.out.println("Success");
+                isListenerOnResponseCalled = true;
             }
         }, new AccessTokenRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                System.out.println("Error");
             }
         });
     }
@@ -45,8 +46,15 @@ public class AccessTokenRequestInstrumentedTest {
 
         assertThat(actualClientId, equalTo("12345"));
         assertThat(actualClientSecret, equalTo("54321"));
-        assertThat(actualRedirectUri, equalTo("rtyl525.com/redirect"));
+        assertThat(actualRedirectUri, equalTo("https://rtykl525.com/redirect"));
         assertThat(actualCode, equalTo("525"));
         assertThat(actualGrantType, equalTo("authorization_code"));
+    }
+
+    @Test
+    public void deliverResponse_checkListenerOnResponseCalled() {
+        accessTokenRequest.deliverResponse("token");
+        assertThat(isListenerOnResponseCalled, equalTo(true));
+
     }
 }

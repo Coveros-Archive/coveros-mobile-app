@@ -1,6 +1,7 @@
 package com.coveros.coverosmobileapp.oauth;
 
 /**
+ * Produces full authorization URL with parameters at which the user logs in.
  * @author Maria Kim
  */
 
@@ -15,7 +16,13 @@ public class AuthUrl {
     private final String REDIRECT_URL_KEY = "redirect_url";
     private final String RESPONSE_TYPE_KEY = "response_type";
 
-    AuthUrl(String endpoint, String clientId, String redirectUri, String responseType, String scope) {
+    /**
+     * @param endpoint    auth url provided by WP OAuth Server
+     * @param clientId    client id provided by WP
+     * @param redirectUri    redirect uri that contains the authorization code that the WebView in OAuthLoginActivity watches for
+     * @param responseType    type of response requested
+     */
+    AuthUrl(String endpoint, String clientId, String redirectUri, String responseType) {
         this.endpoint = endpoint;
         this.clientId = clientId;
         this.redirectUri = redirectUri;
