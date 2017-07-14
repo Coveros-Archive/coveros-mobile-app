@@ -53,12 +53,12 @@ public class BlogPostUpdateActivity extends AppCompatActivity {
                 RestRequest restRequest = new RestRequest(url, accessToken, body, new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        createRequestResponse(BlogPostUpdateActivity.this, BlogPostUpdateActivity.this.getString(R.string.post_update_request_response_success_title), BlogPostUpdateActivity.this.getString(R.string.post_update_request_response_success_message), BlogPostUpdateActivity.this.getString(R.string.post_update_request_response_dismiss_button)).show();
+                        createSuccessResponse(BlogPostUpdateActivity.this);
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        createRequestResponse(BlogPostUpdateActivity.this, BlogPostUpdateActivity.this.getString(R.string.post_update_request_response_error_title), BlogPostUpdateActivity.this.getString(R.string.post_update_request_response_error_message), BlogPostUpdateActivity.this.getString(R.string.post_update_request_response_dismiss_button)).show();
+                        createErrorResponse(BlogPostUpdateActivity.this);
                     }
                 });
 
@@ -79,14 +79,34 @@ public class BlogPostUpdateActivity extends AppCompatActivity {
     }
 
     /**
-     * Creates an AlertDialog to display the response (success or error) from the rest request.
-     * @param context
-     * @param title
-     * @param message
-     * @param buttonText
-     * @return
+     * Creates AlertDialog that is displayed when the request is successful.
+     * @param context    context on which to display AlertDialog
      */
-    AlertDialog createRequestResponse(Context context, String title, String message, String buttonText) {
+    private void createSuccessResponse(Context context) {
+        final String successTitle = context.getString(R.string.post_update_request_response_success_title);
+        final String successMessage = context.getString(R.string.post_update_request_response_success_message);
+        createRequestResponse(context, successTitle, successMessage);
+    }
+
+    /**
+     * Creates AlertDialog that is displayed when the request returns an error.
+     * @param context    context on which to display AlertDialog
+     */
+    private void createErrorResponse(Context context) {
+        final String errorTitle = context.getString(R.string.post_update_request_response_error_title);
+        final String errorMessage = context.getString(R.string.post_update_request_response_error_message);
+        createRequestResponse(context, errorTitle, errorMessage);
+    }
+
+    /**
+     * Creates an AlertDialog to display the response (success or error) from the REST request.
+     * @param context    context on which to display the AlertDialog
+     * @param title    title of the AlertDialog
+     * @param message    message of the AlertDialog
+     * @return    AlertDialog with these data
+     */
+    AlertDialog createRequestResponse(Context context, String title, String message) {
+        final String buttonText = context.getString(R.string.post_update_request_response_dismiss_button);
         AlertDialog requestResponse = new AlertDialog.Builder(context).create();
         requestResponse.setTitle(title);
         requestResponse.setMessage(message);
