@@ -1,21 +1,19 @@
 package com.coveros.coverosmobileapp.oauth;
 
-import com.android.volley.Network;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mockito.Mock;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.when;
 
 /**
  * Running this as an instrumented test because running as a unit test gives a UnsatisfiedLinkError
@@ -26,9 +24,6 @@ public class AccessTokenRequestInstrumentedTest {
 
     AccessTokenRequest accessTokenRequest;
     boolean isListenerOnResponseCalled = false;
-
-    @Mock
-    NetworkResponse networkResponse;
 
     @Before
     public void setUp() {
@@ -67,15 +62,19 @@ public class AccessTokenRequestInstrumentedTest {
     }
 
     @Test
-    public void parseNetworkResponse_withValidNetworkResponse() {
-        byte[] data = {'a', 'b', 'c'};
+    public void parseNetworkResponse_withValidNetworkResponse() throws JSONException {
+        JSONObject dataJson = new JSONObject();
+        dataJson.put("access_token", "525");
+        byte[] dataBytes = dataJson.toString().getBytes();
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "text/html; charset=utf-8");
-        headers.put("access_token", "12345");
-        when(networkResponse.data).thenReturn(data);
-        when(networkResponse.headers).thenReturn(headers);
 
-        Response<String> accessTokenRequestResponse = accessTokenRequest.parseNetworkResponse(networkResponse);
+        Response<String> accessTokenRequestResponse = accessTokenRequest.parseNetworkResponse(new NetworkResponse(dataBytes, headers));
+        String actualToken = accessTokenRequestResponse.result;
+        String actualContentType = accessTokenRequestResponse.cacheEntry.responseHeaders.get("Content-Type");
+
+        assertThat(actualToken, equalTo("525"));
+        assertThat(actualContentType, equalTo("text/html; charset=utf-8"));
     }
 
 }
