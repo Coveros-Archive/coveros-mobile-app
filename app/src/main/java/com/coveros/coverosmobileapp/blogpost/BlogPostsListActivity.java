@@ -38,24 +38,17 @@ public class BlogPostsListActivity extends BlogListActivity {
     private List<BlogPost> blogPosts = new ArrayList<>();
     private SparseArray<String> authors = new SparseArray<>();  // to aggregate the ids and names of the authors of displayed blog posts
     private RequestQueue rQueue;
-
     private static final String[] MENU_TITLES = new String[]{"Home", "Blog"};
     private DrawerLayout menu;
     private ListView drawerList;
     private LinearLayout postList;
-
     private ListView blogPostsListView;
-
     private BlogPostsListAdapter postsAdapter;
-
     private int currentListSize;
-
     private static final int POSTS_PER_PAGE = 10;
     private int postsOffset = 0;
-
     private static final int NUM_OF_AUTHORS = 100;  // number of users that will be returned by the REST call... so if someday Coveros has over 100 employees, this needs to be changed
     private static final String AUTHORS_URL = "https://www3.dev.secureci.com/wp-json/wp/v2/users?orderby=id&per_page=" + NUM_OF_AUTHORS;
-
     private static final String POSTS_URL = "https://www3.dev.secureci.com/wp-json/wp/v2/posts?per_page=" + POSTS_PER_PAGE + "&order=desc&orderby=date&fields=id,title,date,author&offset=%d";
 
     @Override
@@ -97,6 +90,7 @@ public class BlogPostsListActivity extends BlogListActivity {
                 BlogPost blogPost = blogPosts.get(position - 1);  // -1 because the TextView offsets the blogPosts by one for some reason
                 Intent intent = new Intent(getApplicationContext(), BlogPostReadActivity.class);
                 intent.putExtra("blogId", blogPost.getId());
+                int blogId = getIntent().getIntExtra("blogId", 0);
                 startActivity(intent);
             }
         });
