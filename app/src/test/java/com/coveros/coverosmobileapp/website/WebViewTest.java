@@ -14,7 +14,7 @@ public class WebViewTest {
      * Check on Getter/Setter for WebName() for default constructor
      */
     @Test
-    public void getWebsiteAddressName() throws Exception {
+    public void getWebsiteAddressName() {
         String savedUrl = "https://www3.dev.secureci.com";
         String expected = "http://www.html5rocks.com/";
         MainActivity ma = new MainActivity();
@@ -27,7 +27,7 @@ public class WebViewTest {
      * Check on MainActivity Constructors
      */
     @Test
-    public void getWebAddressesForConstructors() throws Exception {
+    public void getWebAddressesForConstructors() {
         String savedUrl = "https://www3.dev.secureci.com";
         String newUrl = "https://github.com/";
         MainActivity mainActivity = new MainActivity();
@@ -37,7 +37,7 @@ public class WebViewTest {
     }
 
     @Test
-    public void getClientFromMainActivity() throws Exception {
+    public void getClientFromMainActivity() {
         MainActivity mainActivity = new MainActivity();
         CustomWebViewClient custom = new CustomWebViewClient();
         mainActivity.setCustomClient(custom);

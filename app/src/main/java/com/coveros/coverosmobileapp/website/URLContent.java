@@ -3,6 +3,7 @@ package com.coveros.coverosmobileapp.website;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 public class URLContent implements Runnable{
     private String htmlStuff;
@@ -23,12 +24,9 @@ public class URLContent implements Runnable{
             htmlClassName = document.body().className();
         }
         catch (IOException i){
+            //Catches malformed URL's too!
             i.printStackTrace();
             htmlClassName = "failed with IOException";
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            htmlClassName = "failed with Exception";
         }
     }
 }
