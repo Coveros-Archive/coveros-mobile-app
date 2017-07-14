@@ -1,7 +1,9 @@
 package com.coveros.coverosmobileapp.oauth;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +14,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
+import com.coveros.coverosmobileapp.blogpost.BlogListActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,15 +47,35 @@ public class BlogPostUpdateActivity extends AppCompatActivity {
                     Log.e("JSON Exception", e.toString());
                 }
 
+                final AlertDialog requestResponse = new AlertDialog.Builder(BlogPostUpdateActivity.this).create();
+
                 RestRequest restRequest = new RestRequest(url, accessToken, body, new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("SUCCESS", response.toString());
+                        requestResponse.setTitle(BlogPostUpdateActivity.this.getString(R.string.post_update_request_response_success_title));
+                        requestResponse.setMessage(BlogPostUpdateActivity.this.getString(R.string.post_update_request_response_success_message));
+                        requestResponse.setButton(AlertDialog.BUTTON_NEUTRAL, BlogPostUpdateActivity.this.getString(R.string.post_update_request_response_dismiss_button),
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        requestResponse.show();
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d("ERROR", error.toString());
+                        requestResponse.setTitle(BlogPostUpdateActivity.this.getString(R.string.post_update_request_response_error_title));
+                        requestResponse.setMessage(BlogPostUpdateActivity.this.getString(R.string.post_update_request_response_error_message));
+                        requestResponse.setButton(AlertDialog.BUTTON_NEUTRAL, BlogPostUpdateActivity.this.getString(R.string.post_update_request_response_dismiss_button),
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        requestResponse.show();
                     }
                 });
 

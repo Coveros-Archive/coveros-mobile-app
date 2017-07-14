@@ -26,7 +26,6 @@ public class AccessTokenRequest extends com.android.volley.toolbox.StringRequest
 
     private Map<String, String> params = new HashMap<String, String>();
 
-    private String endpoint;
     private String clientId;
     private String clientSecret;
     private String redirectUri;
@@ -35,7 +34,7 @@ public class AccessTokenRequest extends com.android.volley.toolbox.StringRequest
 
     private final String CLIENT_ID_KEY = "client_id";
     private final String CLIENT_SECRET_KEY = "client_secret";
-    private final String REDIRECT_URL_KEY = "redirect_url";
+    private final String REDIRECT_URI_KEY = "redirect_urI";
     private final String CODE_KEY = "code";
     private final String GRANT_TYPE_KEY = "grant_type";
 
@@ -44,7 +43,6 @@ public class AccessTokenRequest extends com.android.volley.toolbox.StringRequest
     AccessTokenRequest(String endpoint, String clientId, String clientSecret, String redirectUri, String authCode, String grantType, Listener listener, ErrorListener errorListener) {
         super(Method.POST, endpoint, listener, errorListener);
 
-        this.endpoint = endpoint;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.redirectUri = redirectUri;
@@ -52,11 +50,11 @@ public class AccessTokenRequest extends com.android.volley.toolbox.StringRequest
         this.grantType = grantType;
         this.listener = listener;
 
-        params.put(CLIENT_ID_KEY, clientId);
-        params.put(CLIENT_SECRET_KEY, clientSecret);
-        params.put(REDIRECT_URL_KEY, redirectUri);
-        params.put(CODE_KEY, authCode);
-        params.put(GRANT_TYPE_KEY, grantType);
+        params.put(CLIENT_ID_KEY, this.clientId);
+        params.put(CLIENT_SECRET_KEY, this.clientSecret);
+        params.put(REDIRECT_URI_KEY, this.redirectUri);
+        params.put(CODE_KEY, this.authCode);
+        params.put(GRANT_TYPE_KEY, this.grantType);
 
     }
 
