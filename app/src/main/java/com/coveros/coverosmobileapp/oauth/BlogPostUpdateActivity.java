@@ -53,12 +53,12 @@ public class BlogPostUpdateActivity extends AppCompatActivity {
                 RestRequest restRequest = new RestRequest(url, accessToken, body, new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        createSuccessResponse(BlogPostUpdateActivity.this);
+                        createSuccessResponse(BlogPostUpdateActivity.this).show();
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        createErrorResponse(BlogPostUpdateActivity.this);
+                        createErrorResponse(BlogPostUpdateActivity.this).show();
                     }
                 });
 
@@ -82,20 +82,20 @@ public class BlogPostUpdateActivity extends AppCompatActivity {
      * Creates AlertDialog that is displayed when the request is successful.
      * @param context    context on which to display AlertDialog
      */
-    private void createSuccessResponse(Context context) {
+    private AlertDialog createSuccessResponse(Context context) {
         final String successTitle = context.getString(R.string.post_update_request_response_success_title);
         final String successMessage = context.getString(R.string.post_update_request_response_success_message);
-        createRequestResponse(context, successTitle, successMessage);
+        return createRequestResponse(context, successTitle, successMessage);
     }
 
     /**
      * Creates AlertDialog that is displayed when the request returns an error.
      * @param context    context on which to display AlertDialog
      */
-    private void createErrorResponse(Context context) {
+    private AlertDialog createErrorResponse(Context context) {
         final String errorTitle = context.getString(R.string.post_update_request_response_error_title);
         final String errorMessage = context.getString(R.string.post_update_request_response_error_message);
-        createRequestResponse(context, errorTitle, errorMessage);
+        return createRequestResponse(context, errorTitle, errorMessage);
     }
 
     /**
