@@ -14,6 +14,7 @@ import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
@@ -164,6 +165,16 @@ public class RestRequestInstrumentedTest {
 
         assertThat(actualGetFormat, equalTo("standardR"));
 
+    }
+
+    @Test
+    public void getBody() throws JSONException {
+        byte[] actualPostBody = postRequest.getBody();
+        String actualPostContent = new JSONObject(new String(actualPostBody)).getString("content");
+        assertThat(actualPostContent, equalTo("I Love cats, with a capital L."));
+
+        byte[] actualGetBody = getRequest.getBody();
+        assertThat(actualGetBody, is(nullValue()));
     }
 
 
