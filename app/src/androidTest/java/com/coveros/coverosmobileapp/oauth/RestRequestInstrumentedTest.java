@@ -1,23 +1,19 @@
 package com.coveros.coverosmobileapp.oauth;
 
-import android.util.Log;
-
 import com.android.volley.NetworkResponse;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mockito.internal.matchers.NotNull;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
@@ -150,4 +146,26 @@ public class RestRequestInstrumentedTest {
         getRequest.deliverError(volleyError);
         assertThat(getRequestOnAuthFailedCalled, equalTo(true));
     }
+
+    @Test
+    public void parseNetworkResponse_withValidNetworkResponse() throws JSONException {
+        JSONObject dataJson = new JSONObject();
+        dataJson.put("format", "standard");
+        byte[] dataBytes = dataJson.toString().getBytes();
+        Map<String, String> headers = new HashMap<>();
+
+        Response<JSONObject> postRequestResponse = postRequest.parseNetworkResponse(new NetworkResponse(dataBytes, headers));
+        String actualPostFormat = postRequestResponse.result.getString("format");
+
+        assertThat(actualPostFormat, equalTo("standard"));
+
+        Response<JSONObject> getRequestResponse = postRequest.parseNetworkResponse(new NetworkResponse(dataBytes, headers));
+        String actualGetFormat = getRequestResponse.result.getString("format");
+
+        assertThat(actualGetFormat, equalTo("standardR"));
+
+    }
+
+
+
 }
