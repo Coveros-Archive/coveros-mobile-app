@@ -1,6 +1,7 @@
 package com.coveros.coverosmobileapp.oauth;
 
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
@@ -30,30 +31,16 @@ public class RestRequest extends Request<JSONObject> {
     private static final String PROTOCOL_CHARSET = "utf-8";
     private static final String PROTOCOL_CONTENT_TYPE = String.format("application/json; charset=%s", PROTOCOL_CHARSET);
 
-
-    public static final String ORIGINAL_RESPONSE = "originalResponse";  // NOT SURE IF I NEED THIS
-
-    public interface Listener extends Response.Listener<JSONObject> {
-    }
-
-    public interface ErrorListener extends Response.ErrorListener {
-    }
-
-    /**
-     * Listener for an authorization failure.
-     */
-    public interface OnAuthFailedListener {
-        void onAuthFailed();
-    }
+    public static final String ORIGINAL_RESPONSE_TAG = "Original response";
 
     private final Map<String, String> headers = new HashMap<String, String>(2);
+    private String body;
 
     private final Listener listener;
-    private static OnAuthFailedListener onAuthFailedListener;
+    private OnAuthFailedListener onAuthFailedListener;
 
-    private final Map<String, String> params = null;
-
-    private String body;
+    public enum RestMethod { GET, POST };
+    private RestMethod restMethod;
 
     /**
      * @param url    url the request is made to
@@ -64,8 +51,11 @@ public class RestRequest extends Request<JSONObject> {
      */
     public RestRequest(String url, String accessToken, @Nullable JSONObject body, Listener listener, ErrorListener errorListener) {
         super(body == null ? Method.GET : Method.POST, url, errorListener);
-        if (body != null) {
+        if (body == null) {
+            restMethod = RestMethod.GET;
+        } else {
             this.body = body.toString();
+            restMethod = RestMethod.POST;
         }
         this.listener = listener;
         headers.put(AUTHORIZATION_HEADER, String.format(AUTHORIZATION_FORMAT, accessToken));
@@ -89,11 +79,6 @@ public class RestRequest extends Request<JSONObject> {
         if (listener != null) {
             listener.onResponse(response);
         }
-    }
-
-    @Override
-    protected Map<String, String> getParams() {
-        return params;
     }
 
     @Override
@@ -149,32 +134,6 @@ public class RestRequest extends Request<JSONObject> {
         }
     }
 
-    protected JSONObject jsonObjectFromResponse(String jsonString) throws JSONException {
-        return new JSONObject(jsonString);
-    }
-
-    protected JSONObject jsonArrayObjectFromResponse(String jsonString) throws JSONException {
-        JSONArray responseArray = new JSONArray(jsonString);
-        JSONObject wrapper = new JSONObject();
-        wrapper.put(ORIGINAL_RESPONSE, responseArray);
-
-        return wrapper;
-    }
-
-    protected JSONObject jsonBooleanObjectFromResponse(String jsonString) throws JSONException {
-        JSONObject jsonObject = new JSONObject();
-
-        if (jsonString.equals(Boolean.TRUE.toString())) {
-            jsonObject.put(ORIGINAL_RESPONSE, true);
-            return jsonObject;
-        } else if (jsonString.equals(Boolean.FALSE.toString())) {
-            jsonObject.put(ORIGINAL_RESPONSE, false);
-            return jsonObject;
-        } else {
-            throw new JSONException("Not a valid JSON response: " + jsonString);
-        }
-    }
-
     @Override
     public String getBodyContentType() {
         return PROTOCOL_CONTENT_TYPE;
@@ -190,5 +149,53 @@ public class RestRequest extends Request<JSONObject> {
             return null;
         }
     }
+
+    protected JSONObject jsonObjectFromResponse(String jsonString) throws JSONException {
+        return new JSONObject(jsonString);
+    }
+
+    protected JSONObject jsonArrayObjectFromResponse(String jsonString) throws JSONException {
+        JSONArray responseArray = new JSONArray(jsonString);
+        JSONObject wrapper = new JSONObject();
+        wrapper.put(ORIGINAL_RESPONSE_TAG, responseArray);
+
+        return wrapper;
+    }
+
+    protected JSONObject jsonBooleanObjectFromResponse(String jsonString) throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+
+        if (jsonString.equals(Boolean.TRUE.toString())) {
+            jsonObject.put(ORIGINAL_RESPONSE_TAG, true);
+            return jsonObject;
+        } else if (jsonString.equals(Boolean.FALSE.toString())) {
+            jsonObject.put(ORIGINAL_RESPONSE_TAG, false);
+            return jsonObject;
+        } else {
+            throw new JSONException("Not a valid JSON response: " + jsonString);
+        }
+    }
+
+    RestMethod getRestMethod() {
+        return restMethod;
+    }
+
+    OnAuthFailedListener getOnAuthFailedListener() {
+        return onAuthFailedListener;
+    }
+
+    public interface Listener extends Response.Listener<JSONObject> {
+    }
+
+    public interface ErrorListener extends Response.ErrorListener {
+    }
+
+    /**
+     * Listener for an authorization failure.
+     */
+    public interface OnAuthFailedListener {
+        void onAuthFailed();
+    }
+
 
 }
