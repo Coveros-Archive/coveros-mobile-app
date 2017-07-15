@@ -4,6 +4,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -175,6 +176,33 @@ public class RestRequestInstrumentedTest {
 
         byte[] actualGetBody = getRequest.getBody();
         assertThat(actualGetBody, is(nullValue()));
+    }
+
+    @Test
+    public void jsonObjectFromResponse() throws JSONException {
+        String jsonString = "{\"content\": \"I Love cats, with a capital L.\"}";
+        JSONObject actualJsonObject = postRequest.jsonObjectFromResponse(jsonString);
+        String actualContent = actualJsonObject.getString("content");
+
+        assertThat(actualContent, equalTo("I Love cats, with a capital L."));
+    }
+
+    @Test
+    public void jsonArrayObjectFromResponse() throws JSONException {
+        String jsonString = "[{\"content\":\"I Love cats, with a capital L.\"},{\"content\":\"I Love cats, with a capital L.\"}]";
+        JSONObject actualJsonObject = postRequest.jsonArrayObjectFromResponse(jsonString);
+        String actualOriginalResponse = actualJsonObject.getString("Original response");
+
+        assertThat(actualOriginalResponse, equalTo("[{\"content\":\"I Love cats, with a capital L.\"},{\"content\":\"I Love cats, with a capital L.\"}]"));
+    }
+
+    @Test
+    public void jsonBooleanObjectFromResponse() throws JSONException {
+        String jsonString = "true";
+        JSONObject actualJsonObject = postRequest.jsonBooleanObjectFromResponse(jsonString);
+        String actualOriginalResposne = actualJsonObject.getString("Original response");
+
+        assertThat(actualOriginalResposne, equalTo("true"));
     }
 
 
