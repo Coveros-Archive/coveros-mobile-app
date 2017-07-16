@@ -1,6 +1,7 @@
 package com.coveros.coverosmobileapp.oauth;
 
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
@@ -31,10 +32,10 @@ public class RestRequest extends Request<JSONObject> {
 
     public static final String ORIGINAL_RESPONSE_TAG = "Original response";
 
-    private final Map<String, String> headers = new HashMap<String, String>(2);
+    private final Map<String, String> headers = new HashMap<>(2);
     private String body;
 
-    private final Listener listener;
+    private final RestRequestListener restRequestListener;
     private OnAuthFailedListener onAuthFailedListener;
 
     public enum RestMethod { GET, POST };
@@ -44,18 +45,18 @@ public class RestRequest extends Request<JSONObject> {
      * @param url    url the request is made to
      * @param accessToken    access token for authentication that is passed with the request
      * @param body    content for POST request
-     * @param listener    listener that responds on request success
-     * @param errorListener    listener that responds on request error
+     * @param restRequestListener    restRequestListener that responds on request success
+     * @param restRequestErrorListener    restRequestListener that responds on request error
      */
-    public RestRequest(String url, String accessToken, @Nullable JSONObject body, Listener listener, ErrorListener errorListener) {
-        super(body == null ? Method.GET : Method.POST, url, errorListener);
+    public RestRequest(String url, String accessToken, @Nullable JSONObject body, RestRequestListener restRequestListener, RestRequestErrorListener restRequestErrorListener) {
+        super(body == null ? Method.GET : Method.POST, url, restRequestErrorListener);
         if (body == null) {
             restMethod = RestMethod.GET;
         } else {
             this.body = body.toString();
             restMethod = RestMethod.POST;
         }
-        this.listener = listener;
+        this.restRequestListener = restRequestListener;
         headers.put(AUTHORIZATION_HEADER, String.format(AUTHORIZATION_FORMAT, accessToken));
     }
 
@@ -74,8 +75,8 @@ public class RestRequest extends Request<JSONObject> {
 
     @Override
     protected void deliverResponse(JSONObject response) {
-        if (listener != null) {
-            listener.onResponse(response);
+        if (restRequestListener != null) {
+            restRequestListener.onResponse(response);
         }
     }
 
@@ -90,6 +91,7 @@ public class RestRequest extends Request<JSONObject> {
                 jsonString = new String(error.networkResponse.data, HttpHeaderParser.parseCharset(error.networkResponse.headers));
             } catch (UnsupportedEncodingException e) {
                 jsonString = "";
+                Log.e("Exception thrown", "jsonString assigned to empty string", e);
             }
 
             JSONObject responseObject;
@@ -97,10 +99,12 @@ public class RestRequest extends Request<JSONObject> {
                 responseObject = new JSONObject(jsonString);
             } catch (JSONException e) {
                 responseObject = new JSONObject();
+                Log.e("Exception thrown", "responseObject assigned to empty JSONObject", e);
+
             }
 
             String restError = responseObject.optString("error", "");
-            if (restError.equals("authorization_required") || restError.equals("invalid_token")) {
+            if ("authorization_required".equals(restError) || "invalid_token".equals(restError)) {
                 onAuthFailedListener.onAuthFailed();
             }
         }
@@ -110,7 +114,6 @@ public class RestRequest extends Request<JSONObject> {
     protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
         try {
             String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-
             JSONObject jsonObject;
             try {
                 jsonObject = jsonObjectFromResponse(jsonString);
@@ -125,7 +128,6 @@ public class RestRequest extends Request<JSONObject> {
                     }
                 }
             }
-
             return Response.success(jsonObject, HttpHeaderParser.parseCacheHeaders(response));
         } catch (UnsupportedEncodingException e) {
             return Response.error(new ParseError(e));
@@ -144,6 +146,7 @@ public class RestRequest extends Request<JSONObject> {
         } catch (UnsupportedEncodingException uee) {
             VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
                     body, PROTOCOL_CHARSET);
+            Log.e("Exception thrown", "getBody() will return null", uee);
             return null;
         }
     }
@@ -178,22 +181,22 @@ public class RestRequest extends Request<JSONObject> {
         return restMethod;
     }
 
-    Listener getListener() {
-        return listener;
+    RestRequestListener getRestRequestListener() {
+        return restRequestListener;
     }
 
     OnAuthFailedListener getOnAuthFailedListener() {
         return onAuthFailedListener;
     }
 
-    public interface Listener extends Response.Listener<JSONObject> {
+    public interface RestRequestListener extends Response.Listener<JSONObject> {
     }
 
-    public interface ErrorListener extends Response.ErrorListener {
+    public interface RestRequestErrorListener extends Response.ErrorListener {
     }
 
     /**
-     * Listener for an authorization failure.
+     * AccessTokenRequestListener for an authorization failure.
      */
     public interface OnAuthFailedListener {
         void onAuthFailed();

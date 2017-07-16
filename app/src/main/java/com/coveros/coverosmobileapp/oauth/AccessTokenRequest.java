@@ -19,13 +19,13 @@ import java.util.Map;
 
 public class AccessTokenRequest extends com.android.volley.toolbox.StringRequest {
 
-    public interface Listener extends Response.Listener<String> {
+    public interface AccessTokenRequestListener extends Response.Listener<String> {
     }
 
-    public interface ErrorListener extends Response.ErrorListener {
+    public interface AccessTokenRequestErrorListener extends Response.ErrorListener {
     }
 
-    private Map<String, String> params = new HashMap<String, String>();
+    private Map<String, String> params = new HashMap<>();
 
     private String clientId;
     private String clientSecret;
@@ -33,13 +33,13 @@ public class AccessTokenRequest extends com.android.volley.toolbox.StringRequest
     private String authCode;
     private String grantType;
 
-    private final String CLIENT_ID_KEY = "client_id";
-    private final String CLIENT_SECRET_KEY = "client_secret";
-    private final String REDIRECT_URI_KEY = "redirect_uri";
-    private final String CODE_KEY = "code";
-    private final String GRANT_TYPE_KEY = "grant_type";
+    private static final String CLIENT_ID_KEY = "client_id";
+    private static final String CLIENT_SECRET_KEY = "client_secret";
+    private static final String REDIRECT_URI_KEY = "redirect_uri";
+    private static final String CODE_KEY = "code";
+    private static final String GRANT_TYPE_KEY = "grant_type";
 
-    private Listener listener;
+    private AccessTokenRequestListener accessTokenRequestListener;
 
     /**
      * @param endpoint    url the POST request is made to
@@ -48,18 +48,18 @@ public class AccessTokenRequest extends com.android.volley.toolbox.StringRequest
      * @param redirectUri    redirect uri that was used to gain authorization code in the WebView in OAuthLoginActivity
      * @param authCode    authorization code received after user logs in
      * @param grantType    grant type ("authorization_code")
-     * @param listener    listener that responds on request success
-     * @param errorListener    error listener that responds on request error
+     * @param accessTokenRequestListener    accessTokenRequestListener that responds on request success
+     * @param accessTokenRequestErrorListener    error accessTokenRequestListener that responds on request error
      */
-    AccessTokenRequest(String endpoint, String clientId, String clientSecret, String redirectUri, String authCode, String grantType, Listener listener, ErrorListener errorListener) {
-        super(Method.POST, endpoint, listener, errorListener);
+    AccessTokenRequest(String endpoint, String clientId, String clientSecret, String redirectUri, String authCode, String grantType, AccessTokenRequestListener accessTokenRequestListener, AccessTokenRequestErrorListener accessTokenRequestErrorListener) {
+        super(Method.POST, endpoint, accessTokenRequestListener, accessTokenRequestErrorListener);
 
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.redirectUri = redirectUri;
         this.authCode = authCode;
         this.grantType = grantType;
-        this.listener = listener;
+        this.accessTokenRequestListener = accessTokenRequestListener;
 
         params.put(CLIENT_ID_KEY, this.clientId);
         params.put(CLIENT_SECRET_KEY, this.clientSecret);
@@ -76,7 +76,7 @@ public class AccessTokenRequest extends com.android.volley.toolbox.StringRequest
 
     @Override
     public void deliverResponse(String token) {
-        listener.onResponse(token);
+        accessTokenRequestListener.onResponse(token);
     }
 
     @Override

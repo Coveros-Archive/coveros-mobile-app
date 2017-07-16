@@ -25,41 +25,20 @@ import com.coveros.coverosmobileapp.website.CustomWebViewClient;
 
 public class OAuthLoginActivity extends AppCompatActivity {
 
-    private final String AUTH_ENDPOINT = "https://www3.dev.secureci.com/oauth/authorize";
-    private final String TOKEN_ENDPOINT = "https://www3.dev.secureci.com/oauth/token";
-    private final String CLIENT_ID = "ZIgsZCSNWZ0R869u10Y7ZNFSpn4y2S";
-    private final String CLIENT_SECRET = "w1ANtApmollpctwlYxmXFlKke9HiIK";
-    private final String REDIRECT_URI = "com.coveros.coverosmobileapp://oauthresponse";
-    private final String GRANT_TYPE = "authorization_code";
+    private static final String AUTH_ENDPOINT = "https://www3.dev.secureci.com/oauth/authorize";
+    private static final String TOKEN_ENDPOINT = "https://www3.dev.secureci.com/oauth/token";
+    private static final String CLIENT_ID = "ZIgsZCSNWZ0R869u10Y7ZNFSpn4y2S";
+    private static final String CLIENT_SECRET = "w1ANtApmollpctwlYxmXFlKke9HiIK";
+    private static final String REDIRECT_URI = "com.coveros.coverosmobileapp://oauthresponse";
+    private static final String GRANT_TYPE = "authorization_code";
 
     private AccessTokenRequest accessTokenRequest;
     private AlertDialog errorResponse;
 
-    private AuthCallback authCallback = new AuthCallback() {
-        @Override
-        public void onSuccess(String authCode) {
-            accessTokenRequest = new AccessTokenRequest(TOKEN_ENDPOINT, CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, authCode, GRANT_TYPE, new AccessTokenRequest.Listener() {
-                @Override
-                public void onResponse(String response) {
-                    clearCookies();
-                    Intent intent = new Intent(getApplicationContext(), BlogPostUpdateActivity.class);
-                    intent.putExtra("accessToken", response);
-                    startActivity(intent);
-                    finish();
-                }
-            }, new AccessTokenRequest.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    errorResponse = createRequestResponse(OAuthLoginActivity.this);
-                    errorResponse.show();
-                }
-            });
+    WebViewAuthCallback webViewAuthCallback = new WebViewAuthCallback();
 
-            RequestQueue requestQueue = Volley.newRequestQueue(OAuthLoginActivity.this);
-            requestQueue.add(accessTokenRequest);
-        }
-    };
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.oauth);
@@ -71,7 +50,7 @@ public class OAuthLoginActivity extends AppCompatActivity {
         Log.d("Auth url", authUrl.toString());
         login.loadUrl(authUrl.toString());
 
-        setWebViewClient(login, authCallback);
+        setWebViewClient(login, webViewAuthCallback);
     }
 
     /**
@@ -91,18 +70,6 @@ public class OAuthLoginActivity extends AppCompatActivity {
                 } else {
                     return false;
                 }
-            }
-        });
-    }
-
-    /**
-     * Clears cookies so that user has to log-in each time to perform the authorization.
-     */
-    private void clearCookies() {
-        CookieManager cookieManager = CookieManager.getInstance();
-        cookieManager.removeAllCookies(new ValueCallback<Boolean>() {
-            @Override
-            public void onReceiveValue(Boolean value) {
             }
         });
     }
@@ -136,9 +103,47 @@ public class OAuthLoginActivity extends AppCompatActivity {
         return errorResponse;
     }
 
-    AuthCallback getAuthCallback() {
-        return authCallback;
+    AuthCallback getWebViewAuthCallback() {
+        return webViewAuthCallback;
     }
+
+    class WebViewAuthCallback implements AuthCallback {
+        @Override
+        public void onSuccess(String authCode) {
+            accessTokenRequest = new AccessTokenRequest(TOKEN_ENDPOINT, CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, authCode, GRANT_TYPE, new AccessTokenRequest.AccessTokenRequestListener() {
+                @Override
+                public void onResponse(String response) {
+                    clearCookies();
+                    Intent intent = new Intent(getApplicationContext(), BlogPostUpdateActivity.class);
+                    intent.putExtra("accessToken", response);
+                    startActivity(intent);
+                    finish();
+                }
+            }, new AccessTokenRequest.AccessTokenRequestErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    errorResponse = createRequestResponse(OAuthLoginActivity.this);
+                    errorResponse.show();
+                }
+            });
+
+            RequestQueue requestQueue = Volley.newRequestQueue(OAuthLoginActivity.this);
+            requestQueue.add(accessTokenRequest);
+        }
+        /**
+         * Clears cookies so that user has to log-in each time to perform the authorization.
+         */
+        private void clearCookies() {
+            CookieManager cookieManager = CookieManager.getInstance();
+            cookieManager.removeAllCookies(new ValueCallback<Boolean>() {
+                @Override
+                public void onReceiveValue(Boolean value) {
+                    // don't need to do anything with the value
+                }
+            });
+        }
+
+    };
 
     interface AuthCallback {
         void onSuccess(String authCode);

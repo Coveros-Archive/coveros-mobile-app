@@ -33,57 +33,61 @@ public class BlogPostUpdateActivity extends AppCompatActivity {
     private AlertDialog errorResponse;
 
     private RestRequest restRequest;
+    private String accessToken;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.post_update_form);
 
-        final String accessToken = getIntent().getStringExtra("accessToken");
+        accessToken = getIntent().getStringExtra("accessToken");
 
         Button postNewContentButton = (Button) findViewById(R.id.post_button);
 
-        postNewContentButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                postId = ((TextView) findViewById(R.id.enter_post_id)).getText().toString();
-                newContent = ((TextView) findViewById(R.id.enter_new_content)).getText().toString();
-                newContent = newContent.replace(" ", "+");
-                url = "https://www3.dev.secureci.com/wp-json/wp/v2/posts/" + postId;
-                JSONObject body = new JSONObject();
-                try {
-                    body.put("content", newContent);
-                } catch (JSONException e) {
-                    Log.e("JSON Exception", e.toString());
-                }
+        postNewContentButton.setOnClickListener(new PostButtonOnClickListener());
+    }
 
-                restRequest = new RestRequest(url, accessToken, body, new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        successResponse = createSuccessResponse(BlogPostUpdateActivity.this);
-                        successResponse.show();
-                    }
-                }, new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        errorResponse = createErrorResponse(BlogPostUpdateActivity.this);
-                        errorResponse.show();
-                    }
-                });
-
-                restRequest.setOnAuthFailedListener(new RestRequest.OnAuthFailedListener() {
-                    @Override
-                    public void onAuthFailed() {
-                        Intent intent = new Intent(getApplicationContext(), BlogPostUpdateActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                });
-
-                RequestQueue requestQueue = Volley.newRequestQueue(BlogPostUpdateActivity.this);
-                requestQueue.add(restRequest);
-
+    class PostButtonOnClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            postId = ((TextView) findViewById(R.id.enter_post_id)).getText().toString();
+            newContent = ((TextView) findViewById(R.id.enter_new_content)).getText().toString();
+            newContent = newContent.replace(" ", "+");
+            url = "https://www3.dev.secureci.com/wp-json/wp/v2/posts/" + postId;
+            JSONObject body = new JSONObject();
+            try {
+                body.put("content", newContent);
+            } catch (JSONException e) {
+                Log.e("JSON Exception", "JSON Object body not populated", e);
             }
-        });
+
+            restRequest = new RestRequest(url, accessToken, body, new RestRequest.RestRequestListener() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    successResponse = createSuccessResponse(BlogPostUpdateActivity.this);
+                    successResponse.show();
+                }
+            }, new RestRequest.RestRequestErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    errorResponse = createErrorResponse(BlogPostUpdateActivity.this);
+                    errorResponse.show();
+                }
+            });
+
+            restRequest.setOnAuthFailedListener(new RestRequest.OnAuthFailedListener() {
+                @Override
+                public void onAuthFailed() {
+                    Intent intent = new Intent(getApplicationContext(), BlogPostUpdateActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+
+            RequestQueue requestQueue = Volley.newRequestQueue(BlogPostUpdateActivity.this);
+            requestQueue.add(restRequest);
+
+        }
     }
 
     /**

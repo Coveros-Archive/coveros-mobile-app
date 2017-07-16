@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.ServiceTestRule;
 import android.support.test.runner.AndroidJUnit4;
+
 import com.coveros.coverosmobileapp.test.util.LooperTestSuite;
 
 import org.junit.Rule;

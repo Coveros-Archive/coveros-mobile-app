@@ -39,12 +39,12 @@ public class RestRequestInstrumentedTest {
         // setting up post request
         JSONObject body = new JSONObject();
         body.put("content", "I Love cats, with a capital L.");
-        postRequest = new RestRequest("https://rtykl525.com", "525", body, new RestRequest.Listener() {
+        postRequest = new RestRequest("https://rtykl525.com", "525", body, new RestRequest.RestRequestListener() {
             @Override
             public void onResponse(JSONObject response) {
 
             }
-        }, new RestRequest.ErrorListener() {
+        }, new RestRequest.RestRequestErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
 
@@ -58,12 +58,12 @@ public class RestRequestInstrumentedTest {
         });
 
         // setting up get request
-        getRequest = new RestRequest("https://rtykl525.com", "525", null, new RestRequest.Listener() {
+        getRequest = new RestRequest("https://rtykl525.com", "525", null, new RestRequest.RestRequestListener() {
             @Override
             public void onResponse(JSONObject response) {
 
             }
-        }, new RestRequest.ErrorListener() {
+        }, new RestRequest.RestRequestErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
 
@@ -163,7 +163,7 @@ public class RestRequestInstrumentedTest {
         Response<JSONObject> getRequestResponse = postRequest.parseNetworkResponse(new NetworkResponse(dataBytes, headers));
         String actualGetFormat = getRequestResponse.result.getString("format");
 
-        assertThat(actualGetFormat, equalTo("standardR"));
+        assertThat(actualGetFormat, equalTo("standard"));
 
     }
 

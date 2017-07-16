@@ -70,7 +70,7 @@ public class BlogListActivityInstrumentedTest extends LooperTestSuite {
 
     @Test
     public void errorListenerOnErrorResponse_withVolleyError() {
-        // generate VolleyError to pass into ErrorListener
+        // generate VolleyError to pass into AccessTokenRequestErrorListener
         byte[] data = {0};
         NetworkResponse networkResponse = new NetworkResponse(401, data, new HashMap<String, String>(), true);
         VolleyError volleyError = new VolleyError(networkResponse);

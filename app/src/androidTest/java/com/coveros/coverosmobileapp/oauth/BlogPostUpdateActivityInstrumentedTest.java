@@ -90,18 +90,16 @@ public class BlogPostUpdateActivityInstrumentedTest extends LooperTestSuite {
     public void onResponse_checkSuccessResponseAlertDialogIsShowing() {
 
         onView(withId(R.id.post_button)).perform(click());  // sets listener
-        blogPostUpdateActivity.getRestRequest().getListener().onResponse(new JSONObject());
+        blogPostUpdateActivity.getRestRequest().getRestRequestListener().onResponse(new JSONObject());
 
         boolean isSuccessResponseShowing = blogPostUpdateActivity.getSuccessResponse().isShowing();
-        boolean isErrorResponseNull = blogPostUpdateActivity.getErrorResponse() == null;
         assertThat(isSuccessResponseShowing, equalTo(true));
-        assertThat(isErrorResponseNull, equalTo(true));
 
     }
 
     @Test
     public void onResponse_checkErrorResponseAlertDialogIsShowing() {
-        // generate VolleyError to pass into ErrorListener
+        // generate VolleyError to pass into AccessTokenRequestErrorListener
         byte[] data = {0};
         NetworkResponse networkResponse = new NetworkResponse(401, data, new HashMap<String, String>(), true);
         VolleyError volleyError = new VolleyError(networkResponse);
@@ -110,10 +108,8 @@ public class BlogPostUpdateActivityInstrumentedTest extends LooperTestSuite {
         blogPostUpdateActivity.getRestRequest().getErrorListener().onErrorResponse(volleyError);
 
         boolean isErrorResponseShowing = blogPostUpdateActivity.getErrorResponse().isShowing();
-        boolean isSuccessResponseNull = blogPostUpdateActivity.getSuccessResponse() == null;
 
         assertThat(isErrorResponseShowing, equalTo(true));
-        assertThat(isSuccessResponseNull, equalTo(true));
 
     }
 

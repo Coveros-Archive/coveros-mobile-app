@@ -12,9 +12,9 @@ public class AuthUrl {
     private String redirectUri;
     private String responseType;
 
-    private final String CLIENT_ID_KEY = "client_id";
-    private final String REDIRECT_URI_KEY = "redirect_uri";
-    private final String RESPONSE_TYPE_KEY = "response_type";
+    private static final String CLIENT_ID_KEY = "client_id";
+    private static final String REDIRECT_URI_KEY = "redirect_uri";
+    private static final String RESPONSE_TYPE_KEY = "response_type";
 
     /**
      * @param endpoint    auth url provided by WP OAuth Server
@@ -29,6 +29,7 @@ public class AuthUrl {
         this.responseType = responseType;
     }
 
+    @Override
     public String toString() {
         return endpoint + "?" + CLIENT_ID_KEY + "=" + clientId + "&" + REDIRECT_URI_KEY + "=" + redirectUri + "&" + RESPONSE_TYPE_KEY + "=" + responseType;
     }

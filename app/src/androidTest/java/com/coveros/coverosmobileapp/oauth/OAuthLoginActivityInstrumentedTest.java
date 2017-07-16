@@ -50,12 +50,12 @@ public class OAuthLoginActivityInstrumentedTest extends LooperTestSuite {
 
     @Test
     public void onErrorResponse_checkErrorResponseAlertDialogIsShowing() {
-        // generate VolleyError to pass into ErrorListener
+        // generate VolleyError to pass into AccessTokenRequestErrorListener
         byte[] data = {0};
         NetworkResponse networkResponse = new NetworkResponse(401, data, new HashMap<String, String>(), true);
         VolleyError volleyError = new VolleyError(networkResponse);
 
-        oAuthLoginActivity.getAuthCallback().onSuccess("525");
+        oAuthLoginActivity.getWebViewAuthCallback().onSuccess("525");
         oAuthLoginActivity.getAccessTokenRequest().getErrorListener().onErrorResponse(volleyError);
 
         boolean isErrorResponseShowing = oAuthLoginActivity.getErrorResponse().isShowing();
