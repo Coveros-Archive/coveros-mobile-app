@@ -62,4 +62,6 @@ public class OAuthLoginActivityInstrumentedTest extends LooperTestSuite {
 
         assertThat(isErrorResponseShowing, equalTo(isErrorResponseShowing));
     }
+
+
 }

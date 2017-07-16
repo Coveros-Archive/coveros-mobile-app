@@ -98,7 +98,7 @@ public class OAuthLoginActivity extends AppCompatActivity {
     /**
      * Clears cookies so that user has to log-in each time to perform the authorization.
      */
-    public void clearCookies() {
+    private void clearCookies() {
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeAllCookies(new ValueCallback<Boolean>() {
             @Override
