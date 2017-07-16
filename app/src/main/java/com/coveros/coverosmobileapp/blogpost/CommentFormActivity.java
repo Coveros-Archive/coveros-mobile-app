@@ -18,7 +18,7 @@ import java.util.List;
  * Displays a form through which a user can create and send a comment on a blog post.
  * @author Maria Kim
  */
-
+@SuppressWarnings("squid:MaximumInheritanceDepth")
 public class CommentFormActivity extends AppCompatActivity {
     private String author;
     private String email;

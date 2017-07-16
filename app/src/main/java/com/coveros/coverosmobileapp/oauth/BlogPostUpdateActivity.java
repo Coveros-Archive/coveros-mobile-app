@@ -88,27 +88,28 @@ public class BlogPostUpdateActivity extends AppCompatActivity {
             requestQueue.add(restRequest);
 
         }
+        /**
+         * Creates AlertDialog that is displayed when the request is successful.
+         * @param context    context on which to display AlertDialog
+         */
+        private AlertDialog createSuccessResponse(Context context) {
+            final String successTitle = context.getString(R.string.post_update_request_response_success_title);
+            final String successMessage = context.getString(R.string.post_update_request_response_success_message);
+            return createRequestResponse(context, successTitle, successMessage);
+        }
+
+        /**
+         * Creates AlertDialog that is displayed when the request returns an error.
+         * @param context    context on which to display AlertDialog
+         */
+        private AlertDialog createErrorResponse(Context context) {
+            final String errorTitle = context.getString(R.string.post_update_request_response_error_title);
+            final String errorMessage = context.getString(R.string.post_update_request_response_error_message);
+            return createRequestResponse(context, errorTitle, errorMessage);
+        }
+
     }
 
-    /**
-     * Creates AlertDialog that is displayed when the request is successful.
-     * @param context    context on which to display AlertDialog
-     */
-    private AlertDialog createSuccessResponse(Context context) {
-        final String successTitle = context.getString(R.string.post_update_request_response_success_title);
-        final String successMessage = context.getString(R.string.post_update_request_response_success_message);
-        return createRequestResponse(context, successTitle, successMessage);
-    }
-
-    /**
-     * Creates AlertDialog that is displayed when the request returns an error.
-     * @param context    context on which to display AlertDialog
-     */
-    private AlertDialog createErrorResponse(Context context) {
-        final String errorTitle = context.getString(R.string.post_update_request_response_error_title);
-        final String errorMessage = context.getString(R.string.post_update_request_response_error_message);
-        return createRequestResponse(context, errorTitle, errorMessage);
-    }
 
     /**
      * Creates an AlertDialog to display the response (success or error) from the REST request.

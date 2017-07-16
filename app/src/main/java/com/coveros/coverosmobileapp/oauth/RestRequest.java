@@ -31,6 +31,7 @@ public class RestRequest extends Request<JSONObject> {
     private static final String PROTOCOL_CONTENT_TYPE = String.format("application/json; charset=%s", PROTOCOL_CHARSET);
 
     public static final String ORIGINAL_RESPONSE_TAG = "Original response";
+    public static final String APP_NAME = "CoverosMobileApp";
 
     private final Map<String, String> headers = new HashMap<>(2);
     private String body;
@@ -91,7 +92,7 @@ public class RestRequest extends Request<JSONObject> {
                 jsonString = new String(error.networkResponse.data, HttpHeaderParser.parseCharset(error.networkResponse.headers));
             } catch (UnsupportedEncodingException e) {
                 jsonString = "";
-                Log.e("Exception thrown", "jsonString assigned to empty string", e);
+                Log.e(APP_NAME, "jsonString assigned to empty string", e);
             }
 
             JSONObject responseObject;
@@ -99,7 +100,7 @@ public class RestRequest extends Request<JSONObject> {
                 responseObject = new JSONObject(jsonString);
             } catch (JSONException e) {
                 responseObject = new JSONObject();
-                Log.e("Exception thrown", "responseObject assigned to empty JSONObject", e);
+                Log.e(APP_NAME, "responseObject assigned to empty JSONObject", e);
 
             }
 
@@ -146,7 +147,7 @@ public class RestRequest extends Request<JSONObject> {
         } catch (UnsupportedEncodingException uee) {
             VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
                     body, PROTOCOL_CHARSET);
-            Log.e("Exception thrown", "getBody() will return null", uee);
+            Log.e(APP_NAME, "getBody() will return null", uee);
             return null;
         }
     }
