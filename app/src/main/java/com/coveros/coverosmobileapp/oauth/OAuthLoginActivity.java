@@ -1,8 +1,11 @@
 package com.coveros.coverosmobileapp.oauth;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.webkit.CookieManager;
@@ -29,6 +32,34 @@ public class OAuthLoginActivity extends AppCompatActivity {
     private final String REDIRECT_URI = "com.coveros.coverosmobileapp://oauthresponse";
     private final String GRANT_TYPE = "authorization_code";
 
+    private AccessTokenRequest accessTokenRequest;
+    private AlertDialog errorResponse;
+
+    private AuthCallback authCallback = new AuthCallback() {
+        @Override
+        public void onSuccess(String authCode) {
+            accessTokenRequest = new AccessTokenRequest(TOKEN_ENDPOINT, CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, authCode, GRANT_TYPE, new AccessTokenRequest.Listener() {
+                @Override
+                public void onResponse(String response) {
+                    clearCookies();
+                    Intent intent = new Intent(getApplicationContext(), BlogPostUpdateActivity.class);
+                    intent.putExtra("accessToken", response);
+                    startActivity(intent);
+                    finish();
+                }
+            }, new AccessTokenRequest.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    errorResponse = createRequestResponse(OAuthLoginActivity.this);
+                    errorResponse.show();
+                }
+            });
+
+            RequestQueue requestQueue = Volley.newRequestQueue(OAuthLoginActivity.this);
+            requestQueue.add(accessTokenRequest);
+        }
+    };
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.oauth);
@@ -40,29 +71,7 @@ public class OAuthLoginActivity extends AppCompatActivity {
         Log.d("Auth url", authUrl.toString());
         login.loadUrl(authUrl.toString());
 
-        setWebViewClient(login, new AuthCallback() {
-            @Override
-            public void onSuccess(String authCode) {
-                AccessTokenRequest accessTokenRequest = new AccessTokenRequest(TOKEN_ENDPOINT, CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, authCode, GRANT_TYPE, new AccessTokenRequest.Listener() {
-                    @Override
-                    public void onResponse(String response) {
-                        clearCookies();
-                        Intent intent = new Intent(getApplicationContext(), BlogPostUpdateActivity.class);
-                        intent.putExtra("accessToken", response);
-                        startActivity(intent);
-                        finish();
-                    }
-                }, new AccessTokenRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("Volley error", error.toString());
-                    }
-                });
-
-                RequestQueue requestQueue = Volley.newRequestQueue(OAuthLoginActivity.this);
-                requestQueue.add(accessTokenRequest);
-            }
-        });
+        setWebViewClient(login, authCallback);
     }
 
     /**
@@ -96,6 +105,39 @@ public class OAuthLoginActivity extends AppCompatActivity {
             public void onReceiveValue(Boolean value) {
             }
         });
+    }
+
+    /**
+     * Creates an AlertDialog to display the response (success or error) from the REST request.
+     * @param context    context on which to display the AlertDialog
+     * @return    AlertDialog with these data
+     */
+    AlertDialog createRequestResponse(Context context) {
+        final String errorTitle = context.getString(R.string.post_update_request_response_error_title);
+        final String errorMessage = context.getString(R.string.post_update_request_response_error_message);
+        final String buttonText = context.getString(R.string.post_update_request_response_dismiss_button);
+        AlertDialog requestResponse = new AlertDialog.Builder(context).create();
+        requestResponse.setTitle(errorTitle);
+        requestResponse.setMessage(errorMessage);
+        requestResponse.setButton(AlertDialog.BUTTON_NEUTRAL, buttonText, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        return requestResponse;
+    }
+
+    AccessTokenRequest getAccessTokenRequest() {
+        return accessTokenRequest;
+    }
+
+    AlertDialog getErrorResponse() {
+        return errorResponse;
+    }
+
+    AuthCallback getAuthCallback() {
+        return authCallback;
     }
 
     interface AuthCallback {
