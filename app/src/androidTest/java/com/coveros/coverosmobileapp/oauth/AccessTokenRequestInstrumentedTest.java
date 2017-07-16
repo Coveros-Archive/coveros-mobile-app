@@ -22,8 +22,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class AccessTokenRequestInstrumentedTest {
 
-    AccessTokenRequest accessTokenRequest;
-    boolean isListenerOnResponseCalled = false;
+    private AccessTokenRequest accessTokenRequest;
+    private boolean isListenerOnResponseCalled = false;
 
     @Before
     public void setUp() {

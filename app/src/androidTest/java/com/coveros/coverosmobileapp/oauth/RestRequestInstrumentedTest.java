@@ -4,7 +4,6 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -25,11 +24,11 @@ import static org.hamcrest.core.Is.is;
 
 public class RestRequestInstrumentedTest {
 
-    RestRequest postRequest;
-    RestRequest getRequest;
+    private RestRequest postRequest;
+    private RestRequest getRequest;
 
-    boolean postRequestOnAuthFailedCalled;
-    boolean getRequestOnAuthFailedCalled;
+    private boolean postRequestOnAuthFailedCalled;
+    private boolean getRequestOnAuthFailedCalled;
 
     @Before
     public void setUp() throws JSONException {

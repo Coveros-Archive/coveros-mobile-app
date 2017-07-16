@@ -1,7 +1,6 @@
 package com.coveros.coverosmobileapp.oauth;
 
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
@@ -12,13 +11,12 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.json.JSONException;
-
-import java.util.Map;
-import java.util.HashMap;
+import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Request that takes in and passes on an access to make an authenticated REST call.
@@ -178,6 +176,10 @@ public class RestRequest extends Request<JSONObject> {
 
     RestMethod getRestMethod() {
         return restMethod;
+    }
+
+    Listener getListener() {
+        return listener;
     }
 
     OnAuthFailedListener getOnAuthFailedListener() {

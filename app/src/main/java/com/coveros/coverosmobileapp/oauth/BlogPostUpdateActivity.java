@@ -15,8 +15,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
-import com.coveros.coverosmobileapp.blogpost.BlogListActivity;
-import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,6 +25,14 @@ import org.json.JSONObject;
  */
 
 public class BlogPostUpdateActivity extends AppCompatActivity {
+    private String postId;
+    private String newContent;
+    private String url;
+
+    private AlertDialog successResponse;
+    private AlertDialog errorResponse;
+
+    private RestRequest restRequest;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,10 +45,10 @@ public class BlogPostUpdateActivity extends AppCompatActivity {
         postNewContentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String postId = ((TextView) findViewById(R.id.enter_post_id)).getText().toString();
-                String newContent = ((TextView) findViewById(R.id.enter_new_content)).getText().toString();
+                postId = ((TextView) findViewById(R.id.enter_post_id)).getText().toString();
+                newContent = ((TextView) findViewById(R.id.enter_new_content)).getText().toString();
                 newContent = newContent.replace(" ", "+");
-                String url = "https://www3.dev.secureci.com/wp-json/wp/v2/posts/" + postId;
+                url = "https://www3.dev.secureci.com/wp-json/wp/v2/posts/" + postId;
                 JSONObject body = new JSONObject();
                 try {
                     body.put("content", newContent);
@@ -50,15 +56,17 @@ public class BlogPostUpdateActivity extends AppCompatActivity {
                     Log.e("JSON Exception", e.toString());
                 }
 
-                RestRequest restRequest = new RestRequest(url, accessToken, body, new RestRequest.Listener() {
+                restRequest = new RestRequest(url, accessToken, body, new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        createSuccessResponse(BlogPostUpdateActivity.this).show();
+                        successResponse = createSuccessResponse(BlogPostUpdateActivity.this);
+                        successResponse.show();
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        createErrorResponse(BlogPostUpdateActivity.this).show();
+                        errorResponse = createErrorResponse(BlogPostUpdateActivity.this);
+                        errorResponse.show();
                     }
                 });
 
@@ -117,6 +125,30 @@ public class BlogPostUpdateActivity extends AppCompatActivity {
             }
         });
         return requestResponse;
+    }
+
+    String getPostId() {
+        return postId;
+    }
+
+    String getNewContent() {
+        return newContent;
+    }
+
+    String getUrl() {
+        return url;
+    }
+
+    AlertDialog getSuccessResponse() {
+        return successResponse;
+    }
+
+    AlertDialog getErrorResponse() {
+        return errorResponse;
+    }
+
+    RestRequest getRestRequest() {
+        return restRequest;
     }
 
 }
