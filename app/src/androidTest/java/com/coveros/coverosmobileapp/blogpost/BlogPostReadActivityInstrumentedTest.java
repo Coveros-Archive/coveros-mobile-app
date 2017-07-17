@@ -27,7 +27,7 @@ public class BlogPostReadActivityInstrumentedTest {
 
     private static BlogPostReadActivity blogPostReadActivity;
 
-    private static final String EXPECTED_TITLE = "\u201CScripting with OWASP ZAP";
+    private static final String EXPECTED_TITLE = "Scripting with OWASP ZAP";
 
     @Rule
     public ActivityTestRule<BlogPostReadActivity> blogPostReadActivityRule = new ActivityTestRule<BlogPostReadActivity>(BlogPostReadActivity.class) {
@@ -44,10 +44,12 @@ public class BlogPostReadActivityInstrumentedTest {
     @Before
     public void setUp() {
         blogPostReadActivity = blogPostReadActivityRule.getActivity();
+
     }
 
     @Test
-    public void onCreate_checkTitlesMatch() {
+    public void onCreate_checkTitlesMatch() throws InterruptedException {
+        Thread.sleep(3000);
         String actualTitle = (String) blogPostReadActivity.getTitle();
         assertEquals("Titles should match", EXPECTED_TITLE, actualTitle);
     }
