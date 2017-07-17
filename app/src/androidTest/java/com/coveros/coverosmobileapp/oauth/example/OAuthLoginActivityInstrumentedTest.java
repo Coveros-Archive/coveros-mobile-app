@@ -7,7 +7,6 @@ import android.webkit.WebView;
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.coveros.coverosmobileapp.R;
-import com.coveros.coverosmobileapp.oauth.example.OAuthLoginActivity;
 import com.coveros.coverosmobileapp.test.util.LooperTestSuite;
 
 import org.junit.Before;
@@ -59,7 +58,7 @@ public class OAuthLoginActivityInstrumentedTest extends LooperTestSuite {
         oAuthLoginActivity.getWebViewAuthCallback().onSuccess("525");
         oAuthLoginActivity.getAccessTokenRequest().getErrorListener().onErrorResponse(volleyError);
 
-        boolean isErrorResponseShowing = oAuthLoginActivity.getErrorResponse().isShowing();
+        boolean isErrorResponseShowing = oAuthLoginActivity.getErrorDialog().isShowing();
 
         assertThat(isErrorResponseShowing, equalTo(isErrorResponseShowing));
     }

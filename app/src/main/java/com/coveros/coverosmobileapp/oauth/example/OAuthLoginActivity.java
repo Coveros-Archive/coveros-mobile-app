@@ -36,7 +36,7 @@ public class OAuthLoginActivity extends AppCompatActivity {
     private static final String GRANT_TYPE = "authorization_code";
 
     private AccessTokenRequest accessTokenRequest;
-    private AlertDialog errorResponse;
+    private AlertDialog errorDialog;
 
     WebViewAuthCallback webViewAuthCallback = new WebViewAuthCallback();
 
@@ -82,7 +82,7 @@ public class OAuthLoginActivity extends AppCompatActivity {
      * @param context    context on which to display the AlertDialog
      * @return    AlertDialog with these data
      */
-    AlertDialog createRequestResponse(Context context) {
+    AlertDialog createAccessTokenRequestErrorDialog(Context context) {
         final String errorTitle = context.getString(R.string.post_update_request_response_error_title);
         final String errorMessage = context.getString(R.string.post_update_request_response_error_message);
         final String buttonText = context.getString(R.string.post_update_request_response_dismiss_button);
@@ -102,8 +102,8 @@ public class OAuthLoginActivity extends AppCompatActivity {
         return accessTokenRequest;
     }
 
-    AlertDialog getErrorResponse() {
-        return errorResponse;
+    AlertDialog getErrorDialog() {
+        return errorDialog;
     }
 
     AuthCallback getWebViewAuthCallback() {
@@ -125,8 +125,8 @@ public class OAuthLoginActivity extends AppCompatActivity {
             }, new AccessTokenRequest.AccessTokenRequestErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    errorResponse = createRequestResponse(OAuthLoginActivity.this);
-                    errorResponse.show();
+                    errorDialog = createAccessTokenRequestErrorDialog(OAuthLoginActivity.this);
+                    errorDialog.show();
                 }
             });
 

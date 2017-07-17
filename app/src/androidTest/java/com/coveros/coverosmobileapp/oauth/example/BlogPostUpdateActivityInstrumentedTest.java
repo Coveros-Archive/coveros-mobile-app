@@ -7,7 +7,6 @@ import android.support.test.rule.ActivityTestRule;
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.coveros.coverosmobileapp.R;
-import com.coveros.coverosmobileapp.oauth.example.BlogPostUpdateActivity;
 import com.coveros.coverosmobileapp.test.util.LooperTestSuite;
 
 import org.json.JSONObject;
@@ -93,7 +92,7 @@ public class BlogPostUpdateActivityInstrumentedTest extends LooperTestSuite {
         onView(withId(R.id.post_button)).perform(click());  // sets listener
         blogPostUpdateActivity.getRestRequest().getRestRequestListener().onResponse(new JSONObject());
 
-        boolean isSuccessResponseShowing = blogPostUpdateActivity.getSuccessResponse().isShowing();
+        boolean isSuccessResponseShowing = blogPostUpdateActivity.getSuccessDialog().isShowing();
         assertThat(isSuccessResponseShowing, equalTo(true));
 
     }
@@ -108,7 +107,7 @@ public class BlogPostUpdateActivityInstrumentedTest extends LooperTestSuite {
         onView(withId(R.id.post_button)).perform(click());  // sets errorlistener
         blogPostUpdateActivity.getRestRequest().getErrorListener().onErrorResponse(volleyError);
 
-        boolean isErrorResponseShowing = blogPostUpdateActivity.getErrorResponse().isShowing();
+        boolean isErrorResponseShowing = blogPostUpdateActivity.getErrorDialog().isShowing();
 
         assertThat(isErrorResponseShowing, equalTo(true));
 

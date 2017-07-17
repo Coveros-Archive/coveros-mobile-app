@@ -50,7 +50,9 @@ public class AccessTokenRequest extends com.android.volley.toolbox.StringRequest
      * @param grantType    grant type ("authorization_code")
      * @param accessTokenRequestListener    accessTokenRequestListener that responds on request success
      * @param accessTokenRequestErrorListener    error accessTokenRequestListener that responds on request error
+     * "squid:S00107" warning, which is about the constructor taking 8 parameters rather than the 7 allowed. Ryan said this code smell is appropriate in this context and not a priority to address.
      */
+    @SuppressWarnings("squid:S00107")
     public AccessTokenRequest(String endpoint, String clientId, String clientSecret, String redirectUri, String authCode, String grantType, AccessTokenRequestListener accessTokenRequestListener, AccessTokenRequestErrorListener accessTokenRequestErrorListener) {
         super(Method.POST, endpoint, accessTokenRequestListener, accessTokenRequestErrorListener);
 

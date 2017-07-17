@@ -32,8 +32,8 @@ public class BlogPostUpdateActivity extends AppCompatActivity {
     private String newContent;
     private String url;
 
-    private AlertDialog successResponse;
-    private AlertDialog errorResponse;
+    private AlertDialog successDialog;
+    private AlertDialog errorDialog;
 
     private RestRequest restRequest;
     private String accessToken;
@@ -68,14 +68,14 @@ public class BlogPostUpdateActivity extends AppCompatActivity {
             restRequest = new RestRequest(url, accessToken, body, new RestRequest.RestRequestListener() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    successResponse = createSuccessResponse(BlogPostUpdateActivity.this);
-                    successResponse.show();
+                    successDialog = createRestRequestSuccessDialog(BlogPostUpdateActivity.this);
+                    successDialog.show();
                 }
             }, new RestRequest.RestRequestErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    errorResponse = createErrorResponse(BlogPostUpdateActivity.this);
-                    errorResponse.show();
+                    errorDialog = createRestRequestErrorDialog(BlogPostUpdateActivity.this);
+                    errorDialog.show();
                 }
             });
 
@@ -101,20 +101,20 @@ public class BlogPostUpdateActivity extends AppCompatActivity {
          * Creates AlertDialog that is displayed when the request is successful.
          * @param context    context on which to display AlertDialog
          */
-        private AlertDialog createSuccessResponse(Context context) {
+        private AlertDialog createRestRequestSuccessDialog(Context context) {
             final String successTitle = context.getString(R.string.post_update_request_response_success_title);
             final String successMessage = context.getString(R.string.post_update_request_response_success_message);
-            return createRequestResponse(context, successTitle, successMessage);
+            return createRestRequestDialog(context, successTitle, successMessage);
         }
 
         /**
          * Creates AlertDialog that is displayed when the request returns an error.
          * @param context    context on which to display AlertDialog
          */
-        private AlertDialog createErrorResponse(Context context) {
+        private AlertDialog createRestRequestErrorDialog(Context context) {
             final String errorTitle = context.getString(R.string.post_update_request_response_error_title);
             final String errorMessage = context.getString(R.string.post_update_request_response_error_message);
-            return createRequestResponse(context, errorTitle, errorMessage);
+            return createRestRequestDialog(context, errorTitle, errorMessage);
         }
 
     }
@@ -127,7 +127,7 @@ public class BlogPostUpdateActivity extends AppCompatActivity {
      * @param message    message of the AlertDialog
      * @return    AlertDialog with these data
      */
-    AlertDialog createRequestResponse(Context context, String title, String message) {
+    AlertDialog createRestRequestDialog(Context context, String title, String message) {
         final String buttonText = context.getString(R.string.post_update_request_response_dismiss_button);
         AlertDialog requestResponse = new AlertDialog.Builder(context).create();
         requestResponse.setTitle(title);
@@ -153,12 +153,12 @@ public class BlogPostUpdateActivity extends AppCompatActivity {
         return url;
     }
 
-    AlertDialog getSuccessResponse() {
-        return successResponse;
+    AlertDialog getSuccessDialog() {
+        return successDialog;
     }
 
-    AlertDialog getErrorResponse() {
-        return errorResponse;
+    AlertDialog getErrorDialog() {
+        return errorDialog;
     }
 
     RestRequest getRestRequest() {
