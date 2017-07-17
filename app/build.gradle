@@ -33,6 +33,7 @@ ext.nexus = {
 repositories {
     maven(nexus)
     jcenter()
+    maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
 }
 
 uploadArchives {
@@ -140,6 +141,9 @@ dependencies {
 
     // decoding decimal unicode received from Wordpress
     compile 'org.apache.commons:commons-text:1.1'
+
+    // handling OAuth for Wordpress
+    compile 'com.automattic:wordpresscom-rest:1.+'
 
     // required for local unit tests (JUnit 4 framework)
     testCompile 'junit:junit:4.12'

@@ -4,7 +4,6 @@ package com.coveros.coverosmobileapp.blogpost;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.AbsListView;
