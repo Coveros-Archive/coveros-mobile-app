@@ -12,38 +12,42 @@ import android.webkit.WebViewClient;
 import com.coveros.coverosmobileapp.blogpost.BlogPostReadActivity;
 import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
 
-import static android.content.ContentValues.TAG;
-
 /**
  * Created by EPainter on 6/16/2017.
  * Provides Custom WebView Client that only loads Coveros-related content through WebView.
  * All externally related information is processed in a web browser
  */
 
-public class CustomWebViewClient extends WebViewClient {
+class CustomWebViewClient extends WebViewClient {
 
     private boolean weAreConnected;
-    private boolean errorFound;
-    String value;
-    int postID;
+    private boolean isBlogPost;
+    private String savedClassName;
+    private int postID;
     private MainActivity mainActivity;
     private final String TAG = "CustomWebViewClient";
 
-    public CustomWebViewClient(MainActivity ma) { mainActivity = ma; weAreConnected = true; }
-    public CustomWebViewClient() { weAreConnected = true; }
+    CustomWebViewClient(MainActivity ma) { mainActivity = ma; weAreConnected = true; }
+    CustomWebViewClient() { weAreConnected = true; }
 
-    public MainActivity getMainActivity() { return mainActivity; }
-    public void setMainActivity(MainActivity ma) { mainActivity = ma; }
-    public boolean getConnection(){ return weAreConnected; }
-    public void setConnection(boolean answer){ weAreConnected = answer; }
+    MainActivity getMainActivity() { return mainActivity; }
+    void setMainActivity(MainActivity ma) { mainActivity = ma; }
+    boolean getConnection(){ return weAreConnected; }
+    void setConnection(boolean answer){ weAreConnected = answer; }
+    boolean getIsBlogPost() { return isBlogPost; }
+    void setIsBlogPost(Boolean blogPost) { isBlogPost = blogPost; }
+    int getPostID() { return postID; }
+    void setPostID(int newID) { postID = newID; }
+    String getSavedClassName() { return savedClassName; }
+    void setSavedClassName(String newValue) { savedClassName = newValue; }
 
     @SuppressWarnings("deprecation")
     @Override
     //Logs in this method
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
         //If blog website or blog web page is categorically loaded (hybrid)
-        boolean isBlogPost = false;
-        value = "";
+        isBlogPost = false;
+        String value = "";
         URLContent content = new URLContent(url);
 
         //Create new thread to handle network operations
@@ -52,12 +56,14 @@ public class CustomWebViewClient extends WebViewClient {
         try {
             th.join();
         } catch (InterruptedException e) {
+            Log.e(TAG, "Interruption Occurred with thread for URL Content");
             e.printStackTrace();
         }
         value = content.getHtmlClassName();
 
         //Only Blog posts have this body class name listed, Check off that the url is a Blog Post Link
-        if(value.substring(0,21).equals("post-template-default")){
+        if(value.length() >= 22 && value.substring(0,21).equals("post-template-default")){
+            setSavedClassName(value.substring(0,21));
             isBlogPost = true;
         }
 
@@ -72,7 +78,7 @@ public class CustomWebViewClient extends WebViewClient {
                 saveID += value.charAt(0);
                 value = value.substring(1);
             }
-            //Start blog
+            //Start individual blog
             Intent startBlogPostRead = new Intent(view.getContext(), BlogPostReadActivity.class);
             postID = Integer.parseInt(saveID);
             startBlogPostRead.putExtra("blogId", postID);
@@ -115,7 +121,6 @@ public class CustomWebViewClient extends WebViewClient {
         Log.e(TAG, "Error occurred while loading the web page at URL: " + request.getUrl().toString());
         //Load Blank Page - Could use html substitute error page here
         view.loadUrl("file:///android_asset/sampleErrorPage.html");
-        errorFound = true;
         super.onReceivedError(view, request, error);
     }
 }

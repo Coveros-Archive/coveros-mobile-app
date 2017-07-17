@@ -4,9 +4,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.webkit.WebView;
 
-import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.test.util.LooperTestSuite;
 
 import org.junit.After;
@@ -20,10 +18,10 @@ import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
-public class InstrumentedWebViewTest extends LooperTestSuite {
+public class WebViewInstrumentedTest extends LooperTestSuite {
 
     @Rule
-    public ActivityTestRule<MainActivity> mMainActivity = new ActivityTestRule<MainActivity>(MainActivity.class);
+    public ActivityTestRule<MainActivity> mMainActivity = new ActivityTestRule<>(MainActivity.class);
 
     private MainActivity mActivity = null;
     private AlertDialog mAlertDialog;
@@ -33,6 +31,16 @@ public class InstrumentedWebViewTest extends LooperTestSuite {
         Intent intent = new Intent(Intent.ACTION_PICK);
         mMainActivity.launchActivity(intent);
         mActivity = mMainActivity.getActivity();
+    }
+
+    /*
+     * Check onStart() for Main Activity webName is accurate
+     * Assumes internet is connected
+     */
+    @Test
+    public void checkOnStart() throws Exception {
+        String expected = "https://www3.dev.secureci.com";
+        assertEquals(expected, mActivity.getWebName());
     }
 
     //isOnline tests -> INTERNET IS CURRENTLY CONNECTED
@@ -51,20 +59,7 @@ public class InstrumentedWebViewTest extends LooperTestSuite {
      */
     @Test
     public void checkOnBackPressed() throws NullPointerException {
-        /*
-        WebView view = mActivity.getWebViewBrowser();
-        String expected_GOOGLE = "https://www.google.com";
-        String expected_YT = "https://www.youtube.com";
 
-        view.loadUrl("https://www.google.com");
-        view.loadUrl("https://www.youtube.com");
-        view.loadUrl("https://www.washingtonpost.com");
-
-        mActivity.onBackPressed();
-        assertEquals(expected_YT, view.getUrl());
-        mActivity.onBackPressed();
-        assertEquals(expected_GOOGLE, view.getUrl());
-        */
     }
 
     /*
@@ -107,7 +102,6 @@ public class InstrumentedWebViewTest extends LooperTestSuite {
      */
     @Test
     public void checkAlertDialog_ReloadApp() throws Exception{
-        MainActivity mainActivity = new MainActivity();
 
     }
 
@@ -124,113 +118,6 @@ public class InstrumentedWebViewTest extends LooperTestSuite {
      */
     @Test
     public void checkAlertDialog_Exit() throws Exception {
-
-    }
-
-    /*
-     * Check Custom Client string for html class name
-     */
-    @Test
-    public void checkCustomClient_HTMLClassName(){
-
-    }
-
-    /*
-     * Check Custom Client for Post ID (if Blog Post)
-     */
-    @Test
-    public void checkCustomClient_PostID(){
-
-
-    }
-
-    /*
-     * Check Custom Client if Post ID exists, check blog post from BlogPostReadActivity
-     */
-    @Test
-    public void checkCustomClient_BlogPostReadActivityOpens(){
-
-
-    }
-
-    /*
-     * Check Custom Client loaded URL contains keyword "blog" loads BlogPostListActivity
-     */
-    @Test
-    public void checkCustomClient_LoadsBlogPostListActivity_Blog(){
-
-
-    }
-
-    /*
-     * Check Custom Client loaded URL contains keyword "/category/blogs/"
-     */
-    @Test
-    public void checkCustomClient_LoadsBlogPostListActivity_CategoryBlogs(){
-
-
-    }
-
-    /*
-     * Check Custom Client loaded URL contains coveros related content
-     */
-    @Test
-    public void checkCustomClient_CoverosURL(){
-
-
-    }
-
-    /*
-     * Check Custom Client loaded URL contains dev site url
-     */
-    @Test
-    public void checkCustomClient_SecureCI(){
-
-
-    }
-
-    /*
-     * Check Custom Client loaded external content (Use Browser)
-     */
-    public void checkCustomClient_ExternalContent(){
-
-
-    }
-
-    /*
-     * Check on Page Started
-     * User clicks on new page. Loading as expected
-     */
-    @Test
-    public void checkCustomClient_onPageStarted(){
-
-    }
-
-    /*
-     * Check on Page Started
-     * User clicks on blogs link. Should load page before clicking on Blogs
-     */
-    @Test
-    public void checkCustomClient_LoadPageBeforeBlogs(){
-
-
-    }
-
-    /*
-     * Check that webName is set on onPageFinished()
-     */
-    @Test
-    public void checkCustomClient_NewWebName(){
-
-
-    }
-
-    /*
-     * Check that onReceivedError loads error page && errorFound
-     */
-    @Test
-    public void checkCustomClient_NewError(){
-
 
     }
 

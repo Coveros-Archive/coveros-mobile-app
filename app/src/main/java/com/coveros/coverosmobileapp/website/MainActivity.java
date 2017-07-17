@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     private WebView browser;
     private AlertDialog dialog;
     private CustomWebViewClient cwvc = new CustomWebViewClient();
-    private static final String TAG = "MainActivity";
 
     private static final String[] MENU_TITLES = new String[]{"Home","Blog"};
     private DrawerLayout menu;
@@ -62,24 +61,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        MainActivity main = new MainActivity();
         //Link WebView variable with activity_main_webview for Web View Access
         browser = (WebView) findViewById(R.id.activity_main_webview);
-        main.setWebViewBrowser(browser);
+        setWebViewBrowser(browser);
         rQueue = Volley.newRequestQueue(MainActivity.this);
         final int blogId = getIntent().getIntExtra("blogId", 0);
         final String authors = "https://www.dev.secureci.com/wp-json/wp/v2/users?orderby=id=" + blogId;
-
-        /** StringRequest authorRequest = new StringRequest(Request.Method.GET, authors, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-            JsonObject blogPostsJson = new JsonParser().parse(response).getAsJsonObject();
-            authors.get(blogPostsJson.get("author").getAsJsonObject());
-
-            }
-        }, new BlogPostErrorListener(MainActivity.this));
-        rQueue.add(authorRequest);
-         */
 
         //constructing the menu navigation drawer
         menu = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -103,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //Links open in WebView with Coveros regex check
-        cwvc.setMainActivity(main);
+        cwvc.setMainActivity(this);
         browser.setWebViewClient(cwvc);
         if(!isOnline()){
             browser.loadUrl("file:///android_asset/sampleErrorPage.html");
@@ -117,9 +104,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart(){
         //Phone is online & Connected to a server
         if(isOnline()){
-            WebSettings webSettings = browser.getSettings();
             //JS settings enable/disable hamburger menu, videos, and other media
-            webSettings.setJavaScriptEnabled(true);
+            browser.getSettings().setJavaScriptEnabled(true);
             //Can be changed by either using setWebName or changing value in constructor
             browser.loadUrl(webName);
         }

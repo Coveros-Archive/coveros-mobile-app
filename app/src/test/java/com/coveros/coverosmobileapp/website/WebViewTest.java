@@ -1,7 +1,12 @@
 package com.coveros.coverosmobileapp.website;
 
+import android.webkit.WebView;
+
+import com.coveros.coverosmobileapp.R;
+
 import org.junit.Test;
 
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
 
@@ -43,5 +48,4 @@ public class WebViewTest {
         mainActivity.setCustomClient(custom);
         assertEquals(custom, mainActivity.getCustomClient());
     }
-
 }
