@@ -134,8 +134,12 @@ public class RestRequest extends Request<JSONObject> {
         return PROTOCOL_CONTENT_TYPE;
     }
 
+    /**
+     * {@inheritDoc}
+     * @return    body or null, because the super class depends on null being returned in certain cases, so you have to do it.
+     */
     @Override
-    @Nullable
+    @SuppressWarnings("squid:S1168")
     public byte[] getBody() {
         try {
             return body == null ? null : body.getBytes(PROTOCOL_CHARSET);
@@ -147,15 +151,26 @@ public class RestRequest extends Request<JSONObject> {
         }
     }
 
+    /**
+     * Tests if jsonString is a simple JSON string.
+     * @param jsonString    string under test
+     * "squid:S1848" suppressed because while jsonObject is not explicitly used, it is used to test if creating the object with jsonString throws the JSONException
+     */
+    @SuppressWarnings("squid:S1848")
     private boolean isJson(String jsonString) {
         try {
-            new JSONObject(jsonString);
+            JSONObject jsonObject = new JSONObject(jsonString);
             return true;
         } catch (JSONException je) {
+            Log.d(APP_NAME, "isJson is false", je);
             return false;
         }
     }
 
+    /**
+     * Tests if jsonString is a JSON array string.
+     * @param jsonString    string under test
+     */
     private boolean isJsonArray(String jsonString) {
         try {
             JSONArray responseArray = new JSONArray(jsonString);
@@ -163,10 +178,15 @@ public class RestRequest extends Request<JSONObject> {
             wrapper.put(ORIGINAL_RESPONSE_TAG, responseArray);
             return true;
         } catch (JSONException je) {
+            Log.d(APP_NAME, "isJsonArray is false", je);
             return false;
         }
     }
 
+    /**
+     * Tests if jsonString is a JSON boolean string.
+     * @param jsonString    string under test
+     */
     private boolean isJsonBoolean(String jsonString) {
         try {
             JSONObject jsonObject = new JSONObject();
@@ -178,14 +198,27 @@ public class RestRequest extends Request<JSONObject> {
             }
             return true;
         } catch (JSONException je) {
+            Log.d(APP_NAME, "isJsonBoolean is false", je);
             return false;
         }
     }
 
+    /**
+     * Creates JSONObject from a string representation of a JSON.
+     * @param jsonString    string to be used to create JSONObject
+     * @return JSONObject    JSONObject created from jsonString
+     * @throws JSONException    should never be thrown if used in conjunction with isJson[]() methods above
+     */
     protected JSONObject jsonObjectFromResponse(String jsonString) throws JSONException {
         return new JSONObject(jsonString);
     }
 
+    /**
+     * Creates JSONObject from a string representation of a JSON array.
+     * @param jsonString    string to be used to create JSONObject
+     * @return wrapper    JSONObject created from jsonString
+     * @throws JSONException    should never be thrown if used in conjunction with isJson[]() methods above
+     */
     protected JSONObject jsonArrayObjectFromResponse(String jsonString) throws JSONException {
         JSONArray responseArray = new JSONArray(jsonString);
         JSONObject wrapper = new JSONObject();
@@ -194,6 +227,12 @@ public class RestRequest extends Request<JSONObject> {
         return wrapper;
     }
 
+    /**
+     * Creates JSONObject from a string representation of a JSON boolean.
+     * @param jsonString    string to be used to create JSONObject
+     * @return jsonObject    JSONObject created from jsonString
+     * @throws JSONException    should never be thrown if used in conjunction with isJson[]() methods above
+     */
     protected JSONObject jsonBooleanObjectFromResponse(String jsonString) throws JSONException {
         JSONObject jsonObject = new JSONObject();
 
