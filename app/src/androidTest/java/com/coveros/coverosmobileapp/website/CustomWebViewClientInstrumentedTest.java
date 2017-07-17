@@ -7,7 +7,6 @@ import android.webkit.WebView;
 
 import com.coveros.coverosmobileapp.test.util.LooperTestSuite;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
