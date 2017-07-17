@@ -55,7 +55,6 @@ public class BlogPostUpdateActivity extends AppCompatActivity {
         public void onClick(View v) {
             postId = ((TextView) findViewById(R.id.enter_post_id)).getText().toString();
             newContent = ((TextView) findViewById(R.id.enter_new_content)).getText().toString();
-            newContent = newContent.replace(" ", "+");
             url = "https://www3.dev.secureci.com/wp-json/wp/v2/posts/" + postId;
 
             JSONObject body = new JSONObject();
