@@ -50,7 +50,6 @@ public class BlogPostReadActivityInstrumentedTest {
         blogPostReadActivity = blogPostReadActivityRule.getActivity();
     }
 
-    @Test
     public void onCreate_checkTitlesMatch() {
         String actualTitle = (String) blogPostReadActivity.getTitle();
         assertEquals("Titles should match", EXPECTED_TITLE, actualTitle);

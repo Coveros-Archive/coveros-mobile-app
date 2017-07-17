@@ -55,14 +55,6 @@ public class WebViewInstrumentedTest extends LooperTestSuite {
     }
 
     /*
-     * check on OnBackPressed button (natively a part of the emulator/phone)
-     */
-    @Test
-    public void checkOnBackPressed() throws NullPointerException {
-
-    }
-
-    /*
      * Check if alert will show with or without internet
      * WORKS WITH OR WITHOUT INTERNET
      */
@@ -95,30 +87,6 @@ public class WebViewInstrumentedTest extends LooperTestSuite {
     public void checkAlertDialogDefault() throws Exception {
         MainActivity ma = new MainActivity();
         assertNull(ma.getDialog());             //Not initialized}
-    }
-
-    /*
-     * Check on alertView Neutral button press (Reload App)
-     */
-    @Test
-    public void checkAlertDialog_ReloadApp() throws Exception{
-
-    }
-
-    /*
-     * Check on alertView Negative button press (OK)
-     */
-    @Test
-    public void checkAlertDialog_Ok() throws Exception {
-
-    }
-
-    /*
-     * Check on alertView Positive Button press (Exit App)
-     */
-    @Test
-    public void checkAlertDialog_Exit() throws Exception {
-
     }
 
     @After

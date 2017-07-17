@@ -65,8 +65,6 @@ public class MainActivity extends AppCompatActivity {
         browser = (WebView) findViewById(R.id.activity_main_webview);
         setWebViewBrowser(browser);
         rQueue = Volley.newRequestQueue(MainActivity.this);
-        final int blogId = getIntent().getIntExtra("blogId", 0);
-        final String authors = "https://www.dev.secureci.com/wp-json/wp/v2/users?orderby=id=" + blogId;
 
         //constructing the menu navigation drawer
         menu = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -82,13 +80,6 @@ public class MainActivity extends AppCompatActivity {
                 menu.requestLayout();
             }}
         );
-        //Debugging Purposes (Useful for tracking clicks in Logcat
-        browser.setOnTouchListener(new View.OnTouchListener(){
-            public boolean onTouch(View v, MotionEvent event){
-                WebView.HitTestResult hr = ((WebView) v).getHitTestResult();
-                return false;
-            }
-        });
         //Links open in WebView with Coveros regex check
         cwvc.setMainActivity(this);
         browser.setWebViewClient(cwvc);

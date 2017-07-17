@@ -1,5 +1,7 @@
 package com.coveros.coverosmobileapp.website;
 
+import android.util.Log;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import java.io.IOException;
@@ -25,7 +27,7 @@ public class URLContent implements Runnable{
         }
         catch (IOException i){
             //Catches malformed URL's too!
-            i.printStackTrace();
+            Log.i("URLContent", "IOException Found in URLContent");
             htmlClassName = "failed with IOException";
         }
     }

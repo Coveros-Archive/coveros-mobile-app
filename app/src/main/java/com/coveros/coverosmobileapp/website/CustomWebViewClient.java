@@ -57,7 +57,7 @@ class CustomWebViewClient extends WebViewClient {
             th.join();
         } catch (InterruptedException e) {
             Log.e(TAG, "Interruption Occurred with thread for URL Content");
-            e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
         value = content.getHtmlClassName();
 
