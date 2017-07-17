@@ -4,23 +4,23 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
+
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
 public class MainActivity extends AppCompatActivity {
@@ -28,32 +28,31 @@ public class MainActivity extends AppCompatActivity {
     private String webName;
     private WebView browser;
     private AlertDialog dialog;
+    private CustomWebViewClient cwvc = new CustomWebViewClient();
 
-    private ListView drawerList;
-    private static final String[] MENU_TITLES = new String[]{"Home","Blog","Bookmarks"};
+    private static final String[] MENU_TITLES = new String[]{"Home","Blog"};
     private DrawerLayout menu;
+    private ListView drawerList;
 
-    public MainActivity(){
-        webName = "https://www.coveros.com/";
-    }
+    private RequestQueue rQueue;
 
-    public String getWebName(){
-        return webName;
-    }
+    //Create Strings for Title, message, and buttons
+    private static final String ALERT_TITLE = "Alert";
+    private static final String ALERT_MESSAGE = "Sorry, we cannot currently retrieve the requested information.";
+    private static final String ALERT_BUTTON_EXIT = "Exit App";
+    private static final String ALERT_BUTTON_RELOAD= "Reload App";
+    private static final String ALERT_BUTTON_OK = "OK";
 
-    public void setWebName(String website){
-        webName = website;
-    }
+    public MainActivity(){ webName = "https://www3.dev.secureci.com"; }
+    public MainActivity(String specificUrl) { webName = specificUrl; }
 
+    public String getWebName(){ return webName; }
+    public void setWebName(String website){ webName = website; }
     public WebView getWebViewBrowser(){ return browser; }
-
-    public void setWebViewBrowser(WebView br){
-        browser = br;
-    }
-
-    public AlertDialog getDialog(){
-        return dialog;
-    }
+    public void setWebViewBrowser(WebView br){ browser = br; }
+    public AlertDialog getDialog() { return dialog; }
+    public CustomWebViewClient getCustomClient() { return cwvc; }
+    public void setCustomClient(CustomWebViewClient cc) { cwvc = cc;}
 
     /*
      * On Creation/Declaration of App/Activity
@@ -62,16 +61,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        MainActivity main = new MainActivity();
         //Link WebView variable with activity_main_webview for Web View Access
         browser = (WebView) findViewById(R.id.activity_main_webview);
-        main.setWebViewBrowser(browser);
+        setWebViewBrowser(browser);
+        rQueue = Volley.newRequestQueue(MainActivity.this);
 
+        //constructing the menu navigation drawer
         menu = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerList = (ListView)findViewById(R.id.left_drawer);
         drawerList.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1 , MENU_TITLES));
-        drawerList.setOnItemClickListener(new MainActivity.DrawerItemClickListener());
+        drawerList.setOnItemClickListener(new DrawerItemClickListener());
         menu.addDrawerListener(new DrawerLayout.SimpleDrawerListener(){
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset){
@@ -80,40 +80,9 @@ public class MainActivity extends AppCompatActivity {
                 menu.requestLayout();
             }}
         );
-
         //Links open in WebView with Coveros regex check
-        browser.setWebViewClient(new CustomWebViewClient(){
-            @SuppressWarnings("deprecation")
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                //If blog website or blog webspage is categorically loaded (hybrid)
-                if(url.contains("coveros.com/blog/") || url.contains("coveros.com/category/blogs/") ||
-                        url.contains("dev.secureci.com/blog/") || url.contains("dev.secureci.com/category/blogs/")){
-                    //Load new activity
-                    Intent startBlogPost = new Intent(getApplicationContext(), BlogPostsListActivity.class);
-                    startActivity(startBlogPost);
-                    return true;
-                }
-                if (url.contains("coveros.com") || url.contains("dev.secureci.com")) {
-                    view.loadUrl(url);
-                    return true;
-                } else {
-                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    view.getContext().startActivity(i);
-                    return true;
-                }
-            }
-            @Override
-            public void onPageStarted(WebView view, String url, Bitmap fav){
-                if(("https://www.coveros.com/blog/").equals(webName)){
-                    onBackPressed();
-                }
-            }
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                setWebName(url);
-            }
-        });
+        cwvc.setMainActivity(this);
+        browser.setWebViewClient(cwvc);
         if(!isOnline()){
             browser.loadUrl("file:///android_asset/sampleErrorPage.html");
         }
@@ -126,9 +95,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart(){
         //Phone is online & Connected to a server
         if(isOnline()){
-            //Enable Javascript (Plugins)
-            WebSettings webSettings = browser.getSettings();
-            webSettings.setJavaScriptEnabled(true);
+            //JS settings enable/disable hamburger menu, videos, and other media
+            browser.getSettings().setJavaScriptEnabled(true);
             //Can be changed by either using setWebName or changing value in constructor
             browser.loadUrl(webName);
         }
@@ -173,42 +141,35 @@ public class MainActivity extends AppCompatActivity {
      * OK option provided to immediately close the dialog box if the user's wifi loads
      *      the Coveros website in the background
      */
-    private void alertView(){
-        //Create Strings for Title, messsage, and buttons
-        String title = "Alert";
-        String message = "Sorry, we cannot currently retrieve the requested information.";
-        String button1 = "Exit App";
-        String button2 = "Reload App";
-        String button3 = "OK";
-
+    protected void alertView(){
         //Init Alert Dialog menu & Cancel only if pressed on button
         dialog = new AlertDialog.Builder(MainActivity.this)
-                .setNeutralButton(button2, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getApplicationContext(), "Loading App", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
-                recreate();
-            }
-        })
-                .setNegativeButton(button3, new DialogInterface.OnClickListener() {
+                .setNeutralButton(ALERT_BUTTON_RELOAD, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss(); }
+                    public void onClick(DialogInterface dialogs, int which) {
+                        Toast.makeText(getApplicationContext(), "Loading App", Toast.LENGTH_SHORT).show();
+                        dialogs.dismiss();
+                        recreate();
+                    }
                 })
-                .setPositiveButton(button1, new DialogInterface.OnClickListener(){
+                .setNegativeButton(ALERT_BUTTON_OK, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which){
+                    public void onClick(DialogInterface dialogs, int which) {
+                        dialogs.dismiss(); }
+                })
+                .setPositiveButton(ALERT_BUTTON_EXIT, new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialogs, int which){
                         Toast.makeText(getApplicationContext(), "Thank You", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
+                        dialogs.dismiss();
                         finish();
                     }
                 }).create();
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
         //Setters (title, default message, button 1 -> Exit, button2 -> Reload)
-        dialog.setTitle(title);
-        dialog.setMessage(message);
+        dialog.setTitle(ALERT_TITLE);
+        dialog.setMessage(ALERT_MESSAGE);
         //Show dialog and make text changes (font color, size, etc.)
         dialog.show();
     }
@@ -217,6 +178,13 @@ public class MainActivity extends AppCompatActivity {
      * Made to navigate through the menu drawer by click
      */
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        /**
+         * This method implements navigating to the corresponding activity when a position is selected on the navigation menu drawer
+         * @param parent the current placing of the adapter
+         * @param view the current layout shown
+         * @param position the int the describes the placing in the list
+         * @param id the specified value of the layout
+         */
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             if (position == 0) {

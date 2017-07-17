@@ -2,13 +2,14 @@ package com.coveros.coverosmobileapp.test.util;
 
 import android.os.Looper;
 
+import org.junit.After;
 import org.junit.BeforeClass;
 
 /**
  * Setup the main thread to be a {@link android.os.Looper} thread. This allows callbacks to be
  * individually tested without requiring a sophisticated mock setup.
  */
-public class LooperTestSuite {
+public abstract class LooperTestSuite {
 
     /**
      * Prepare the main thread to be a "looper thread".

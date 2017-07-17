@@ -3,35 +3,43 @@ package com.coveros.coverosmobileapp.website;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
-import android.support.test.rule.ServiceTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.coveros.coverosmobileapp.test.util.LooperTestSuite;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
-public class InstrumentedWebViewTest extends LooperTestSuite {
+public class WebViewInstrumentedTest extends LooperTestSuite {
 
     @Rule
     public ActivityTestRule<MainActivity> mMainActivity = new ActivityTestRule<>(MainActivity.class);
 
-    @Rule
-    public final ServiceTestRule mServiceRule = new ServiceTestRule();
-
+    private MainActivity mActivity = null;
     private AlertDialog mAlertDialog;
 
+    @Before
+    public void setUp() throws Exception {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        mMainActivity.launchActivity(intent);
+        mActivity = mMainActivity.getActivity();
+    }
+
     /*
-     * Test if MainActivity Will run with custom intent
+     * Check onStart() for Main Activity webName is accurate
+     * Assumes internet is connected
      */
     @Test
-    public void check_testRun() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        MainActivity newMain = mMainActivity.launchActivity(intent);
+    public void checkOnStart() throws Exception {
+        String expected = "https://www3.dev.secureci.com";
+        assertEquals(expected, mActivity.getWebName());
     }
 
     //isOnline tests -> INTERNET IS CURRENTLY CONNECTED
@@ -40,10 +48,8 @@ public class InstrumentedWebViewTest extends LooperTestSuite {
      * Checks if the app/device is connected to the internet
      */
     @Test
-    public void check_isOnlineTrue() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        MainActivity newMain = mMainActivity.launchActivity(intent);
-        boolean theTruth = newMain.isOnline();
+    public void isOnline_True() {
+        boolean theTruth = mActivity.isOnline();
         assertTrue(theTruth);
     }
 
@@ -52,10 +58,8 @@ public class InstrumentedWebViewTest extends LooperTestSuite {
      * WORKS WITH OR WITHOUT INTERNET
      */
     @Test
-    public void check_AlertShowingWithInternet() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        MainActivity newMain = mMainActivity.launchActivity(intent);
-        mAlertDialog = new AlertDialog.Builder(newMain).create();
+    public void alertViewTest() {
+        mAlertDialog = new AlertDialog.Builder(mActivity).create();
         boolean workingAsIntended;
         if (mAlertDialog.isShowing()) {
             workingAsIntended = false;
@@ -71,12 +75,16 @@ public class InstrumentedWebViewTest extends LooperTestSuite {
      */
     @Test
     //Check Alert Dialog runs
-    public void check_alertView_1() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        MainActivity newMain = mMainActivity.launchActivity(intent);
-        mAlertDialog = new AlertDialog.Builder(mMainActivity.getActivity()).create();
+    public void alertView_1() {
+        mAlertDialog = new AlertDialog.Builder(mActivity).create();
     }
-    //More AlertView tests necessary but need to access xml ID's
-    //which means the creation of Buttons/TextViews in xml activity
-    //linking the buttons and strings together
+
+    /*
+    * Check uninitialized dialog and initialized dialog
+    */
+    @Test
+    public void checkAlertDialogDefault() throws Exception {
+        MainActivity ma = new MainActivity();
+        assertNull(ma.getDialog());             //Not initialized}
+    }
 }

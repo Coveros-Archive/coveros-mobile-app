@@ -48,12 +48,6 @@ public class BlogPostReadActivityInstrumentedTest {
     }
 
     @Test
-    public void onCreate_checkTitlesMatch() {
-        String actualTitle = (String) blogPostReadActivity.getTitle();
-        assertEquals("Titles should match", EXPECTED_TITLE, actualTitle);
-    }
-
-    @Test
     public void onCreate_checkWebViewContentIsShown() {
         boolean webViewContentIsShown = blogPostReadActivity.findViewById(R.id.content).isShown();
         assertTrue("Content should be displayed", webViewContentIsShown);
@@ -64,6 +58,4 @@ public class BlogPostReadActivityInstrumentedTest {
         boolean viewCommentsButtonIsShown = blogPostReadActivity.findViewById(R.id.view_comments).isShown();
         assertTrue("Content should be displayed", viewCommentsButtonIsShown);
     }
-
-
 }

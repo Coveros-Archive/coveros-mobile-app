@@ -39,7 +39,7 @@ public class BlogPostsListActivity extends BlogListActivity {
     private SparseArray<String> authors = new SparseArray<>();  // to aggregate the ids and names of the authors of displayed blog posts
     private RequestQueue rQueue;
 
-    private static final String[] MENU_TITLES = new String[]{"Home", "Blog", "Bookmarks"};
+    private static final String[] MENU_TITLES = new String[]{"Home", "Blog"};
     private DrawerLayout menu;
     private ListView drawerList;
     private LinearLayout postList;
@@ -69,6 +69,7 @@ public class BlogPostsListActivity extends BlogListActivity {
 
         errorListener = createErrorListener(BlogPostsListActivity.this);
 
+        //creates the sliding navigation drawer menu
         postList = (LinearLayout) findViewById(R.id.postlist);
         menu = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerList = (ListView) findViewById(R.id.left_drawer);
@@ -94,17 +95,12 @@ public class BlogPostsListActivity extends BlogListActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 BlogPost blogPost = blogPosts.get(position - 1);  // -1 because the TextView offsets the blogPosts by one for some reason
-                ArrayList<String> blogPostData = new ArrayList<>();
-                blogPostData.add(String.valueOf(blogPost.getId()));
-                blogPostData.add(blogPost.getTitle());
-                blogPostData.add(blogPost.getContent());
                 Intent intent = new Intent(getApplicationContext(), BlogPostReadActivity.class);
-                intent.putStringArrayListExtra("postData", blogPostData);
+                intent.putExtra("blogId", blogPost.getId());
                 startActivity(intent);
             }
         });
     }
-
 
     /**
      * Adds blogPosts to the list view. Called when user scrolls to the bottom of the listview.
@@ -154,6 +150,7 @@ public class BlogPostsListActivity extends BlogListActivity {
             });
         }
     }
+
     /**
      * Populates List of Authors.
      *
@@ -162,16 +159,16 @@ public class BlogPostsListActivity extends BlogListActivity {
     protected void retrieveAuthors(final PostListCallback<String> postListCallback) {
         StringRequest authorsRequest = new StringRequest(Request.Method.GET, AUTHORS_URL, new Response.Listener<String>() {
             @Override
-            public void onResponse(String response) {
-                JsonArray authorsJson = new JsonParser().parse(response).getAsJsonArray();
-                for (JsonElement author : authorsJson) {
-                    JsonObject authorJson = (JsonObject) author;
-                    Integer id = authorJson.get("id").getAsInt();
-                    authors.put(id, authorJson.get("name").getAsString());
-                }
-                postListCallback.onSuccess(null);
+        public void onResponse(String response) {
+            JsonArray authorsJson = new JsonParser().parse(response).getAsJsonArray();
+            for (JsonElement author : authorsJson) {
+                JsonObject authorJson = (JsonObject) author;
+                Integer id = authorJson.get("id").getAsInt();
+                authors.put(id, authorJson.get("name").getAsString());
             }
-        }, errorListener);
+            postListCallback.onSuccess(null);
+        }
+    }, errorListener);
         rQueue.add(authorsRequest);
     }
 
@@ -227,13 +224,18 @@ public class BlogPostsListActivity extends BlogListActivity {
                     addPosts();
                     currentListSize = BlogPostsListActivity.this.blogPostsListView.getAdapter().getCount();
                 }
-
             }
         }
-
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        /**
+         * This method implements navigating to the corresponding activity when a position is selected on the navigation menu drawer
+         * @param parent the current placing of the adapter
+         * @param view the current layout shown
+         * @param position the int the describes the placing in the list
+         * @param id the specified value of the layout
+         */
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             if (position == 0) {
@@ -248,8 +250,6 @@ public class BlogPostsListActivity extends BlogListActivity {
     public ListView getBlogPostsListView() {
         return blogPostsListView;
     }
-
-
 }
 
 

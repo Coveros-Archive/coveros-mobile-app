@@ -1,7 +1,13 @@
 package com.coveros.coverosmobileapp.website;
 
+import android.webkit.WebView;
+
+import com.coveros.coverosmobileapp.R;
+
 import org.junit.Test;
 
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -10,25 +16,36 @@ import static org.junit.Assert.assertEquals;
 public class WebViewTest {
 
     /**
-     * Check on Getter for WebName()
+     * Check on Getter/Setter for WebName() for default constructor
      */
     @Test
-    public void check_GetWebsiteAddressName() throws Exception {
-        String savedUrl;
+    public void getWebsiteAddressName() {
+        String savedUrl = "https://www3.dev.secureci.com";
+        String expected = "http://www.html5rocks.com/";
         MainActivity ma = new MainActivity();
-        savedUrl = ma.getWebName();
-        assertEquals("https://www.coveros.com/", savedUrl);
+        assertEquals(savedUrl, ma.getWebName());
+        ma.setWebName("http://www.html5rocks.com/");
+        assertEquals(expected, ma.getWebName());
     }
 
-    /**
-     * Check on Setter for WebName()
+    /*
+     * Check on MainActivity Constructors
      */
     @Test
-    public void check_SetWebsiteAddressName() throws Exception {
-        String savedUrl = "http://www.html5rocks.com/";
-        MainActivity ma = new MainActivity();
-        ma.setWebName(savedUrl);
-        assertEquals("http://www.html5rocks.com/", ma.getWebName());
+    public void getWebAddressesForConstructors() {
+        String savedUrl = "https://www3.dev.secureci.com";
+        String newUrl = "https://github.com/";
+        MainActivity mainActivity = new MainActivity();
+        MainActivity mainActivity1 = new MainActivity(newUrl);
+        assertEquals(savedUrl, mainActivity.getWebName());
+        assertEquals(newUrl, mainActivity1.getWebName());
     }
 
+    @Test
+    public void getClientFromMainActivity() {
+        MainActivity mainActivity = new MainActivity();
+        CustomWebViewClient custom = new CustomWebViewClient();
+        mainActivity.setCustomClient(custom);
+        assertEquals(custom, mainActivity.getCustomClient());
+    }
 }

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
@@ -18,7 +19,6 @@ import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.oauth.AccessTokenRequest;
 import com.coveros.coverosmobileapp.oauth.AuthUrl;
-import com.coveros.coverosmobileapp.website.CustomWebViewClient;
 
 /**
  * Displays a WebView that presents user with log-in page.
@@ -62,7 +62,7 @@ public class OAuthLoginActivity extends AppCompatActivity {
      * @param authCallback    callback to wait for the parsing of the authorization code from the redirect uri
      */
     private void setWebViewClient(WebView webView, final AuthCallback authCallback) {
-        webView.setWebViewClient(new CustomWebViewClient() {
+        webView.setWebViewClient(new WebViewClient() {
             @SuppressWarnings("deprecation")
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {

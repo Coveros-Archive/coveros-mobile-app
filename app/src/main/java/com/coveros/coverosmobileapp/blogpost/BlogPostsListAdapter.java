@@ -67,7 +67,4 @@ class BlogPostsListAdapter extends ArrayAdapter<BlogPost> {
         TextView title;
         TextView authorDate;
     }
-
-
-
 }
