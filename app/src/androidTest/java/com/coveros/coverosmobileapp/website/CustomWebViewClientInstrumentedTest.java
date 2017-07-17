@@ -102,9 +102,4 @@ public class CustomWebViewClientInstrumentedTest extends LooperTestSuite {
         changeIt = "https://www.google.com";
         assertEquals(expectedNew, changeIt);
     }
-
-    @After
-    public void tearDown() throws Exception {
-        mActivity = null;
-    }
 }

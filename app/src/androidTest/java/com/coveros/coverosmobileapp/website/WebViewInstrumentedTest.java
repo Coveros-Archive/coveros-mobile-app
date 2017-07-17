@@ -88,9 +88,4 @@ public class WebViewInstrumentedTest extends LooperTestSuite {
         MainActivity ma = new MainActivity();
         assertNull(ma.getDialog());             //Not initialized}
     }
-
-    @After
-    public void tearDown() throws Exception{
-        mActivity = null;
-    }
 }
