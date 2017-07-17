@@ -4,7 +4,6 @@ package com.coveros.coverosmobileapp.blogpost;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.AbsListView;
@@ -33,6 +32,7 @@ import java.util.Locale;
  * @author Maria Kim
  *         Creates ListView that displays list of titles of blog post_list.
  */
+@SuppressWarnings("squid:MaximumInheritanceDepth")
 public class BlogPostsListActivity extends BlogListActivity {
 
     private List<BlogPost> blogPosts = new ArrayList<>();

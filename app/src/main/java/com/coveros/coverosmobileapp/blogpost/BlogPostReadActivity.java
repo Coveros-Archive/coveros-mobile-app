@@ -22,6 +22,7 @@ import com.google.gson.JsonParser;
  *
  * @author Maria Kim
  */
+@SuppressWarnings("squid:MaximumInheritanceDepth")
 public class BlogPostReadActivity extends AppCompatActivity {
 
     /**
