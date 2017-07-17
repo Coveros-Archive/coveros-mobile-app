@@ -57,40 +57,40 @@ public class BlogPostUpdateActivity extends AppCompatActivity {
             newContent = newContent.replace(" ", "+");
             url = "https://www3.dev.secureci.com/wp-json/wp/v2/posts/" + postId;
 
-            if (postId.isEmpty() || newContent.isEmpty()) {
+            JSONObject body = new JSONObject();
+            try {
+                body.put("content", newContent);
+            } catch (JSONException e) {
+                Log.e("JSON Exception", "JSON Object body not populated", e);
+            }
+
+            restRequest = new RestRequest(url, accessToken, body, new RestRequest.RestRequestListener() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    successResponse = createSuccessResponse(BlogPostUpdateActivity.this);
+                    successResponse.show();
+                }
+            }, new RestRequest.RestRequestErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    errorResponse = createErrorResponse(BlogPostUpdateActivity.this);
+                    errorResponse.show();
+                }
+            });
+
+            restRequest.setOnAuthFailedListener(new RestRequest.OnAuthFailedListener() {
+                @Override
+                public void onAuthFailed() {
+                    Intent intent = new Intent(getApplicationContext(), BlogPostUpdateActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+
+            if (postId.isEmpty() || newContent.isEmpty()) {  // if either field is empty, don't send request and show Toast
                 Toast emptyField = Toast.makeText(BlogPostUpdateActivity.this, "All fields must be filled.", Toast.LENGTH_SHORT);
                 emptyField.show();
-            } else {
-                JSONObject body = new JSONObject();
-                try {
-                    body.put("content", newContent);
-                } catch (JSONException e) {
-                    Log.e("JSON Exception", "JSON Object body not populated", e);
-                }
-
-                restRequest = new RestRequest(url, accessToken, body, new RestRequest.RestRequestListener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        successResponse = createSuccessResponse(BlogPostUpdateActivity.this);
-                        successResponse.show();
-                    }
-                }, new RestRequest.RestRequestErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        errorResponse = createErrorResponse(BlogPostUpdateActivity.this);
-                        errorResponse.show();
-                    }
-                });
-
-                restRequest.setOnAuthFailedListener(new RestRequest.OnAuthFailedListener() {
-                    @Override
-                    public void onAuthFailed() {
-                        Intent intent = new Intent(getApplicationContext(), BlogPostUpdateActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                });
-
+            } else {  // if both fields are not empty, make request
                 RequestQueue requestQueue = Volley.newRequestQueue(BlogPostUpdateActivity.this);
                 requestQueue.add(restRequest);
             }

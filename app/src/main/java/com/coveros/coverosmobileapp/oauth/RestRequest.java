@@ -154,12 +154,12 @@ public class RestRequest extends Request<JSONObject> {
     /**
      * Tests if jsonString is a simple JSON string.
      * @param jsonString    string under test
-     * "squid:S1848" suppressed because while jsonObject is not explicitly used, it is used to test if creating the object with jsonString throws the JSONException
+     * "squid:S1848" suppressed because while JSONObject is not explicitly used, it is used to test if creating the object with jsonString throws the JSONException
      */
     @SuppressWarnings("squid:S1848")
     private boolean isJson(String jsonString) {
         try {
-            JSONObject jsonObject = new JSONObject(jsonString);
+            new JSONObject(jsonString);
             return true;
         } catch (JSONException je) {
             Log.d(APP_NAME, "isJson is false", je);
