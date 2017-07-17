@@ -6,12 +6,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.webkit.*;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -23,6 +25,7 @@ import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
 
 
+@SuppressWarnings("squid:MaximumInheritanceDepth")
 public class MainActivity extends AppCompatActivity {
     //MainActivity
     private String webName;
@@ -138,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
 
         //No internet connection
-        return (netInfo != null && netInfo.isConnected() && netInfo.isAvailable());
+        return netInfo != null && netInfo.isConnected() && netInfo.isAvailable();
     }
 
     /*
@@ -203,6 +206,4 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
-
 }

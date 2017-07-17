@@ -18,7 +18,7 @@ import java.util.List;
  * Displays a form through which a user can create and send a comment on a blog post.
  * @author Maria Kim
  */
-
+@SuppressWarnings("squid:MaximumInheritanceDepth")
 public class CommentFormActivity extends AppCompatActivity {
     private String author;
     private String email;
@@ -74,7 +74,7 @@ public class CommentFormActivity extends AppCompatActivity {
     }
 
     private AlertDialog createEmptyFieldAlertDialog(List<String> emptyFields) {
-        AlertDialog emptyFieldAlertDialog = new AlertDialog.Builder(CommentFormActivity.this).create();
+        emptyFieldAlertDialog = new AlertDialog.Builder(CommentFormActivity.this).create();
         emptyFieldAlertDialog.setTitle(R.string.empty_field_alert_dialog_title);
         String emptyFieldsString;
         if (emptyFields.size() == 1) {

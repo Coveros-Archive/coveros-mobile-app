@@ -26,7 +26,7 @@ import java.util.List;
  *
  * @author Maria Kim
  */
-
+@SuppressWarnings("squid:MaximumInheritanceDepth")
 public class CommentsListActivity extends BlogListActivity {
 
     private RequestQueue rQueue;
