@@ -135,6 +135,7 @@ public class RestRequest extends Request<JSONObject> {
     }
 
     @Override
+    @Nullable
     public byte[] getBody() {
         try {
             return body == null ? null : body.getBytes(PROTOCOL_CHARSET);
@@ -148,10 +149,9 @@ public class RestRequest extends Request<JSONObject> {
 
     private boolean isJson(String jsonString) {
         try {
-            JSONObject jsonObject = new JSONObject(jsonString);
+            new JSONObject(jsonString);
             return true;
         } catch (JSONException je) {
-            Log.e("CoverosMobileApp", "isJson is false", je);
             return false;
         }
     }
@@ -163,7 +163,6 @@ public class RestRequest extends Request<JSONObject> {
             wrapper.put(ORIGINAL_RESPONSE_TAG, responseArray);
             return true;
         } catch (JSONException je) {
-            Log.e("CoverosMobileApp", "isJsonArray is false", je);
             return false;
         }
     }
@@ -179,7 +178,6 @@ public class RestRequest extends Request<JSONObject> {
             }
             return true;
         } catch (JSONException je) {
-            Log.e("CoverosMobileApp", "isJsonBoolean is false", je);
             return false;
         }
     }
