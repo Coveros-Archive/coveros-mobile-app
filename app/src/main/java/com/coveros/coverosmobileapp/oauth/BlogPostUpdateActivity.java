@@ -24,6 +24,7 @@ import org.json.JSONObject;
  * @author Maria Kim
  */
 
+@SuppressWarnings("squid:MaximumInheritanceDepth")
 public class BlogPostUpdateActivity extends AppCompatActivity {
     private String postId;
     private String newContent;

@@ -115,22 +115,16 @@ public class RestRequest extends Request<JSONObject> {
     protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
         try {
             String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-            JSONObject jsonObject;
-            try {
+            JSONObject jsonObject = new JSONObject();
+            if (isJson(jsonString)) {
                 jsonObject = jsonObjectFromResponse(jsonString);
-            } catch (JSONException jsonException) {
-                try {
-                    jsonObject = jsonArrayObjectFromResponse(jsonString);
-                } catch (JSONException jsonArrayException) {
-                    try {
-                        jsonObject = jsonBooleanObjectFromResponse(jsonString);
-                    } catch (JSONException jsonBooleanException) {
-                        return Response.error(new ParseError(jsonBooleanException));
-                    }
-                }
+            } else if (isJsonArray(jsonString)) {
+                jsonObject = jsonArrayObjectFromResponse(jsonString);
+            } else if (isJsonBoolean(jsonString)) {
+                jsonObject = jsonBooleanObjectFromResponse(jsonString);
             }
             return Response.success(jsonObject, HttpHeaderParser.parseCacheHeaders(response));
-        } catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException | JSONException e) {
             return Response.error(new ParseError(e));
         }
     }
@@ -149,6 +143,44 @@ public class RestRequest extends Request<JSONObject> {
                     body, PROTOCOL_CHARSET);
             Log.e(APP_NAME, "getBody() will return null", uee);
             return null;
+        }
+    }
+
+    private boolean isJson(String jsonString) {
+        try {
+            JSONObject jsonObject = new JSONObject(jsonString);
+            return true;
+        } catch (JSONException je) {
+            Log.e("CoverosMobileApp", "isJson is false", je);
+            return false;
+        }
+    }
+
+    private boolean isJsonArray(String jsonString) {
+        try {
+            JSONArray responseArray = new JSONArray(jsonString);
+            JSONObject wrapper = new JSONObject();
+            wrapper.put(ORIGINAL_RESPONSE_TAG, responseArray);
+            return true;
+        } catch (JSONException je) {
+            Log.e("CoverosMobileApp", "isJsonArray is false", je);
+            return false;
+        }
+    }
+
+    private boolean isJsonBoolean(String jsonString) {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            if (jsonString.equals(Boolean.TRUE.toString())) {
+                jsonObject.put(ORIGINAL_RESPONSE_TAG, true);
+            }
+            if (jsonString.equals(Boolean.FALSE.toString())) {
+                jsonObject.put(ORIGINAL_RESPONSE_TAG, false);
+            }
+            return true;
+        } catch (JSONException je) {
+            Log.e("CoverosMobileApp", "isJsonBoolean is false", je);
+            return false;
         }
     }
 

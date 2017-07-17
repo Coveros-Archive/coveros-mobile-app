@@ -23,6 +23,7 @@ import com.coveros.coverosmobileapp.website.CustomWebViewClient;
  * @author Maria Kim
  */
 
+@SuppressWarnings("squid:MaximumInheritanceDepth")
 public class OAuthLoginActivity extends AppCompatActivity {
 
     private static final String AUTH_ENDPOINT = "https://www3.dev.secureci.com/oauth/authorize";
