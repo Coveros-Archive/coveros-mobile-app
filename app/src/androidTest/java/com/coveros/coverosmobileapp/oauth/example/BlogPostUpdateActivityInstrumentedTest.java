@@ -68,7 +68,7 @@ public class BlogPostUpdateActivityInstrumentedTest extends LooperTestSuite {
     @Test
     public void onClick_checkInputStringsAreReadCorrectly() {
         final String expectedPostId = "7601";
-        final String expectedNewContent = "Hello,+Ryane.";
+        final String expectedNewContent = "Hello, Ryane.";
         final String expectedUrl = "https://www3.dev.secureci.com/wp-json/wp/v2/posts/7601";
 
         onView(withId(R.id.enter_post_id)).perform(ViewActions.typeText(expectedPostId), closeSoftKeyboard());
