@@ -17,7 +17,7 @@ import static android.util.TypedValue.COMPLEX_UNIT_PX;
 /**
  * @author Maria Kim
  */
-
+@SuppressWarnings("squid:MaximumInheritanceDepth")
 public class BlogListActivity extends ListActivity {
 
     AlertDialog errorMessage;

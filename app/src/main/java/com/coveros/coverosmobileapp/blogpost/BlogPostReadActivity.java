@@ -25,6 +25,7 @@ import java.util.List;
  *
  * @author Maria Kim and Sadie Rynestad
  */
+@SuppressWarnings("squid:MaximumInheritanceDepth")
 public class BlogPostReadActivity extends AppCompatActivity {
     private static final int NUM_OF_AUTHORS = 100;  // number of users that will be returned by the REST call... so if someday Coveros has over 100 employees, this needs to be changed
     private static final String AUTHORS_URL = "https://www3.dev.secureci.com/wp-json/wp/v2/users?orderby=id&per_page=" + NUM_OF_AUTHORS;

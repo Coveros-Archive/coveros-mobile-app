@@ -24,7 +24,7 @@ import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
 
-
+@SuppressWarnings("squid:MaximumInheritanceDepth")
 public class MainActivity extends AppCompatActivity {
     //MainActivity
     private String webName;
@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
         NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
 
         //No internet connection
-        return (netInfo != null && netInfo.isConnected() && netInfo.isAvailable());
+        return netInfo != null && netInfo.isConnected() && netInfo.isAvailable();
     }
 
     /*

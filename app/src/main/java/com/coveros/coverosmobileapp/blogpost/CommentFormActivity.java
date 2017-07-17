@@ -18,7 +18,7 @@ import java.util.List;
  * Displays a form through which a user can create and send a comment on a blog post.
  * @author Maria Kim
  */
-
+@SuppressWarnings("squid:MaximumInheritanceDepth")
 public class CommentFormActivity extends AppCompatActivity {
     private String author;
     private String email;
@@ -74,8 +74,8 @@ public class CommentFormActivity extends AppCompatActivity {
     }
 
     private AlertDialog createEmptyFieldAlertDialog(List<String> emptyFields) {
-        AlertDialog emptyFieldAlertDialog = new AlertDialog.Builder(CommentFormActivity.this).create();
-        emptyFieldAlertDialog.setTitle(R.string.empty_field_alert_dialog_title);
+        AlertDialog newEmptyFieldAlertDialog = new AlertDialog.Builder(CommentFormActivity.this).create();
+        newEmptyFieldAlertDialog.setTitle(R.string.empty_field_alert_dialog_title);
         String emptyFieldsString;
         if (emptyFields.size() == 1) {
             emptyFieldsString = emptyFields.get(0);
@@ -85,16 +85,16 @@ public class CommentFormActivity extends AppCompatActivity {
             emptyFieldsString = emptyFields.get(0) + ", " + emptyFields.get(1) + ", and " + emptyFields.get(2);
         }
 
-        emptyFieldAlertDialog.setTitle(getResources().getString(R.string.empty_field_alert_dialog_title));
-        emptyFieldAlertDialog.setMessage(getResources().getString(R.string.empty_field_alert_dialog_message) + " " + emptyFieldsString + ".");
-        emptyFieldAlertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getString(R.string.empty_field_alert_dialog_dismiss_message),
+        newEmptyFieldAlertDialog.setTitle(getResources().getString(R.string.empty_field_alert_dialog_title));
+        newEmptyFieldAlertDialog.setMessage(getResources().getString(R.string.empty_field_alert_dialog_message) + " " + emptyFieldsString + ".");
+        newEmptyFieldAlertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getString(R.string.empty_field_alert_dialog_dismiss_message),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 });
-        return emptyFieldAlertDialog;
+        return newEmptyFieldAlertDialog;
     }
 
     String getAuthor() {
