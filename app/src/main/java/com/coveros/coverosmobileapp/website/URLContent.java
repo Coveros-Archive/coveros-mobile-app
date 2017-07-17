@@ -5,19 +5,18 @@ import android.util.Log;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import java.io.IOException;
-import java.net.MalformedURLException;
 
 public class URLContent implements Runnable{
     private String htmlStuff;
     private String htmlClassName;
     private static final String TAG = "URLContent";
 
-    public URLContent(String saved){ htmlStuff = saved; htmlClassName = "null"; }
-    public URLContent() { htmlClassName = "null"; }
+    URLContent(String saved){ htmlStuff = saved; htmlClassName = "null"; }
+    URLContent() { htmlClassName = "null"; }
 
-    public String getHtmlStuff() { return htmlStuff; }
-    public void setHtmlStuff(String newUrl) { htmlStuff = newUrl; }
-    public String getHtmlClassName(){ return htmlClassName; }
+    String getHtmlStuff() { return htmlStuff; }
+    void setHtmlStuff(String newUrl) { htmlStuff = newUrl; }
+    String getHtmlClassName(){ return htmlClassName; }
 
     @Override
     public void run() {
@@ -27,7 +26,7 @@ public class URLContent implements Runnable{
         }
         catch (IOException i){
             //Catches malformed URL's too!
-            Log.i("URLContent", "IOException Found in URLContent");
+            Log.i(TAG, "IOException Found in URLContent");
             htmlClassName = "failed with IOException";
         }
     }
