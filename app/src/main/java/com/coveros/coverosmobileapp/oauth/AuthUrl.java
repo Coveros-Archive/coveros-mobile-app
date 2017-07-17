@@ -22,7 +22,7 @@ public class AuthUrl {
      * @param redirectUri    redirect uri that contains the authorization code that the WebView in OAuthLoginActivity watches for
      * @param responseType    type of response requested
      */
-    AuthUrl(String endpoint, String clientId, String redirectUri, String responseType) {
+    public AuthUrl(String endpoint, String clientId, String redirectUri, String responseType) {
         this.endpoint = endpoint;
         this.clientId = clientId;
         this.redirectUri = redirectUri;

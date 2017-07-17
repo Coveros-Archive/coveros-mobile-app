@@ -247,15 +247,15 @@ public class RestRequest extends Request<JSONObject> {
         }
     }
 
-    RestMethod getRestMethod() {
+    public RestMethod getRestMethod() {
         return restMethod;
     }
 
-    RestRequestListener getRestRequestListener() {
+    public RestRequestListener getRestRequestListener() {
         return restRequestListener;
     }
 
-    OnAuthFailedListener getOnAuthFailedListener() {
+    public OnAuthFailedListener getOnAuthFailedListener() {
         return onAuthFailedListener;
     }
 

@@ -51,7 +51,7 @@ public class AccessTokenRequest extends com.android.volley.toolbox.StringRequest
      * @param accessTokenRequestListener    accessTokenRequestListener that responds on request success
      * @param accessTokenRequestErrorListener    error accessTokenRequestListener that responds on request error
      */
-    AccessTokenRequest(String endpoint, String clientId, String clientSecret, String redirectUri, String authCode, String grantType, AccessTokenRequestListener accessTokenRequestListener, AccessTokenRequestErrorListener accessTokenRequestErrorListener) {
+    public AccessTokenRequest(String endpoint, String clientId, String clientSecret, String redirectUri, String authCode, String grantType, AccessTokenRequestListener accessTokenRequestListener, AccessTokenRequestErrorListener accessTokenRequestErrorListener) {
         super(Method.POST, endpoint, accessTokenRequestListener, accessTokenRequestErrorListener);
 
         this.clientId = clientId;

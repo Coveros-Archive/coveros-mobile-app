@@ -1,4 +1,4 @@
-package com.coveros.coverosmobileapp.oauth;
+package com.coveros.coverosmobileapp.oauth.example;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,6 +16,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
+import com.coveros.coverosmobileapp.oauth.RestRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;

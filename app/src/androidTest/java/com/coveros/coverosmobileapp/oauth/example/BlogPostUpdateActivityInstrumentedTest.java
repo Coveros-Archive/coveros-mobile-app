@@ -1,4 +1,4 @@
-package com.coveros.coverosmobileapp.oauth;
+package com.coveros.coverosmobileapp.oauth.example;
 
 import android.content.Intent;
 import android.support.test.espresso.action.ViewActions;
@@ -7,6 +7,7 @@ import android.support.test.rule.ActivityTestRule;
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.coveros.coverosmobileapp.R;
+import com.coveros.coverosmobileapp.oauth.example.BlogPostUpdateActivity;
 import com.coveros.coverosmobileapp.test.util.LooperTestSuite;
 
 import org.json.JSONObject;
