@@ -3,15 +3,19 @@ package com.coveros.coverosmobileapp.website;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
-import android.support.test.rule.ServiceTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.webkit.WebView;
 
+import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.test.util.LooperTestSuite;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -19,20 +23,16 @@ import static org.junit.Assert.assertTrue;
 public class InstrumentedWebViewTest extends LooperTestSuite {
 
     @Rule
-    public ActivityTestRule<MainActivity> mMainActivity = new ActivityTestRule<>(MainActivity.class);
+    public ActivityTestRule<MainActivity> mMainActivity = new ActivityTestRule<MainActivity>(MainActivity.class);
 
-    @Rule
-    public final ServiceTestRule mServiceRule = new ServiceTestRule();
-
+    private MainActivity mActivity = null;
     private AlertDialog mAlertDialog;
 
-    /*
-     * Test if MainActivity Will run with custom intent
-     */
-    @Test
-    public void testRun_MainActivity() {
+    @Before
+    public void setUp() throws Exception {
         Intent intent = new Intent(Intent.ACTION_PICK);
-        MainActivity newMain = mMainActivity.launchActivity(intent);
+        mMainActivity.launchActivity(intent);
+        mActivity = mMainActivity.getActivity();
     }
 
     //isOnline tests -> INTERNET IS CURRENTLY CONNECTED
@@ -42,9 +42,7 @@ public class InstrumentedWebViewTest extends LooperTestSuite {
      */
     @Test
     public void isOnline_True() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        MainActivity newMain = mMainActivity.launchActivity(intent);
-        boolean theTruth = newMain.isOnline();
+        boolean theTruth = mActivity.isOnline();
         assertTrue(theTruth);
     }
 
@@ -52,9 +50,21 @@ public class InstrumentedWebViewTest extends LooperTestSuite {
      * check on OnBackPressed button (natively a part of the emulator/phone)
      */
     @Test
-    public void checkOnBackPressed() throws Exception{
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        MainActivity newMain = mMainActivity.launchActivity(intent);
+    public void checkOnBackPressed() throws NullPointerException {
+        /*
+        WebView view = mActivity.getWebViewBrowser();
+        String expected_GOOGLE = "https://www.google.com";
+        String expected_YT = "https://www.youtube.com";
+
+        view.loadUrl("https://www.google.com");
+        view.loadUrl("https://www.youtube.com");
+        view.loadUrl("https://www.washingtonpost.com");
+
+        mActivity.onBackPressed();
+        assertEquals(expected_YT, view.getUrl());
+        mActivity.onBackPressed();
+        assertEquals(expected_GOOGLE, view.getUrl());
+        */
     }
 
     /*
@@ -63,9 +73,7 @@ public class InstrumentedWebViewTest extends LooperTestSuite {
      */
     @Test
     public void alertViewTest() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        MainActivity newMain = mMainActivity.launchActivity(intent);
-        mAlertDialog = new AlertDialog.Builder(newMain).create();
+        mAlertDialog = new AlertDialog.Builder(mActivity).create();
         boolean workingAsIntended;
         if (mAlertDialog.isShowing()) {
             workingAsIntended = false;
@@ -82,9 +90,7 @@ public class InstrumentedWebViewTest extends LooperTestSuite {
     @Test
     //Check Alert Dialog runs
     public void alertView_1() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        MainActivity newMain = mMainActivity.launchActivity(intent);
-        mAlertDialog = new AlertDialog.Builder(mMainActivity.getActivity()).create();
+        mAlertDialog = new AlertDialog.Builder(mActivity).create();
     }
 
     /*
@@ -110,7 +116,6 @@ public class InstrumentedWebViewTest extends LooperTestSuite {
      */
     @Test
     public void checkAlertDialog_Ok() throws Exception {
-        MainActivity mainActivity = new MainActivity();
 
     }
 
@@ -119,7 +124,6 @@ public class InstrumentedWebViewTest extends LooperTestSuite {
      */
     @Test
     public void checkAlertDialog_Exit() throws Exception {
-        MainActivity mainActivity = new MainActivity();
 
     }
 
@@ -128,7 +132,6 @@ public class InstrumentedWebViewTest extends LooperTestSuite {
      */
     @Test
     public void checkCustomClient_HTMLClassName(){
-
 
     }
 
@@ -229,5 +232,10 @@ public class InstrumentedWebViewTest extends LooperTestSuite {
     public void checkCustomClient_NewError(){
 
 
+    }
+
+    @After
+    public void tearDown() throws Exception{
+        mActivity = null;
     }
 }
