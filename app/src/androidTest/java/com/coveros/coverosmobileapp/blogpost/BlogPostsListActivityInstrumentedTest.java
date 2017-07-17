@@ -25,7 +25,7 @@ import static junit.framework.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class BlogPostsListActivityInstrumentedTest {
 
-    BlogPostsListActivity blogPostsListActivity;
+    private BlogPostsListActivity blogPostsListActivity;
 
     private static int EXPECTED_HEADER_COUNT = 1;
 
@@ -36,7 +36,7 @@ public class BlogPostsListActivityInstrumentedTest {
             JsonObject blogJson = new Gson().fromJson("{\"id\": 1234, \"author\": 14, \"date\": \"1911-02-03T00:00:00\", \"content\": {\"rendered\": \"<p>I like to make unfunny puns.&#8212;</p>\"}, \"title\": {\"rendered\": \"&#8220;BlogPost\"}}", JsonObject.class);
             SparseArray authors = new SparseArray();
             authors.append(14, "Ryan Kenney");
-            BlogPost blogPost = new BlogPost(blogJson, authors);
+            BlogPostItem blogPost = new BlogPostHtmlDecorator(new BlogPostFactory().createBlogPost(blogJson, authors));
 
             ArrayList<String> blogPostData = new ArrayList<>();
             blogPostData.add(String.valueOf(blogPost.getId()));

@@ -21,8 +21,7 @@ import static org.mockito.Mockito.when;
  */
 public class BlogPostTest {
 
-//    JsonObject outerJson = new JsonObject();
-    BlogPost blogPost;
+    private BlogPostHtmlDecorator blogPost;
 
     private static final int EXPECTED_ID = 1234;
     private static final String EXPECTED_DATE = "Feb 3, 1911";
@@ -34,21 +33,17 @@ public class BlogPostTest {
         JsonObject blogJson = new Gson().fromJson("{\"id\": 1234, \"author\": 14, \"date\": \"1911-02-03T00:00:00\", \"content\": {\"rendered\": \"<p>I like to make unfunny puns.&#8212;</p>\"}, \"title\": {\"rendered\": \"&#8220;BlogPost\"}}", JsonObject.class);
         SparseArray authors = mock(SparseArray.class);
         when(authors.get(14)).thenReturn("Ryan Kenney");
-        blogPost = new BlogPost(blogJson, authors);
+        blogPost = new BlogPostHtmlDecorator(new BlogPostFactory().createBlogPost(blogJson, authors));
     }
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void formatDate_withValidInput() throws ParseException {
-        String actualDate = blogPost.formatDate("1911-02-03T00:00:00");
+        String actualDate = blogPost.getHtmlDateString();
         assertEquals("Dates should be equal.", EXPECTED_DATE, actualDate);
     }
 
-    @Test(expected = ParseException.class)
-    public void formatDate_withInvalidInput() throws ParseException {
-        blogPost.formatDate("02/03/91");
-    }
 
     @Test
     public void unescapeTitle_withUnicodeSymbol() {

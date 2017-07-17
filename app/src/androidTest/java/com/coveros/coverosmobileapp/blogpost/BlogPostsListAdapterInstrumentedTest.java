@@ -48,7 +48,7 @@ public class BlogPostsListAdapterInstrumentedTest {
             JsonObject blogJson = new Gson().fromJson("{\"id\": 1234, \"author\": 14, \"date\": \"2017-06-27T10:23:18\", \"content\": {\"rendered\": \"&#8220;Cats are objectively the worst animal.\"}, \"title\": {\"rendered\": \"&#8220;My Disdain for the Feline Race--an Autobiography\"}}", JsonObject.class);
             SparseArray authors = new SparseArray();
             authors.append(14, "Ryan Kenney");
-            BlogPost blogPost = new BlogPost(blogJson, authors);
+            BlogPost blogPost = new BlogPostFactory().createBlogPost(blogJson, authors);
 
             ArrayList<String> blogPostData = new ArrayList<>();
             blogPostData.add(String.valueOf(blogPost.getId()));
@@ -68,7 +68,7 @@ public class BlogPostsListAdapterInstrumentedTest {
         JsonObject blogJson = new Gson().fromJson("{\"id\": 1234, \"author\": 14, \"date\": \"2017-06-27T10:23:18\", \"content\": {\"rendered\": \"&#8220;Cats are objectively the worst animal.\"}, \"title\": {\"rendered\": \"&#8220;My Disdain for the Feline Race--an Autobiography\"}}", JsonObject.class);
         SparseArray authors = new SparseArray();
         authors.append(14, "Ryan Kenney");
-        BlogPost blogPost = new BlogPost(blogJson, authors);
+        BlogPost blogPost = new BlogPostFactory().createBlogPost(blogJson, authors);
 
         List<BlogPost> blogPosts = new ArrayList<>();
         blogPosts.add(blogPost);
