@@ -12,6 +12,8 @@ import android.webkit.WebViewClient;
 import com.coveros.coverosmobileapp.blogpost.BlogPostReadActivity;
 import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
 
+import org.jsoup.nodes.Document;
+
 /**
  * Created by EPainter on 6/16/2017.
  * Provides Custom WebView Client that only loads Coveros-related content through WebView.
@@ -22,6 +24,7 @@ class CustomWebViewClient extends WebViewClient {
     private boolean isBlogPost;
     private MainActivity mainActivity;
     private int postId;
+    private String classNames;
 
     private static final String TAG = "CustomWebViewClient";
     private static final String POST_ID_CLASS_PREFIX = "postid-";
@@ -31,55 +34,58 @@ class CustomWebViewClient extends WebViewClient {
     }
 
     @Override
-    public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+    public boolean shouldOverrideUrlLoading(final WebView view, WebResourceRequest request) {
         //If blog website or blog web page is categorically loaded (hybrid)
         isBlogPost = false;
-        String classNames;
-        String url = request.getUrl().toString();
-        DocumentGenerator urlHtml = new DocumentGenerator(url);
+        final String url = request.getUrl().toString();
 
-        //Create new thread to handle network operations
-        Thread th = new Thread(urlHtml);
-        th.start();
-        try {
-            th.join();
-        } catch (InterruptedException e) {
-            Log.e(TAG, "Interruption Occurred with thread for URL Content");
-            Thread.currentThread().interrupt();
-        }
-        classNames = urlHtml.getDocument().body().className();
+        DocumentGenerator urlHtml = new DocumentGenerator(url, new DocumentGenerator.DocumentGeneratorCallback() {
+            @Override
+            public void onDocumentReceived(Document document) {
+                classNames = document.body().className();
+                isBlogPost = checkIsBlogPost(classNames);
 
-        //Only Blog posts have this body class name listed, Check off that the url is a Blog Post Link
-        isBlogPost = checkIsBlogPost(classNames);
+                view.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        //If a Blog Post was clicked on from the home page, redirect to native blog associated with post
+                        if (isBlogPost) {
+                            postId = Integer.parseInt(parsePostId(classNames));
 
-        //If a Blog Post was clicked on from the home page, redirect to native blog associated with post
-        if (isBlogPost) {
-            postId = Integer.parseInt(parsePostId(classNames));
+                            //Start individual blog
+                            Intent startBlogPostRead = new Intent(view.getContext(), BlogPostReadActivity.class);
+                            startBlogPostRead.putExtra("blogId", postId);
+                            view.getContext().startActivity(startBlogPostRead);
+                        }
+                        //If blog website or blog web page is categorically loaded (hybrid)
+                        else if (checkIsBlog(url)) {
+                            //Load Blog List
+                            Intent startBlogPost = new Intent(view.getContext(), BlogPostsListActivity.class);
+                            view.getContext().startActivity(startBlogPost);
+                        }
+                        //Default stay in WebView (Recognizes url associated with Coveros content)
+                        else if (checkIsCoveros(url)) {
+                            view.loadUrl(url);
+                        }
+                        //Otherwise, resort to Browser for external content
+                        else {
+                            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                            view.getContext().startActivity(i);
+                        }
+                    }
+                });
 
-            //Start individual blog
-            Intent startBlogPostRead = new Intent(view.getContext(), BlogPostReadActivity.class);
-            startBlogPostRead.putExtra("blogId", postId);
-            view.getContext().startActivity(startBlogPostRead);
-            return true;
-        }
-        //If blog website or blog web page is categorically loaded (hybrid)
-        else if (checkIsBlog(url)) {
-            //Load Blog List
-            Intent startBlogPost = new Intent(view.getContext(), BlogPostsListActivity.class);
-            view.getContext().startActivity(startBlogPost);
-            return true;
-        }
-        //Default stay in WebView (Recognizes url associated with Coveros content)
-        else if (checkIsCoveros(url)) {
-            view.loadUrl(url);
-            return true;
-        }
-        //Otherwise, resort to Browser for external content
-        else {
-            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            view.getContext().startActivity(i);
-            return true;
-        }
+
+            }
+        });
+
+        // Create new thread to handle network operations
+        Thread getUrlHtmlThread = new Thread(urlHtml);
+        getUrlHtmlThread.start();
+
+        return true;
+
+
     }
 
     public boolean checkIsBlogPost(String value){
