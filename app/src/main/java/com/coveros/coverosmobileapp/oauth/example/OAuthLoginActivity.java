@@ -63,7 +63,6 @@ public class OAuthLoginActivity extends AppCompatActivity {
      */
     private void setWebViewClient(WebView webView, final AuthCallback authCallback) {
         webView.setWebViewClient(new WebViewClient() {
-            @SuppressWarnings("deprecation")
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 String url = request.getUrl().toString();
