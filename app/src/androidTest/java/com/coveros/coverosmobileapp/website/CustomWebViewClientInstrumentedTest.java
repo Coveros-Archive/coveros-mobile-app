@@ -49,8 +49,8 @@ public class CustomWebViewClientInstrumentedTest extends LooperTestSuite {
         WebView view = mainActivity.getWebViewBrowser();
         customWebViewClient.shouldOverrideUrlLoading(view, request);
 
-        String actualClassName = customWebViewClient.getSavedClassName();
-        int actualPostId = customWebViewClient.getPostID();
+        String actualClassName = customWebViewClient.getClassName();
+        int actualPostId = customWebViewClient.getPostId();
 
         assertThat(actualClassName, equalTo(expectedClassName));
         assertThat(actualPostId, equalTo(expectedPostId));
@@ -86,7 +86,7 @@ public class CustomWebViewClientInstrumentedTest extends LooperTestSuite {
         WebView view = mainActivity.getWebViewBrowser();
         customWebViewClient.shouldOverrideUrlLoading(view, request);
 
-        String actualClassName = customWebViewClient.getSavedClassName();
+        String actualClassName = customWebViewClient.getClassName();
 
         assertThat(actualClassName, equalTo(expectedClassName));
 

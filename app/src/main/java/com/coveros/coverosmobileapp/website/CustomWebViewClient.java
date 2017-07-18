@@ -19,20 +19,21 @@ import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
  */
 class CustomWebViewClient extends WebViewClient {
 
-    private boolean weAreConnected;
+    private boolean isConnected;
     private boolean isBlogPost;
-    private String savedClassName;
-    private int postID;
+    private String className;
+    private int postId;
     private MainActivity mainActivity;
+
     private static final String TAG = "CustomWebViewClient";
   
-    CustomWebViewClient(MainActivity ma) {
-        mainActivity = ma;
-        weAreConnected = true;
+    CustomWebViewClient(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
+        isConnected = true;
     }
 
     CustomWebViewClient() {
-        weAreConnected = true;
+        isConnected = true;
     }
 
     MainActivity getMainActivity() {
@@ -44,11 +45,11 @@ class CustomWebViewClient extends WebViewClient {
     }
 
     boolean getConnection() {
-        return weAreConnected;
+        return isConnected;
     }
 
     void setConnection(boolean answer) {
-        weAreConnected = answer;
+        isConnected = answer;
     }
 
     boolean getIsBlogPost() {
@@ -59,20 +60,20 @@ class CustomWebViewClient extends WebViewClient {
         isBlogPost = blogPost;
     }
 
-    int getPostID() {
-        return postID;
+    int getPostId() {
+        return postId;
     }
 
-    void setPostID(int newID) {
-        postID = newID;
+    void setPostId(int newID) {
+        postId = newID;
     }
 
-    String getSavedClassName() {
-        return savedClassName;
+    String getClassName() {
+        return className;
     }
 
-    void setSavedClassName(String newValue) {
-        savedClassName = newValue;
+    void setClassName(String newValue) {
+        className = newValue;
     }
 
     @Override
@@ -96,7 +97,7 @@ class CustomWebViewClient extends WebViewClient {
 
         //Only Blog posts have this body class name listed, Check off that the url is a Blog Post Link
         if (value.length() >= 22 && value.substring(0, 21).equals("post-template-default")) {
-            setSavedClassName(value.substring(0, 21));
+            setClassName(value.substring(0, 21));
             isBlogPost = true;
         }
 
@@ -115,8 +116,8 @@ class CustomWebViewClient extends WebViewClient {
             saveID = builder.toString();
             //Start individual blog
             Intent startBlogPostRead = new Intent(view.getContext(), BlogPostReadActivity.class);
-            postID = Integer.parseInt(saveID);
-            startBlogPostRead.putExtra("blogId", postID);
+            postId = Integer.parseInt(saveID);
+            startBlogPostRead.putExtra("blogId", postId);
             view.getContext().startActivity(startBlogPostRead);
             return true;
         }
