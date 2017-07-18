@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private AlertDialog dialog;
     private CustomWebViewClient cwvc = new CustomWebViewClient();
 
-    private static final String[] MENU_TITLES = new String[]{"Home","Blog"};
+    private String[] menuTitles;
     private DrawerLayout menu;
     private ListView drawerList;
 
@@ -69,8 +69,9 @@ public class MainActivity extends AppCompatActivity {
         //constructing the menu navigation drawer
         menu = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerList = (ListView)findViewById(R.id.left_drawer);
+        menuTitles = getResources().getStringArray(R.array.menu_Titles);
         drawerList.setAdapter(new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1 , MENU_TITLES));
+                android.R.layout.simple_list_item_1 , menuTitles));
         drawerList.setOnItemClickListener(new DrawerItemClickListener());
         menu.addDrawerListener(new DrawerLayout.SimpleDrawerListener(){
             @Override
