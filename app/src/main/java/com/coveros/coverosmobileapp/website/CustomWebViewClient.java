@@ -81,7 +81,7 @@ class CustomWebViewClient extends WebViewClient {
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
         //If blog website or blog web page is categorically loaded (hybrid)
         isBlogPost = false;
-        String value = "";
+        String value;
         URLContent content = new URLContent(url);
 
         //Create new thread to handle network operations

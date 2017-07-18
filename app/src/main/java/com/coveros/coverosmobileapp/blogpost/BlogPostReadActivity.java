@@ -40,7 +40,7 @@ public class BlogPostReadActivity extends AppCompatActivity {
             public void onResponse(String response) {
                 JsonObject blogPostsJson = new JsonParser().parse(response).getAsJsonObject();
                 WebView content = (WebView) findViewById(R.id.content);
-                content.loadData(blogPostsJson.get("content").getAsJsonObject().get("rendered").getAsString(), "text/html, charset=utf-8", "UTF-8");
+                content.loadData(blogPostsJson.get("content").getAsJsonObject().get("rendered").getAsString(), "text/html; charset=utf-8", "UTF-8");
                 setTitle(blogPostsJson.get("title").getAsJsonObject().get("rendered").getAsString());
             }
         }, new BlogPostErrorListener(BlogPostReadActivity.this));
