@@ -30,25 +30,44 @@ class CustomWebViewClient extends WebViewClient {
     CustomWebViewClient(MainActivity ma) { mainActivity = ma; weAreConnected = true; }
     CustomWebViewClient() { weAreConnected = true; }
 
-    MainActivity getMainActivity() { return mainActivity; }
-    void setMainActivity(MainActivity ma) { mainActivity = ma; }
-    boolean getConnection(){ return weAreConnected; }
-    void setConnection(boolean answer){ weAreConnected = answer; }
-    boolean getIsBlogPost() { return isBlogPost; }
-    void setIsBlogPost(Boolean blogPost) { isBlogPost = blogPost; }
-    int getPostID() { return postID; }
-    void setPostID(int newID) { postID = newID; }
-    String getSavedClassName() { return savedClassName; }
-    void setSavedClassName(String newValue) { savedClassName = newValue; }
+    MainActivity getMainActivity() {
+        return mainActivity;
+    }
+    void setMainActivity(MainActivity ma) {
+        mainActivity = ma;
+    }
+    boolean getConnection(){
+        return weAreConnected;
+    }
+    void setConnection(boolean answer){
+        weAreConnected = answer;
+    }
+    boolean getIsBlogPost() {
+        return isBlogPost;
+    }
+    void setIsBlogPost(Boolean blogPost) {
+        isBlogPost = blogPost;
+    }
+    int getPostID() {
+        return postID;
+    }
+    void setPostID(int newID) {
+        postID = newID;
+    }
+    String getSavedClassName() {
+        return savedClassName;
+    }
+    void setSavedClassName(String newValue) {
+        savedClassName = newValue;
+    }
 
-    @SuppressWarnings("deprecation")
-    @Deprecated
     @Override
     //Logs in this method
-    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+    public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
         //If blog website or blog web page is categorically loaded (hybrid)
         isBlogPost = false;
         String value;
+        String url = request.getUrl().toString();
         URLContent content = new URLContent(url);
 
         //Create new thread to handle network operations
