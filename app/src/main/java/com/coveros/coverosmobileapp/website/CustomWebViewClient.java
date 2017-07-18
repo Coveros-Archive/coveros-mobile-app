@@ -17,7 +17,6 @@ import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
  * Provides Custom WebView Client that only loads Coveros-related content through WebView.
  * All externally related information is processed in a web browser
  */
-
 class CustomWebViewClient extends WebViewClient {
 
     private boolean weAreConnected;
@@ -25,21 +24,56 @@ class CustomWebViewClient extends WebViewClient {
     private String savedClassName;
     private int postID;
     private MainActivity mainActivity;
-    private final String TAG = "CustomWebViewClient";
+    private static final String TAG = "CustomWebViewClient";
 
-    CustomWebViewClient(MainActivity ma) { mainActivity = ma; weAreConnected = true; }
-    CustomWebViewClient() { weAreConnected = true; }
+    CustomWebViewClient(MainActivity ma) {
+        mainActivity = ma;
+        weAreConnected = true;
+    }
 
-    MainActivity getMainActivity() { return mainActivity; }
-    void setMainActivity(MainActivity ma) { mainActivity = ma; }
-    boolean getConnection(){ return weAreConnected; }
-    void setConnection(boolean answer){ weAreConnected = answer; }
-    boolean getIsBlogPost() { return isBlogPost; }
-    void setIsBlogPost(Boolean blogPost) { isBlogPost = blogPost; }
-    int getPostID() { return postID; }
-    void setPostID(int newID) { postID = newID; }
-    String getSavedClassName() { return savedClassName; }
-    void setSavedClassName(String newValue) { savedClassName = newValue; }
+    CustomWebViewClient() {
+        weAreConnected = true;
+    }
+
+    MainActivity getMainActivity() {
+        return mainActivity;
+    }
+
+    void setMainActivity(MainActivity ma) {
+        mainActivity = ma;
+    }
+
+    boolean getConnection() {
+        return weAreConnected;
+    }
+
+    void setConnection(boolean answer) {
+        weAreConnected = answer;
+    }
+
+    boolean getIsBlogPost() {
+        return isBlogPost;
+    }
+
+    void setIsBlogPost(Boolean blogPost) {
+        isBlogPost = blogPost;
+    }
+
+    int getPostID() {
+        return postID;
+    }
+
+    void setPostID(int newID) {
+        postID = newID;
+    }
+
+    String getSavedClassName() {
+        return savedClassName;
+    }
+
+    void setSavedClassName(String newValue) {
+        savedClassName = newValue;
+    }
 
     @SuppressWarnings("deprecation")
     @Override
@@ -62,19 +96,19 @@ class CustomWebViewClient extends WebViewClient {
         value = content.getHtmlClassName();
 
         //Only Blog posts have this body class name listed, Check off that the url is a Blog Post Link
-        if(value.length() >= 22 && value.substring(0,21).equals("post-template-default")){
-            setSavedClassName(value.substring(0,21));
+        if (value.length() >= 22 && value.substring(0, 21).equals("post-template-default")) {
+            setSavedClassName(value.substring(0, 21));
             isBlogPost = true;
         }
 
         //If a Blog Post was clicked on from the home page, redirect to native blog associated with post
-        if(isBlogPost){
+        if (isBlogPost) {
             //Index at 48 because each blog post has the same index length up until post id numbers
             //Post ID numbers could be n number of digits. Read values until space
             value = value.substring(48);
             String saveID = "";
             //Get only numbers after post id (stops when empty space is present)
-            while(value.charAt(0) != ' '){
+            while (value.charAt(0) != ' ') {
                 saveID += value.charAt(0);
                 value = value.substring(1);
             }
@@ -86,15 +120,15 @@ class CustomWebViewClient extends WebViewClient {
             return true;
         }
         //If blog website or blog web page is categorically loaded (hybrid)
-        else if(url.contains("coveros.com/blog/") || url.contains("coveros.com/category/blogs/") ||
-                url.contains("dev.secureci.com/blog/") || url.contains("dev.secureci.com/category/blogs/")){
+        else if (url.contains("coveros.com/blog/") || url.contains("coveros.com/category/blogs/") ||
+                url.contains("dev.secureci.com/blog/") || url.contains("dev.secureci.com/category/blogs/")) {
             //Load Blog List
             Intent startBlogPost = new Intent(view.getContext(), BlogPostsListActivity.class);
             view.getContext().startActivity(startBlogPost);
             return true;
         }
         //Default stay in WebView (Recognizes url associated with Coveros content)
-        else if (url.contains("coveros.com") || url.contains("dev.secureci.com")){
+        else if (url.contains("coveros.com") || url.contains("dev.secureci.com")) {
             view.loadUrl(url);
             return true;
         }
@@ -105,12 +139,14 @@ class CustomWebViewClient extends WebViewClient {
             return true;
         }
     }
+
     @Override
-    public void onPageStarted(WebView view, String url, Bitmap fav){
-        if(("https://www.coveros.com/blog/").equals(getMainActivity().getWebName())){
+    public void onPageStarted(WebView view, String url, Bitmap fav) {
+        if (("https://www.coveros.com/blog/").equals(getMainActivity().getWebName())) {
             getMainActivity().onBackPressed();
         }
     }
+
     @Override
     public void onPageFinished(WebView view, String url) {
         getMainActivity().setWebName(url);
