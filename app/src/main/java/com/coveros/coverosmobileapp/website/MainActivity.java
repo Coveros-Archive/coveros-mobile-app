@@ -37,11 +37,11 @@ public class MainActivity extends AppCompatActivity {
     private RequestQueue rQueue;
 
     //Create Strings for Title, message, and buttons
-    private static final String ALERT_TITLE = "Alert";
-    private static final String ALERT_MESSAGE = "Sorry, we cannot currently retrieve the requested information.";
-    private static final String ALERT_BUTTON_EXIT = "Exit App";
-    private static final String ALERT_BUTTON_RELOAD= "Reload App";
-    private static final String ALERT_BUTTON_OK = "OK";
+    private  String alertTitle = getResources().getString(R.string.alert_title);
+    private  String alertMessage = getResources().getString(R.string.alert_message);
+    private  String alertButtonExit = getResources().getString(R.string.alert_button_exit);
+    private  String alertButtonReload= getResources().getString(R.string.alert_button_reload);;
+    private  String alertButtonOk = getResources().getString(R.string.alert_button_ok);;
 
     public MainActivity(){ webName = "https://www3.dev.secureci.com"; }
     public MainActivity(String specificUrl) { webName = specificUrl; }
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
     protected void alertView(){
         //Init Alert Dialog menu & Cancel only if pressed on button
         dialog = new AlertDialog.Builder(MainActivity.this)
-                .setNeutralButton(ALERT_BUTTON_RELOAD, new DialogInterface.OnClickListener() {
+                .setNeutralButton(alertButtonReload, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogs, int which) {
                         Toast.makeText(getApplicationContext(), "Loading App", Toast.LENGTH_SHORT).show();
@@ -153,12 +153,12 @@ public class MainActivity extends AppCompatActivity {
                         recreate();
                     }
                 })
-                .setNegativeButton(ALERT_BUTTON_OK, new DialogInterface.OnClickListener() {
+                .setNegativeButton(alertButtonOk, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogs, int which) {
                         dialogs.dismiss(); }
                 })
-                .setPositiveButton(ALERT_BUTTON_EXIT, new DialogInterface.OnClickListener(){
+                .setPositiveButton(alertButtonExit, new DialogInterface.OnClickListener(){
                     @Override
                     public void onClick(DialogInterface dialogs, int which){
                         Toast.makeText(getApplicationContext(), "Thank You", Toast.LENGTH_SHORT).show();
@@ -169,8 +169,8 @@ public class MainActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
         //Setters (title, default message, button 1 -> Exit, button2 -> Reload)
-        dialog.setTitle(ALERT_TITLE);
-        dialog.setMessage(ALERT_MESSAGE);
+        dialog.setTitle(alertTitle);
+        dialog.setMessage(alertMessage);
         //Show dialog and make text changes (font color, size, etc.)
         dialog.show();
     }
