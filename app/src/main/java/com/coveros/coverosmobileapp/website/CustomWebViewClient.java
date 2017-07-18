@@ -19,7 +19,6 @@ import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
  */
 class CustomWebViewClient extends WebViewClient {
 
-    private boolean isConnected;
     private boolean isBlogPost;
     private String className;
     private int postId;
@@ -29,52 +28,8 @@ class CustomWebViewClient extends WebViewClient {
   
     CustomWebViewClient(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
-        isConnected = true;
     }
 
-    CustomWebViewClient() {
-        isConnected = true;
-    }
-
-    MainActivity getMainActivity() {
-        return mainActivity;
-    }
-
-    void setMainActivity(MainActivity ma) {
-        mainActivity = ma;
-    }
-
-    boolean getConnection() {
-        return isConnected;
-    }
-
-    void setConnection(boolean answer) {
-        isConnected = answer;
-    }
-
-    boolean getIsBlogPost() {
-        return isBlogPost;
-    }
-
-    void setIsBlogPost(Boolean blogPost) {
-        isBlogPost = blogPost;
-    }
-
-    int getPostId() {
-        return postId;
-    }
-
-    void setPostId(int newID) {
-        postId = newID;
-    }
-
-    String getClassName() {
-        return className;
-    }
-
-    void setClassName(String newValue) {
-        className = newValue;
-    }
 
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
@@ -161,4 +116,18 @@ class CustomWebViewClient extends WebViewClient {
         view.loadUrl("file:///android_asset/sampleErrorPage.html");
         super.onReceivedError(view, request, error);
     }
+
+    MainActivity getMainActivity() {
+        return mainActivity;
+    }
+
+
+    boolean getIsBlogPost() {
+        return isBlogPost;
+    }
+
+    int getPostId() {
+        return postId;
+    }
+
 }
