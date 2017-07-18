@@ -12,7 +12,8 @@ public class URLContent implements Runnable{
     private static final String TAG = "URLContent";
 
     public URLContent(String saved){
-        htmlStuff = saved; htmlClassName = "null";
+        htmlStuff = saved;
+        htmlClassName = "null";
     }
 
     public URLContent() {
@@ -38,7 +39,7 @@ public class URLContent implements Runnable{
             htmlClassName = document.body().className();
         }
         catch (IOException i){
-            Log.e("CoverosMobileApp", "Document or html not assigned", i);
+            Log.e(TAG, "Document or html not assigned", i);
             htmlClassName = "failed with IOException";
         }
     }
