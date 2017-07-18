@@ -11,9 +11,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.coveros.coverosmobileapp.R;
 
-public class BlogPostErrorListener implements Response.ErrorListener {
-
-    private AlertDialog errorMessageDialog;
+class BlogPostErrorListener implements Response.ErrorListener {
+    
     private Context context;
 
     BlogPostErrorListener(Context context) {
@@ -23,7 +22,7 @@ public class BlogPostErrorListener implements Response.ErrorListener {
     @Override
     public void onErrorResponse(VolleyError volleyError) {
         // creates and displays errorMessage
-        errorMessageDialog = createErrorMessage();
+        AlertDialog errorMessageDialog = createErrorMessage();
         errorMessageDialog.show();
         NetworkResponse errorNetworkResponse = volleyError.networkResponse;
         String errorData = "";
@@ -42,7 +41,6 @@ public class BlogPostErrorListener implements Response.ErrorListener {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        //TODO figure this thing out finish();
                     }
                 });
         return errorMessageToCreate;
