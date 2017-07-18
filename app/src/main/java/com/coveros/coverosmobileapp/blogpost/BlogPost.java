@@ -1,16 +1,6 @@
 package com.coveros.coverosmobileapp.blogpost;
 
-import android.util.Log;
-import android.util.SparseArray;
-
-import com.google.gson.JsonObject;
-
-import org.apache.commons.text.StringEscapeUtils;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 
 /**
@@ -18,67 +8,50 @@ import java.util.Locale;
  *
  * @author Maria Kim
  */
-class BlogPost {
+class BlogPost implements BlogPostItem {
 
     private int id;
-    private String date;
+
     private String content;
     private String title;
     private String authorDate;
 
-    /**
-     * Create a blog BlogPost instance
-     *
-     * @param blogPostJson JsonObject that contains information about BlogPost received from Wordpress
-     * @param authors      SparseArray that contains ids and names of all visible authors
-     */
-    BlogPost(JsonObject blogPostJson, SparseArray<String> authors) {
-        this.id = blogPostJson.get("id").getAsInt();
-        try {
-            this.date = formatDate(blogPostJson.get("date").getAsString());
-        } catch (ParseException e) {
-            this.date = "";
-            Log.e("Parse exception", e.toString());
-        }
-        String author = StringEscapeUtils.unescapeHtml4(authors.get(blogPostJson.get("author").getAsInt()));
+    private Date date;
 
-        // to show in BlogPostListActivity
-        this.title = StringEscapeUtils.unescapeHtml4(blogPostJson.get("title").getAsJsonObject().get("rendered").getAsString());
-        authorDate = StringEscapeUtils.unescapeHtml4(author + "\n" + this.date);
+    private String author;
 
-        // to display in BlogPostReadActivity
-        this.content = "<h3>" + this.title + "</h3><h4>" + author + "</h4><h5>" + this.date + "</h5>" + StringEscapeUtils.unescapeHtml4(blogPostJson.get("content").getAsJsonObject().get("rendered").getAsString());
+    BlogPost(int id, Date date, String content, String title, String author) {
+        this.id = id;
+        this.date = date;
+        this.content = content;
+        this.title = title;
+        this.author = author;
+        this.authorDate = author + "\n" + this.date;
     }
 
 
-    /**
-     * Modifies date from Wordpress to MMM dd YYYY format.
-     *
-     * @param date the date to format
-     * @return the date in MM dd YYYY format
-     * @throws ParseException if the internal date format cannot be parsed
-     */
-    static String formatDate(String date) throws ParseException {
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH);
-        Date parsedDate = dateFormatter.parse(date);
-        SimpleDateFormat datePrint = new SimpleDateFormat("MMM d, yyyy");
-        return datePrint.format(parsedDate);
-    }
-
-    int getId() {
+    public int getId() {
         return id;
     }
 
-    String getTitle() {
+    public String getTitle() {
         return title;
     }
 
-    String getAuthorDate() {
+    public String getAuthorDate() {
         return authorDate;
     }
 
-    String getContent() {
+    public String getContent() {
         return content;
+    }
+
+    public String getAuthor() {
+        return this.author;
+    }
+
+    public Date getDate() {
+        return this.date;
     }
 
     @Override

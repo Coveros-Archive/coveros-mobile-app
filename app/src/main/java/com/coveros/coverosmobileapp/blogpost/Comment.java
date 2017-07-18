@@ -7,6 +7,8 @@ import com.google.gson.JsonObject;
 import org.apache.commons.text.StringEscapeUtils;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Represents a comment for a blog post.
@@ -23,7 +25,9 @@ public class Comment {
     public Comment(JsonObject commentJson) {
         this.author = StringEscapeUtils.unescapeHtml4(commentJson.get("author_name").getAsString());
         try {
-            this.date = BlogPost.formatDate(commentJson.get("date").getAsString());
+           Date d = new SimpleDateFormat(BlogPostFactory.WORDPRESS_BLOGPOST_DATE_FORMAT).parse(commentJson.get("date").getAsString());
+            this.date = new SimpleDateFormat(BlogPostHtmlDecorator.HTML_DATE_FORMAT_STRING).format(d);
+
         } catch (ParseException e) {
             this.date = "";
             Log.e("Parse exception", e.toString());

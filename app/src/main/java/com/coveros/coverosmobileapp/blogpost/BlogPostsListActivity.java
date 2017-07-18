@@ -94,7 +94,7 @@ public class BlogPostsListActivity extends BlogListActivity {
         blogPostsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                BlogPost blogPost = blogPosts.get(position - 1);  // -1 because the TextView offsets the blogPosts by one for some reason
+                BlogPostItem blogPost = new BlogPostHtmlDecorator(blogPosts.get(position - 1));  // -1 because the TextView offsets the blogPosts by one for some reason
                 ArrayList<String> blogPostData = new ArrayList<>();
                 blogPostData.add(String.valueOf(blogPost.getId()));
                 blogPostData.add(blogPost.getTitle());
@@ -188,7 +188,7 @@ public class BlogPostsListActivity extends BlogListActivity {
                 JsonArray blogPostsJson = new JsonParser().parse(response).getAsJsonArray();
                 List<BlogPost> newBlogPosts = new ArrayList<>();
                 for (JsonElement blogPost : blogPostsJson) {
-                    newBlogPosts.add(new BlogPost((JsonObject) blogPost, authors));
+                    newBlogPosts.add(new BlogPostFactory().createBlogPost((JsonObject) blogPost, authors));
                 }
                 postListCallback.onSuccess(newBlogPosts);
                 postsOffset = postsOffset + POSTS_PER_PAGE;

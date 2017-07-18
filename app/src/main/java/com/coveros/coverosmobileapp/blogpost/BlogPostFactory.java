@@ -25,7 +25,7 @@ public class BlogPostFactory {
      * @return
      */
     public BlogPost createBlogPost(JsonObject blogPostJson, SparseArray<String> authors) {
-        Date date = null;
+        Date date;
         try {
             date = new SimpleDateFormat(WORDPRESS_BLOGPOST_DATE_FORMAT).parse(blogPostJson.get("date").getAsString());
         } catch (ParseException e) {
@@ -33,8 +33,8 @@ public class BlogPostFactory {
         }
         String title = parseBlogObject(blogPostJson);
         int authorId = blogPostJson.get("author").getAsInt();
-        String author = StringEscapeUtils.unescapeHtml4(authors.get(authorId));
-        String content = "<h3>" + title + "</h3><h4>" + author + "</h4><h5>" + date + "</h5>" + StringEscapeUtils.unescapeHtml4(blogPostJson.get("content").getAsJsonObject().get("rendered").getAsString());
+        String author = authors.get(authorId);
+        String content = blogPostJson.get("content").getAsJsonObject().get("rendered").getAsString();
         int id = blogPostJson.get("id").getAsInt();
 
         return new BlogPost(id, date, content, title, author);

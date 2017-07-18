@@ -52,7 +52,7 @@ class BlogPostsListAdapter extends ArrayAdapter<BlogPost> {
             holder = (BlogPostHolder) row.getTag();
         }
 
-        BlogPost blogPost = getItem(position);
+        BlogPostItem blogPost = new BlogPostHtmlDecorator(getItem(position));
         holder.title.setText(blogPost.getTitle());
         holder.authorDate.setText(blogPost.getAuthorDate());
 
