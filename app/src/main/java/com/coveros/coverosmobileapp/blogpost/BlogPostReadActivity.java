@@ -3,7 +3,6 @@ package com.coveros.coverosmobileapp.blogpost;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -13,7 +12,6 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -55,7 +53,7 @@ public class BlogPostReadActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), CommentsListActivity.class);
-                intent.putExtra("postId", "" + blogId);
+                intent.putExtra("postId", Integer.toString(blogId));
                 startActivity(intent);
             }
         });
