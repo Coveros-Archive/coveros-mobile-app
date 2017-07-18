@@ -17,95 +17,79 @@ import org.junit.runner.RunWith;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class CustomWebViewClientInstrumentedTest extends LooperTestSuite {
 
     @Rule
-    public ActivityTestRule<MainActivity> mMainActivity = new ActivityTestRule<>(MainActivity.class);
+    public ActivityTestRule<MainActivity> mainActivityRule = new ActivityTestRule<>(MainActivity.class);
 
-    private MainActivity mActivity = null;
+    private MainActivity mainActivity = null;
 
     @Before
     public void setUp() throws Exception {
         Intent intent = new Intent(Intent.ACTION_PICK);
-        mMainActivity.launchActivity(intent);
-        mActivity = mMainActivity.getActivity();
+        mainActivityRule.launchActivity(intent);
+        mainActivity = mainActivityRule.getActivity();
     }
 
     /*
      * Check on methods related to PostID
      */
     @Test
-    public void checkCustomClient_GettingPostID() {
+    public void shouldOverrideUrlLoadinggetPostID_withUrl() {
+        final String expectedClassName = "post-template-default";
+        final int expectedPostId = 7520;
+
         WebResourceRequest request = new WebResourceRequestImpl(Uri.parse("https://www3.dev.secureci.com/unity3d-first-class-build-support/"));
-        CustomWebViewClient customWebViewClient = mActivity.getCustomClient();
-        final String expected = "post-template-default";
-        final int expectedVal = 7520;
-        WebView view = mActivity.getWebViewBrowser();
+        CustomWebViewClient customWebViewClient = mainActivity.getCustomClient();
+        WebView view = mainActivity.getWebViewBrowser();
         customWebViewClient.shouldOverrideUrlLoading(view, request);
-        assertEquals(expected, customWebViewClient.getSavedClassName());
-        assertEquals(expectedVal, customWebViewClient.getPostID());
-        customWebViewClient.setPostID(7777);
-        assertEquals(7777, customWebViewClient.getPostID());
+
+        String actualClassName = customWebViewClient.getSavedClassName();
+        int actualPostId = customWebViewClient.getPostID();
+
+        assertThat(actualClassName, equalTo(expectedClassName));
+        assertThat(actualPostId, equalTo(expectedPostId));
     }
 
     /*
      * Check on methods related to isBlogPost
      */
     @Test
-    public void checkCustomClient_GettingIsBlogPost() {
+    public void shouldOverrideUrlLoading_checkIsBlogPost_withUrl() {
+        final boolean expectedIsBlogPost = true;
+
         WebResourceRequest request = new WebResourceRequestImpl(Uri.parse("https://www3.dev.secureci.com/techwell-announces-coveros-ceo-jeffery-payne-agileconnection-technical-editor/"));
-        CustomWebViewClient customWebViewClient = mActivity.getCustomClient();
-        WebView view = mActivity.getWebViewBrowser();
-        final boolean isABlogPost = true;
-        final boolean notABlogAnymore = false;
+        CustomWebViewClient customWebViewClient = mainActivity.getCustomClient();
+        WebView view = mainActivity.getWebViewBrowser();
         customWebViewClient.shouldOverrideUrlLoading(view, request);
-        assertEquals(isABlogPost, customWebViewClient.getIsBlogPost());
-        customWebViewClient.setIsBlogPost(notABlogAnymore);
-        assertFalse(customWebViewClient.getIsBlogPost());
+
+        boolean actualIsBlogPost = customWebViewClient.getIsBlogPost();
+
+        assertThat(actualIsBlogPost, equalTo(expectedIsBlogPost));
+
     }
 
     /*
      * Check Custom Client string for html class name
      */
     @Test
-    public void checkCustomClient_HTMLClassName() {
+    public void shouldOverrideUrlLoading_checkClassName_withUrl() {
+        final String expectedClassName = "post-template-default";
+
         WebResourceRequest request = new WebResourceRequestImpl(Uri.parse("https://www3.dev.secureci.com/good-free-sequence-diagram-tool"));
-        CustomWebViewClient customWebViewClient = mActivity.getCustomClient();
-        final String expected = "post-template-default";
-        WebView view = mActivity.getWebViewBrowser();
+        CustomWebViewClient customWebViewClient = mainActivity.getCustomClient();
+        WebView view = mainActivity.getWebViewBrowser();
         customWebViewClient.shouldOverrideUrlLoading(view, request);
-        assertEquals(expected, customWebViewClient.getSavedClassName());
-        assertTrue(customWebViewClient.getIsBlogPost());
+
+        String actualClassName = customWebViewClient.getSavedClassName();
+
+        assertThat(actualClassName, equalTo(expectedClassName));
+
     }
 
-    /*
-     * Check Custom Client for Post ID (if Blog Post)
-     */
-    @Test
-    public void checkCustomClient_PostID_True() {
-        WebResourceRequest request = new WebResourceRequestImpl(Uri.parse("https://www3.dev.secureci.com/good-free-sequence-diagram-tool/"));
-        CustomWebViewClient customWebViewClient = mActivity.getCustomClient();
-        int expected = 7509;
-        WebView view = mActivity.getWebViewBrowser();
-        customWebViewClient.shouldOverrideUrlLoading(view, request);
-        assertEquals(expected, customWebViewClient.getPostID());
-        assertTrue(customWebViewClient.getIsBlogPost());
-    }
-
-    /*
-     * Check that webName is set and can be changed with customWebViewClient
-     */
-    @Test
-    public void checkCustomClient_NewWebName() {
-        CustomWebViewClient customWebViewClient = mActivity.getCustomClient();
-        String expectedDefault = "https://www3.dev.secureci.com";
-        String expectedNew = "https://www.google.com";
-        String changeIt = customWebViewClient.getMainActivity().getWebName();
-        assertEquals(expectedDefault, changeIt);
-        changeIt = "https://www.google.com";
-        assertEquals(expectedNew, changeIt);
-    }
 }
