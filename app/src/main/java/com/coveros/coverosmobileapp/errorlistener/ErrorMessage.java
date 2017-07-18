@@ -1,21 +1,19 @@
-package com.coveros.coverosmobileapp.blogpost;
-
+package com.coveros.coverosmobileapp.errorlistener;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.coveros.coverosmobileapp.R;
 
-class BlogPostErrorListener implements Response.ErrorListener {
-    
+public class ErrorMessage implements Response.ErrorListener {
+
     private Context context;
 
-    BlogPostErrorListener(Context context) {
+    public ErrorMessage(Context context) {
         this.context = context;
     }
 
