@@ -75,13 +75,12 @@ class CustomWebViewClient extends WebViewClient {
         savedClassName = newValue;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
-    //Logs in this method
-    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+    public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
         //If blog website or blog web page is categorically loaded (hybrid)
         isBlogPost = false;
         String value;
+        String url = request.getUrl().toString();
         URLContent content = new URLContent(url);
 
         //Create new thread to handle network operations
