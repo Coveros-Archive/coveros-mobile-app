@@ -25,7 +25,7 @@ class CustomWebViewClient extends WebViewClient {
     private int postID;
     private MainActivity mainActivity;
     private static final String TAG = "CustomWebViewClient";
-
+  
     CustomWebViewClient(MainActivity ma) {
         mainActivity = ma;
         weAreConnected = true;
@@ -105,12 +105,14 @@ class CustomWebViewClient extends WebViewClient {
             //Index at 48 because each blog post has the same index length up until post id numbers
             //Post ID numbers could be n number of digits. Read values until space
             value = value.substring(48);
-            String saveID = "";
+            String saveID;
             //Get only numbers after post id (stops when empty space is present)
-            while (value.charAt(0) != ' ') {
-                saveID += value.charAt(0);
+            StringBuilder builder = new StringBuilder();
+            while(value.charAt(0) != ' '){
+                builder.append(value.charAt(0));
                 value = value.substring(1);
             }
+            saveID = builder.toString();
             //Start individual blog
             Intent startBlogPostRead = new Intent(view.getContext(), BlogPostReadActivity.class);
             postID = Integer.parseInt(saveID);

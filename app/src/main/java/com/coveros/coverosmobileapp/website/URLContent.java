@@ -5,7 +5,6 @@ import android.util.Log;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import java.io.IOException;
-import java.net.MalformedURLException;
 
 public class URLContent implements Runnable{
     private String htmlStuff;

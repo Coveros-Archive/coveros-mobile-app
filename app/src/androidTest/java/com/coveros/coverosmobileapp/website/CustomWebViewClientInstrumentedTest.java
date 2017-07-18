@@ -64,7 +64,7 @@ public class CustomWebViewClientInstrumentedTest extends LooperTestSuite {
         customWebViewClient.shouldOverrideUrlLoading(view, request);
         assertEquals(isABlogPost, customWebViewClient.getIsBlogPost());
         customWebViewClient.setIsBlogPost(notABlogAnymore);
-        assertFalse(notABlogAnymore);
+        assertFalse(customWebViewClient.getIsBlogPost());
     }
 
     /*

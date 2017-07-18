@@ -32,9 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String[] MENU_TITLES = new String[]{"Home","Blog"};
     private DrawerLayout menu;
-    private ListView drawerList;
-
-    private RequestQueue rQueue;
+    RequestQueue rQueue;
 
     //Create Strings for Title, message, and buttons
     private static final String ALERT_TITLE = "Alert";
@@ -68,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
         //constructing the menu navigation drawer
         menu = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ListView drawerList;
         drawerList = (ListView)findViewById(R.id.left_drawer);
         drawerList.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1 , MENU_TITLES));
