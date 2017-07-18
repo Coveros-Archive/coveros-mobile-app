@@ -95,10 +95,7 @@ class CustomWebViewClient extends WebViewClient {
         value = content.getHtmlClassName();
 
         //Only Blog posts have this body class name listed, Check off that the url is a Blog Post Link
-        if (value.length() >= 22 && value.substring(0, 21).equals("post-template-default")) {
-            setSavedClassName(value.substring(0, 21));
-            isBlogPost = true;
-        }
+        checkIfBlogPost(value);
 
         //If a Blog Post was clicked on from the home page, redirect to native blog associated with post
         if (isBlogPost) {
@@ -138,6 +135,13 @@ class CustomWebViewClient extends WebViewClient {
             Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             view.getContext().startActivity(i);
             return true;
+        }
+    }
+
+    public void checkIfBlogPost(String value){
+        if (value.length() >= 22 && ("post-template-default").equals(value.substring(0, 21))) {
+            setSavedClassName(value.substring(0, 21));
+            isBlogPost = true;
         }
     }
 
