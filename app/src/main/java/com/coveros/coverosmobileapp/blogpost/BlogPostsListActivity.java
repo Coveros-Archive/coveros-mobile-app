@@ -38,24 +38,17 @@ public class BlogPostsListActivity extends BlogListActivity {
     private List<BlogPost> blogPosts = new ArrayList<>();
     private SparseArray<String> authors = new SparseArray<>();  // to aggregate the ids and names of the authors of displayed blog posts
     private RequestQueue rQueue;
-
-    private static final String[] MENU_TITLES = new String[]{"Home", "Blog"};
+    private String[] menuTitles;
     private DrawerLayout menu;
     private ListView drawerList;
     private LinearLayout postList;
-
     private ListView blogPostsListView;
-
     private BlogPostsListAdapter postsAdapter;
-
     private int currentListSize;
-
     private static final int POSTS_PER_PAGE = 10;
     private int postsOffset = 0;
-
     private static final int NUM_OF_AUTHORS = 100;  // number of users that will be returned by the REST call... so if someday Coveros has over 100 employees, this needs to be changed
     private static final String AUTHORS_URL = "https://www3.dev.secureci.com/wp-json/wp/v2/users?orderby=id&per_page=" + NUM_OF_AUTHORS;
-
     private static final String POSTS_URL = "https://www3.dev.secureci.com/wp-json/wp/v2/posts?per_page=" + POSTS_PER_PAGE + "&order=desc&orderby=date&fields=id,title,date,author&offset=%d";
 
     @Override
@@ -73,8 +66,9 @@ public class BlogPostsListActivity extends BlogListActivity {
         postList = (LinearLayout) findViewById(R.id.postlist);
         menu = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerList = (ListView) findViewById(R.id.left_drawer);
+        menuTitles = getResources().getStringArray(R.array.menu_Titles);
         drawerList.setAdapter(new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, MENU_TITLES));
+                android.R.layout.simple_list_item_1, menuTitles));
         drawerList.setOnItemClickListener(new BlogPostsListActivity.DrawerItemClickListener());
         menu.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
                                    @Override
@@ -159,16 +153,16 @@ public class BlogPostsListActivity extends BlogListActivity {
     protected void retrieveAuthors(final PostListCallback<String> postListCallback) {
         StringRequest authorsRequest = new StringRequest(Request.Method.GET, AUTHORS_URL, new Response.Listener<String>() {
             @Override
-        public void onResponse(String response) {
-            JsonArray authorsJson = new JsonParser().parse(response).getAsJsonArray();
-            for (JsonElement author : authorsJson) {
-                JsonObject authorJson = (JsonObject) author;
-                Integer id = authorJson.get("id").getAsInt();
-                authors.put(id, authorJson.get("name").getAsString());
+            public void onResponse(String response) {
+                JsonArray authorsJson = new JsonParser().parse(response).getAsJsonArray();
+                for (JsonElement author : authorsJson) {
+                    JsonObject authorJson = (JsonObject) author;
+                    Integer id = authorJson.get("id").getAsInt();
+                    authors.put(id, authorJson.get("name").getAsString());
+                }
+                postListCallback.onSuccess(null);
             }
-            postListCallback.onSuccess(null);
-        }
-    }, errorListener);
+        }, errorListener);
         rQueue.add(authorsRequest);
     }
 
@@ -231,10 +225,11 @@ public class BlogPostsListActivity extends BlogListActivity {
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         /**
          * This method implements navigating to the corresponding activity when a position is selected on the navigation menu drawer
-         * @param parent the current placing of the adapter
-         * @param view the current layout shown
+         *
+         * @param parent   the current placing of the adapter
+         * @param view     the current layout shown
          * @param position the int the describes the placing in the list
-         * @param id the specified value of the layout
+         * @param id       the specified value of the layout
          */
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
