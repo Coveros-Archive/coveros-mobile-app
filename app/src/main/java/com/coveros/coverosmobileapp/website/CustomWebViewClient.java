@@ -21,6 +21,7 @@ class CustomWebViewClient extends WebViewClient {
 
     private boolean isBlogPost;
     private MainActivity mainActivity;
+    private int postId;
 
     private static final String TAG = "CustomWebViewClient";
     private static final String POST_ID_CLASS_PREFIX = "postid-";
@@ -53,11 +54,11 @@ class CustomWebViewClient extends WebViewClient {
 
         //If a Blog Post was clicked on from the home page, redirect to native blog associated with post
         if (isBlogPost) {
-            String postId = parsePostId(classNames);
+            postId = Integer.parseInt(parsePostId(classNames));
 
             //Start individual blog
             Intent startBlogPostRead = new Intent(view.getContext(), BlogPostReadActivity.class);
-            startBlogPostRead.putExtra("blogId", Integer.parseInt(postId));
+            startBlogPostRead.putExtra("blogId", postId);
             view.getContext().startActivity(startBlogPostRead);
             return true;
         }
@@ -147,6 +148,10 @@ class CustomWebViewClient extends WebViewClient {
 
     boolean getIsBlogPost() {
         return isBlogPost;
+    }
+
+    public int getPostId() {
+        return postId;
     }
 
 }

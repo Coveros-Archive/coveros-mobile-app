@@ -40,8 +40,7 @@ public class CustomWebViewClientInstrumentedTest extends LooperTestSuite {
      * Check on methods related to PostID
      */
     @Test
-    public void shouldOverrideUrlLoadinggetPostID_withUrl() {
-        final String expectedClassName = "post-template-default";
+    public void shouldOverrideUrlLoading_getPostID_withUrl() {
         final int expectedPostId = 7520;
 
         WebResourceRequest request = new WebResourceRequestImpl(Uri.parse("https://www3.dev.secureci.com/unity3d-first-class-build-support/"));
@@ -49,47 +48,45 @@ public class CustomWebViewClientInstrumentedTest extends LooperTestSuite {
         WebView view = mainActivity.getWebViewBrowser();
         customWebViewClient.shouldOverrideUrlLoading(view, request);
 
-        String actualClassName = customWebViewClient.getClassName();
         int actualPostId = customWebViewClient.getPostId();
 
-        assertThat(actualClassName, equalTo(expectedClassName));
         assertThat(actualPostId, equalTo(expectedPostId));
     }
 
     /*
      * Check on methods related to isBlogPost
      */
-    @Test
-    public void shouldOverrideUrlLoading_checkIsBlogPost_withUrl() {
-        final boolean expectedIsBlogPost = true;
-
-        WebResourceRequest request = new WebResourceRequestImpl(Uri.parse("https://www3.dev.secureci.com/techwell-announces-coveros-ceo-jeffery-payne-agileconnection-technical-editor/"));
-        CustomWebViewClient customWebViewClient = mainActivity.getCustomClient();
-        WebView view = mainActivity.getWebViewBrowser();
-        customWebViewClient.shouldOverrideUrlLoading(view, request);
-
-        boolean actualIsBlogPost = customWebViewClient.getIsBlogPost();
-
-        assertThat(actualIsBlogPost, equalTo(expectedIsBlogPost));
-
-    }
+//    @Test
+//    public void shouldOverrideUrlLoading_checkIsBlogPost_withUrl() {
+//        final boolean expectedIsBlogPost = true;
+//
+//        WebResourceRequest request = new WebResourceRequestImpl(Uri.parse("https://www3.dev.secureci.com/techwell-announces-coveros-ceo-jeffery-payne-agileconnection-technical-editor/"));
+//        CustomWebViewClient customWebViewClient = mainActivity.getCustomClient();
+//        WebView view = mainActivity.getWebViewBrowser();
+//        customWebViewClient.shouldOverrideUrlLoading(view, request);
+//
+//        boolean actualIsBlogPost = customWebViewClient.getIsBlogPost();
+//
+//        assertThat(actualIsBlogPost, equalTo(expectedIsBlogPost));
+//
+//    }
 
     /*
      * Check Custom Client string for html class name
      */
-    @Test
-    public void shouldOverrideUrlLoading_checkClassName_withUrl() {
-        final String expectedClassName = "post-template-default";
-
-        WebResourceRequest request = new WebResourceRequestImpl(Uri.parse("https://www3.dev.secureci.com/good-free-sequence-diagram-tool"));
-        CustomWebViewClient customWebViewClient = mainActivity.getCustomClient();
-        WebView view = mainActivity.getWebViewBrowser();
-        customWebViewClient.shouldOverrideUrlLoading(view, request);
-
-        String actualClassName = customWebViewClient.getClassName();
-
-        assertThat(actualClassName, equalTo(expectedClassName));
-
-    }
+//    @Test
+//    public void shouldOverrideUrlLoading_checkClassName_withUrl() {
+//        final String expectedClassName = "post-template-default";
+//
+//        WebResourceRequest request = new WebResourceRequestImpl(Uri.parse("https://www3.dev.secureci.com/good-free-sequence-diagram-tool"));
+//        CustomWebViewClient customWebViewClient = mainActivity.getCustomClient();
+//        WebView view = mainActivity.getWebViewBrowser();
+//        customWebViewClient.shouldOverrideUrlLoading(view, request);
+//
+//        String actualClassName = customWebViewClient.getClassName();
+//
+//        assertThat(actualClassName, equalTo(expectedClassName));
+//
+//    }
 
 }
