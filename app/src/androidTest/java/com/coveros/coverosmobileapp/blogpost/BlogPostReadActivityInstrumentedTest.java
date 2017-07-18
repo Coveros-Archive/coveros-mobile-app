@@ -14,9 +14,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +41,6 @@ public class BlogPostReadActivityInstrumentedTest {
     @Before
     public void setUp() {
         blogPostReadActivity = blogPostReadActivityRule.getActivity();
-
     }
 
     @Test
@@ -58,6 +54,4 @@ public class BlogPostReadActivityInstrumentedTest {
         boolean viewCommentsButtonIsShown = blogPostReadActivity.findViewById(R.id.view_comments).isShown();
         assertTrue("Content should be displayed", viewCommentsButtonIsShown);
     }
-
-
 }

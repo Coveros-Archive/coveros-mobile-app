@@ -1,8 +1,8 @@
 package com.coveros.coverosmobileapp.blogpost;
 
 import android.content.Intent;
-import android.support.test.rule.ActivityTestRule;
 import android.support.test.espresso.action.ViewActions;
+import android.support.test.rule.ActivityTestRule;
 
 import com.coveros.coverosmobileapp.R;
 
@@ -56,6 +56,7 @@ public class CommentFormActivityInstrumentedTest {
         boolean enterNameIsShown = commentFormActivity.findViewById(R.id.enter_name).isShown();
         assertTrue("Enter name EditText should be displayed", enterNameIsShown);
     }
+
     @Test
     public void onCreate_checkEmailEditTextIsShown() {
         boolean enterEmailIsShown = commentFormActivity.findViewById(R.id.enter_email).isShown();

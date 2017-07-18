@@ -11,7 +11,6 @@ import com.coveros.coverosmobileapp.R;
 
 public class ErrorMessage implements Response.ErrorListener {
 
-    private AlertDialog errorMessageDialog;
     private Context context;
 
     public ErrorMessage(Context context) {
@@ -21,7 +20,7 @@ public class ErrorMessage implements Response.ErrorListener {
     @Override
     public void onErrorResponse(VolleyError volleyError) {
         // creates and displays errorMessage
-        errorMessageDialog = createErrorMessage();
+        AlertDialog errorMessageDialog = createErrorMessage();
         errorMessageDialog.show();
         NetworkResponse errorNetworkResponse = volleyError.networkResponse;
         String errorData = "";

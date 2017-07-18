@@ -23,7 +23,8 @@ import java.util.List;
 /**
  * Creates and displays a single blog post when it is selected from the list of blog post_list.
  *
- * @author Maria Kim and Sadie Rynestad
+ * @author Maria Kim
+ * @author Sadie Rynestad
  */
 @SuppressWarnings("squid:MaximumInheritanceDepth")
 public class BlogPostReadActivity extends AppCompatActivity {
