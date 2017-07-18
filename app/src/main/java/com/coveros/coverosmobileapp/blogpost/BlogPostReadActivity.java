@@ -13,7 +13,7 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
-import com.coveros.coverosmobileapp.errorlistener.ErrorListener;
+import com.coveros.coverosmobileapp.errorlistener.ErrorMessage;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -55,7 +55,7 @@ public class BlogPostReadActivity extends AppCompatActivity {
                         content.loadData(post.getContent(), "text/html; charset=utf-8", "UTF-8");
                         setTitle(post.getTitle());
                     }
-                }, new ErrorListener(BlogPostReadActivity.this));
+                }, new ErrorMessage(BlogPostReadActivity.this));
                 rQueue.add(blogPostsRequest);
             }
         });
@@ -67,7 +67,7 @@ public class BlogPostReadActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), CommentsListActivity.class);
-                intent.putExtra("postId", "" + blogId);
+                intent.putExtra("postId", Integer.toString(blogId));
                 startActivity(intent);
             }
         });
@@ -90,7 +90,7 @@ public class BlogPostReadActivity extends AppCompatActivity {
                 }
                 postListCallback.onSuccess(null);
             }
-        }, new ErrorListener(BlogPostReadActivity.this));
+        }, new ErrorMessage(BlogPostReadActivity.this));
         rQueue.add(authorsRequest);
     }
 

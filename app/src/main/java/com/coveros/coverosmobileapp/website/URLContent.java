@@ -1,5 +1,7 @@
 package com.coveros.coverosmobileapp.website;
 
+import android.util.Log;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import java.io.IOException;
@@ -21,12 +23,8 @@ public class URLContent implements Runnable{
             htmlClassName = document.body().className();
         }
         catch (IOException i){
-            i.printStackTrace();
-            htmlClassName = "failed with IOException";
+            Log.e("CoverosMobileApp", "Document or html not assigned", i);
         }
-        catch (Exception e){
-            e.printStackTrace();
-            htmlClassName = "failed with Exception";
-        }
+
     }
 }

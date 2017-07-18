@@ -8,14 +8,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
 import com.coveros.coverosmobileapp.R;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Displays a form through which a user can create and send a comment on a blog post.
+ *
  * @author Maria Kim
  */
 @SuppressWarnings("squid:MaximumInheritanceDepth")
@@ -23,15 +22,12 @@ public class CommentFormActivity extends AppCompatActivity {
     private String author;
     private String email;
     private String message;
-
     private AlertDialog emptyFieldAlertDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.comment_form);
-
         Button sendMessage = (Button) findViewById(R.id.send_button);
         sendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,24 +35,20 @@ public class CommentFormActivity extends AppCompatActivity {
                 EditText enterName = (EditText) findViewById(R.id.enter_name);
                 EditText enterEmail = (EditText) findViewById(R.id.enter_email);
                 EditText enterMessage = (EditText) findViewById(R.id.enter_message);
-
                 author = enterName.getText().toString();
                 email = enterEmail.getText().toString();
                 message = enterMessage.getText().toString();
-
                 List<String> emptyFields = checkFieldIsEmpty(author, email, message);
                 if (!emptyFields.isEmpty()) {
                     emptyFieldAlertDialog = createEmptyFieldAlertDialog(emptyFields);
                     emptyFieldAlertDialog.show();
                 }
-
                 // logging for now until we make the actual request
                 Log.d("AUTHOR", author);
                 Log.d("EMAIL", email);
                 Log.d("MESSAGE", message);
             }
         });
-
     }
 
     static List<String> checkFieldIsEmpty(String author, String email, String message) {
@@ -64,7 +56,7 @@ public class CommentFormActivity extends AppCompatActivity {
         if (author.isEmpty()) {
             emptyFields.add("name");
         }
-        if (email.isEmpty()){
+        if (email.isEmpty()) {
             emptyFields.add("email");
         }
         if (message.isEmpty()) {
@@ -108,6 +100,7 @@ public class CommentFormActivity extends AppCompatActivity {
     String getMessage() {
         return message;
     }
+
     AlertDialog getEmptyFieldAlertDialog() {
         return emptyFieldAlertDialog;
     }

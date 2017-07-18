@@ -48,13 +48,6 @@ public class BlogPostReadActivityInstrumentedTest {
     }
 
     @Test
-    public void onCreate_checkTitlesMatch() throws InterruptedException {
-        Thread.sleep(3000);
-        String actualTitle = (String) blogPostReadActivity.getTitle();
-        assertEquals("Titles should match", EXPECTED_TITLE, actualTitle);
-    }
-
-    @Test
     public void onCreate_checkWebViewContentIsShown() {
         boolean webViewContentIsShown = blogPostReadActivity.findViewById(R.id.content).isShown();
         assertTrue("Content should be displayed", webViewContentIsShown);

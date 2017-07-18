@@ -19,8 +19,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
 
@@ -31,26 +29,33 @@ public class MainActivity extends AppCompatActivity {
     private WebView browser;
     private AlertDialog dialog;
     private static final String TAG = "MainActivity";
-    private static final String[] MENU_TITLES = new String[]{"Home","Blog"};
+    private String[] menuTitles;
     private DrawerLayout menu;
     private ListView drawerList;
 
-    public MainActivity(){
+    public MainActivity() {
 
         webName = "https://www3.dev.secureci.com";
 
     }
-    public String getWebName(){
+
+    public String getWebName() {
         return webName;
     }
-    public void setWebName(String website){
+
+    public void setWebName(String website) {
         webName = website;
     }
-    public WebView getWebViewBrowser(){ return browser; }
-    public void setWebViewBrowser(WebView br){
+
+    public WebView getWebViewBrowser() {
+        return browser;
+    }
+
+    public void setWebViewBrowser(WebView br) {
         browser = br;
     }
-    public AlertDialog getDialog(){
+
+    public AlertDialog getDialog() {
         return dialog;
     }
 
@@ -65,77 +70,71 @@ public class MainActivity extends AppCompatActivity {
         //Link WebView variable with activity_main_webview for Web View Access
         browser = (WebView) findViewById(R.id.activity_main_webview);
         main.setWebViewBrowser(browser);
-        RequestQueue rQueue = Volley.newRequestQueue(MainActivity.this);
-        final int blogId = getIntent().getIntExtra("blogId", 0);
 
         //constructing the menu navigation drawer
         menu = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerList = (ListView)findViewById(R.id.left_drawer);
+        drawerList = (ListView) findViewById(R.id.left_drawer);
+        menuTitles = getResources().getStringArray(R.array.menu_Titles);
         drawerList.setAdapter(new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1 , MENU_TITLES));
+                android.R.layout.simple_list_item_1, menuTitles));
         drawerList.setOnItemClickListener(new DrawerItemClickListener());
-        menu.addDrawerListener(new DrawerLayout.SimpleDrawerListener(){
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset){
-                browser.setTranslationX(slideOffset * drawerView.getWidth());
-                menu.bringChildToFront(drawerView);
-                menu.requestLayout();
-            }}
+        menu.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+                                   @Override
+                                   public void onDrawerSlide(View drawerView, float slideOffset) {
+                                       browser.setTranslationX(slideOffset * drawerView.getWidth());
+                                       menu.bringChildToFront(drawerView);
+                                       menu.requestLayout();
+                                   }
+                               }
         );
-        browser.setOnTouchListener(new View.OnTouchListener(){
-            public boolean onTouch(View v, MotionEvent event){
-                WebView.HitTestResult hr = ((WebView) v).getHitTestResult();
+        browser.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
                 return false;
             }
         });
         //Links open in WebView with Coveros regex check
-        browser.setWebViewClient(new CustomWebViewClient(){
+        browser.setWebViewClient(new CustomWebViewClient() {
             @SuppressWarnings("deprecation")
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 //If blog website or blog webpage is categorically loaded (hybrid)
                 boolean isBlogPost = false;
-                String value = "";
+                String value;
                 URLContent content = new URLContent(url);
-
                 //Create new thread to handle network operations
                 Thread th = new Thread(content);
                 th.start();
                 try {
                     th.join();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Log.e("CoverosMobileApp", "Loading html content is interrupted", e);
                 }
                 value = content.getHtmlClassName();
                 Log.d(TAG, "Value: " + value);
-
                 //Only Blog posts have this body class name listed, Check off that the url is a Blog Post Link
-                if(value.substring(0,21).equals("post-template-default")){
+                if (("post-template-default").equals(value.substring(0, 21))) {
                     isBlogPost = true;
                 }
-
                 //If a Blog Post was clicked on from the home page, redirect to native blog associated with post
-                if(isBlogPost){
-                    //view.loadUrl("https://www3.dev.secureci.com/wp-json/wp/v2/posts/7520");
+                if (isBlogPost) {
                     Log.d(TAG, "Value: " + value);
                     int loopCounter = 0;            //Loop max is 5. Anything greater is not allowed
                     Intent startBlogPostList = new Intent(getApplicationContext(), BlogPostsListActivity.class);
                     startActivity(startBlogPostList);
-                    while(loopCounter<6){
-
+                    while (loopCounter < 6) {
                         loopCounter++;
                     }
                     return true;
                 }
                 //If blog website or blog web page is categorically loaded (hybrid)
-                else if(url.contains("coveros.com/blog/") || url.contains("coveros.com/category/blogs/") ||
-                        url.contains("dev.secureci.com/blog/") || url.contains("dev.secureci.com/category/blogs/")){
+                else if (url.contains("coveros.com/blog/") || url.contains("coveros.com/category/blogs/") ||
+                        url.contains("dev.secureci.com/blog/") || url.contains("dev.secureci.com/category/blogs/")) {
                     //Load Blog List
                     Intent startBlogPost = new Intent(getApplicationContext(), BlogPostsListActivity.class);
                     startActivity(startBlogPost);
                     return true;
-                }
-                else if (url.contains("coveros.com") || url.contains("dev.secureci.com")){
+                } else if (url.contains("coveros.com") || url.contains("dev.secureci.com")) {
                     view.loadUrl(url);
                     return true;
                 } else {
@@ -144,18 +143,20 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
             }
+
             @Override
-            public void onPageStarted(WebView view, String url, Bitmap fav){
-                if(("https://www.coveros.com/blog/").equals(webName)){
+            public void onPageStarted(WebView view, String url, Bitmap fav) {
+                if (("https://www.coveros.com/blog/").equals(webName)) {
                     onBackPressed();
                 }
             }
+
             @Override
             public void onPageFinished(WebView view, String url) {
                 setWebName(url);
             }
         });
-        if(!isOnline()){
+        if (!isOnline()) {
             browser.loadUrl("file:///android_asset/sampleErrorPage.html");
         }
     }
@@ -164,16 +165,15 @@ public class MainActivity extends AppCompatActivity {
      * On App StartUp
      */
     @Override
-    protected void onStart(){
+    protected void onStart() {
         //Phone is online & Connected to a server
-        if(isOnline()){
+        if (isOnline()) {
             //Enable Javascript (Plugins)
             WebSettings webSettings = browser.getSettings();
             webSettings.setJavaScriptEnabled(false);
             //Can be changed by either using setWebName or changing value in constructor
             browser.loadUrl(webName);
-        }
-        else{
+        } else {
             alertView();
         }
         super.onStart();
@@ -183,11 +183,10 @@ public class MainActivity extends AppCompatActivity {
      * Back button is pressed in the app. Default implementation
      */
     @Override
-    public void onBackPressed(){
-        if(browser.canGoBack()){
+    public void onBackPressed() {
+        if (browser.canGoBack()) {
             browser.goBack();
-        }
-        else{
+        } else {
             super.onBackPressed();
         }
     }
@@ -195,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
     /*
      * Checks if the user is connected to the Internet
      */
-    public boolean isOnline(){
+    public boolean isOnline() {
         //Get Connectivity Manager and network info
         ConnectivityManager conMgr = (ConnectivityManager)
                 getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -214,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
      * OK option provided to immediately close the dialog box if the user's wifi loads
      *      the Coveros website in the background
      */
-    private void alertView(){
+    private void alertView() {
         //Create Strings for Title, messsage, and buttons
         String title = "Alert";
         String message = "Sorry, we cannot currently retrieve the requested information.";
@@ -224,21 +223,22 @@ public class MainActivity extends AppCompatActivity {
         //Init Alert Dialog menu & Cancel only if pressed on button
         dialog = new AlertDialog.Builder(MainActivity.this)
                 .setNeutralButton(button2, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getApplicationContext(), "Loading App", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
-                recreate();
-            }
-        })
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(), "Loading App", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                        recreate();
+                    }
+                })
                 .setNegativeButton(button3, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss(); }
+                        dialog.dismiss();
+                    }
                 })
-                .setPositiveButton(button1, new DialogInterface.OnClickListener(){
+                .setPositiveButton(button1, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which){
+                    public void onClick(DialogInterface dialog, int which) {
                         Toast.makeText(getApplicationContext(), "Thank You", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                         finish();
@@ -259,10 +259,11 @@ public class MainActivity extends AppCompatActivity {
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         /**
          * This method implements navigating to the corresponding activity when a position is selected on the navigation menu drawer
-         * @param parent the current placing of the adapter
-         * @param view the current layout shown
+         *
+         * @param parent   the current placing of the adapter
+         * @param view     the current layout shown
          * @param position the int the describes the placing in the list
-         * @param id the specified value of the layout
+         * @param id       the specified value of the layout
          */
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

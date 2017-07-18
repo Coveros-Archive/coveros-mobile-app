@@ -9,12 +9,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.coveros.coverosmobileapp.R;
 
-public class ErrorListener implements Response.ErrorListener {
+public class ErrorMessage implements Response.ErrorListener {
 
     private AlertDialog errorMessageDialog;
     private Context context;
 
-    public ErrorListener(Context context) {
+    public ErrorMessage(Context context) {
         this.context = context;
     }
 
@@ -40,7 +40,6 @@ public class ErrorListener implements Response.ErrorListener {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        //TODO figure this thing out finish();
                     }
                 });
         return errorMessageToCreate;
