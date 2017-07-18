@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.ValueCallback;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -61,12 +62,11 @@ public class OAuthLoginActivity extends AppCompatActivity {
      * @param webView    WebView for which the WebViewClient is set
      * @param authCallback    callback to wait for the parsing of the authorization code from the redirect uri
      */
-    @Deprecated
     private void setWebViewClient(WebView webView, final AuthCallback authCallback) {
         webView.setWebViewClient(new WebViewClient() {
-            @SuppressWarnings("deprecation")
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                String url = request.getUrl().toString();
                 if (url.startsWith(REDIRECT_URI)) {
                     Uri uri = Uri.parse(url);
                     authCallback.onSuccess(uri.getQueryParameter("code"));

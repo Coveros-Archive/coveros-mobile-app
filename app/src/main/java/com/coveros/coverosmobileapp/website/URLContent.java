@@ -11,12 +11,25 @@ public class URLContent implements Runnable{
     private String htmlClassName;
     private static final String TAG = "URLContent";
 
-    URLContent(String saved){ htmlStuff = saved; htmlClassName = "null"; }
-    URLContent() { htmlClassName = "null"; }
+    public URLContent(String saved){
+        htmlStuff = saved; htmlClassName = "null";
+    }
 
-    String getHtmlStuff() { return htmlStuff; }
-    void setHtmlStuff(String newUrl) { htmlStuff = newUrl; }
-    String getHtmlClassName(){ return htmlClassName; }
+    public URLContent() {
+        htmlClassName = "null";
+    }
+
+    public String getHtmlStuff() {
+        return htmlStuff;
+    }
+
+    public void setHtmlStuff(String newUrl) {
+        htmlStuff = newUrl;
+    }
+
+    public String getHtmlClassName() {
+        return htmlClassName;
+    }
 
     @Override
     public void run() {
@@ -25,8 +38,7 @@ public class URLContent implements Runnable{
             htmlClassName = document.body().className();
         }
         catch (IOException i){
-            //Catches malformed URL's too!
-            Log.i(TAG, "IOException Found in URLContent");
+            Log.e("CoverosMobileApp", "Document or html not assigned", i);
             htmlClassName = "failed with IOException";
         }
     }

@@ -1,29 +1,26 @@
-package com.coveros.coverosmobileapp.blogpost;
-
+package com.coveros.coverosmobileapp.errorlistener;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.coveros.coverosmobileapp.R;
 
-public class BlogPostErrorListener implements Response.ErrorListener {
+public class ErrorMessage implements Response.ErrorListener {
 
-    private AlertDialog errorMessageDialog;
     private Context context;
 
-    BlogPostErrorListener(Context context) {
+    public ErrorMessage(Context context) {
         this.context = context;
     }
 
     @Override
     public void onErrorResponse(VolleyError volleyError) {
         // creates and displays errorMessage
-        errorMessageDialog = createErrorMessage();
+        AlertDialog errorMessageDialog = createErrorMessage();
         errorMessageDialog.show();
         NetworkResponse errorNetworkResponse = volleyError.networkResponse;
         String errorData = "";
@@ -42,7 +39,6 @@ public class BlogPostErrorListener implements Response.ErrorListener {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        //TODO figure this thing out finish();
                     }
                 });
         return errorMessageToCreate;

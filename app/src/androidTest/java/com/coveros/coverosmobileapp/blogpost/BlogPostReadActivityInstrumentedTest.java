@@ -3,16 +3,19 @@ package com.coveros.coverosmobileapp.blogpost;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 import android.util.SparseArray;
+import android.webkit.WebView;
 
 import com.coveros.coverosmobileapp.R;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -21,23 +24,16 @@ public class BlogPostReadActivityInstrumentedTest {
 
     private static BlogPostReadActivity blogPostReadActivity;
 
-    private static final String EXPECTED_TITLE = "\u201CMy Disdain for the Feline Race--an Autobiography";
+    private static final String EXPECTED_TITLE = "Scripting with OWASP ZAP";
 
     @Rule
     public ActivityTestRule<BlogPostReadActivity> blogPostReadActivityRule = new ActivityTestRule<BlogPostReadActivity>(BlogPostReadActivity.class) {
         @Override
         public Intent getActivityIntent() {
             Intent intent = new Intent();
-            JsonObject blogJson = new Gson().fromJson("{\"id\": 1234, \"author\": 14, \"date\": \"2017-06-27T10:23:18\", \"content\": {\"rendered\": \"&#8220;Cats are objectively the worst animal.\"}, \"title\": {\"rendered\": \"&#8220;My Disdain for the Feline Race--an Autobiography\"}}", JsonObject.class);
-            SparseArray authors = new SparseArray();
-            authors.append(14, "Ryan Kenney");
-            BlogPost blogPost = new BlogPost(blogJson, authors);
-
-            ArrayList<String> blogPostData = new ArrayList<>();
-            blogPostData.add(Integer.toString(blogPost.getId()));
-            blogPostData.add(blogPost.getTitle());
-            blogPostData.add(blogPost.getContent());
-            intent.putStringArrayListExtra("postData", blogPostData);
+            intent.putExtra("blogId", 6674);
+            SparseArray<String> authors = new SparseArray<>();
+            authors.append(42, "Ryan Kenny");
             return intent;
         }
     };
