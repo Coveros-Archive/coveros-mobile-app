@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
         //constructing the menu navigation drawer
         menu = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ListView drawerList;
         drawerList = (ListView)findViewById(R.id.left_drawer);
         menuTitles = getResources().getStringArray(R.array.menu_Titles);
         drawerList.setAdapter(new ArrayAdapter<>(this,

@@ -64,7 +64,7 @@ public class CustomWebViewClientInstrumentedTest extends LooperTestSuite {
         customWebViewClient.shouldOverrideUrlLoading(view, request);
         assertEquals(isABlogPost, customWebViewClient.getIsBlogPost());
         customWebViewClient.setIsBlogPost(notABlogAnymore);
-        assertFalse(notABlogAnymore);
+        assertFalse(customWebViewClient.getIsBlogPost());
     }
 
     /*
@@ -102,10 +102,7 @@ public class CustomWebViewClientInstrumentedTest extends LooperTestSuite {
     public void checkCustomClient_NewWebName() {
         CustomWebViewClient customWebViewClient = mActivity.getCustomClient();
         String expectedDefault = "https://www3.dev.secureci.com";
-        String expectedNew = "https://www.google.com";
         String changeIt = customWebViewClient.getMainActivity().getWebName();
         assertEquals(expectedDefault, changeIt);
-        changeIt = "https://www.google.com";
-        assertEquals(expectedNew, changeIt);
     }
 }

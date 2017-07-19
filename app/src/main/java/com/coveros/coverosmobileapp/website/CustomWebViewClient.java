@@ -25,7 +25,7 @@ class CustomWebViewClient extends WebViewClient {
     private int postID;
     private MainActivity mainActivity;
     private static final String TAG = "CustomWebViewClient";
-
+  
     CustomWebViewClient(MainActivity ma) {
         mainActivity = ma;
         weAreConnected = true;
@@ -95,22 +95,21 @@ class CustomWebViewClient extends WebViewClient {
         value = content.getHtmlClassName();
 
         //Only Blog posts have this body class name listed, Check off that the url is a Blog Post Link
-        if (value.length() >= 22 && value.substring(0, 21).equals("post-template-default")) {
-            setSavedClassName(value.substring(0, 21));
-            isBlogPost = true;
-        }
+        checkIfBlogPost(value);
 
         //If a Blog Post was clicked on from the home page, redirect to native blog associated with post
         if (isBlogPost) {
             //Index at 48 because each blog post has the same index length up until post id numbers
             //Post ID numbers could be n number of digits. Read values until space
             value = value.substring(48);
-            String saveID = "";
+            String saveID;
             //Get only numbers after post id (stops when empty space is present)
-            while (value.charAt(0) != ' ') {
-                saveID += value.charAt(0);
+            StringBuilder builder = new StringBuilder();
+            while(value.charAt(0) != ' '){
+                builder.append(value.charAt(0));
                 value = value.substring(1);
             }
+            saveID = builder.toString();
             //Start individual blog
             Intent startBlogPostRead = new Intent(view.getContext(), BlogPostReadActivity.class);
             postID = Integer.parseInt(saveID);
@@ -136,6 +135,13 @@ class CustomWebViewClient extends WebViewClient {
             Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             view.getContext().startActivity(i);
             return true;
+        }
+    }
+
+    public void checkIfBlogPost(String value){
+        if (value.length() >= 22 && ("post-template-default").equals(value.substring(0, 21))) {
+            setSavedClassName(value.substring(0, 21));
+            isBlogPost = true;
         }
     }
 

@@ -39,7 +39,7 @@ public class RestRequest extends Request<JSONObject> {
     private final RestRequestListener restRequestListener;
     private OnAuthFailedListener onAuthFailedListener;
 
-    public enum RestMethod { GET, POST };
+    public enum RestMethod { GET, POST }
     private RestMethod restMethod;
 
     /**
