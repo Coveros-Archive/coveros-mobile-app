@@ -75,7 +75,6 @@ class CustomWebViewClient extends WebViewClient {
                     }
                 });
 
-
             }
         });
 
@@ -85,11 +84,10 @@ class CustomWebViewClient extends WebViewClient {
 
         return true;
 
-
     }
 
-    public boolean checkIsBlogPost(String value){
-        if (value.contains(POST_ID_CLASS_PREFIX)) {
+    public boolean checkIsBlogPost(String classNames){
+        if (classNames.contains(POST_ID_CLASS_PREFIX)) {
             return true;
         }
         return false;

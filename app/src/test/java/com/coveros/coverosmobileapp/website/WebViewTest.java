@@ -44,7 +44,7 @@ public class WebViewTest {
     @Test
     public void getClientFromMainActivity() {
         MainActivity mainActivity = new MainActivity();
-        CustomWebViewClient custom = new CustomWebViewClient();
+        CustomWebViewClient custom = new CustomWebViewClient(mainActivity);
         mainActivity.setCustomClient(custom);
         assertEquals(custom, mainActivity.getCustomClient());
     }
