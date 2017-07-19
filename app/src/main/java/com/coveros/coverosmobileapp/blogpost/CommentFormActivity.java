@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import com.coveros.coverosmobileapp.R;
+import com.coveros.coverosmobileapp.oauth.RestRequest;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,10 +26,15 @@ public class CommentFormActivity extends AppCompatActivity {
     private String message;
     private AlertDialog emptyFieldAlertDialog;
 
+    private RestRequest postComment;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.comment_form);
+
+        final String postId = getIntent().getExtras().getString("postId");
+
         Button sendMessage = (Button) findViewById(R.id.send_button);
         sendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,6 +51,8 @@ public class CommentFormActivity extends AppCompatActivity {
                     emptyFieldAlertDialog.show();
                 }
                 // logging for now until we make the actual request
+
+                postComment = new RestRequest("https://www3.dev.secureci.com/wp-json/wp/v2/comments/" + postId, )
                 Log.d("AUTHOR", author);
                 Log.d("EMAIL", email);
                 Log.d("MESSAGE", message);

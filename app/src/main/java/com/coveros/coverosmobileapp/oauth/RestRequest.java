@@ -36,6 +36,8 @@ public class RestRequest extends Request<JSONObject> {
     private final Map<String, String> headers = new HashMap<>(2);
     private String body;
 
+    private boolean isAuthenticated;
+
     private final RestRequestListener restRequestListener;
     private OnAuthFailedListener onAuthFailedListener;
 
@@ -49,7 +51,7 @@ public class RestRequest extends Request<JSONObject> {
      * @param restRequestListener    restRequestListener that responds on request success
      * @param restRequestErrorListener    restRequestListener that responds on request error
      */
-    public RestRequest(String url, String accessToken, @Nullable JSONObject body, RestRequestListener restRequestListener, RestRequestErrorListener restRequestErrorListener) {
+    public RestRequest(String url, @Nullable String accessToken, @Nullable JSONObject body, RestRequestListener restRequestListener, RestRequestErrorListener restRequestErrorListener) {
         super(body == null ? Method.GET : Method.POST, url, restRequestErrorListener);
         if (body == null) {
             restMethod = RestMethod.GET;
@@ -58,7 +60,12 @@ public class RestRequest extends Request<JSONObject> {
             restMethod = RestMethod.POST;
         }
         this.restRequestListener = restRequestListener;
-        headers.put(AUTHORIZATION_HEADER, String.format(AUTHORIZATION_FORMAT, accessToken));
+        if (accessToken == null) {
+            isAuthenticated = false;
+        } else {
+            isAuthenticated = true;
+            headers.put(AUTHORIZATION_HEADER, String.format(AUTHORIZATION_FORMAT, accessToken));
+        }
     }
 
     /**
