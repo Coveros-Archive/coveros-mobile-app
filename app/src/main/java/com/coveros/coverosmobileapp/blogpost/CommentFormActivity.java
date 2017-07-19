@@ -41,7 +41,9 @@ public class CommentFormActivity extends AppCompatActivity {
                 List<String> emptyFields = checkFieldIsEmpty(author, email, message);
                 if (!emptyFields.isEmpty()) {
                     emptyFieldAlertDialog = createEmptyFieldAlertDialog(emptyFields);
-                    emptyFieldAlertDialog.show();
+                    if (!isFinishing()) {
+                        emptyFieldAlertDialog.show();
+                    }
                 }
                 // logging for now until we make the actual request
                 Log.d("AUTHOR", author);
