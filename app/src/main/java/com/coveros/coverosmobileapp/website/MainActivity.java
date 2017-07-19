@@ -34,9 +34,9 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout menu;
     private ListView drawerList;
 
-    private RequestQueue rQueue;
+    RequestQueue rQueue;
 
-    //Create Strings for Title, message, and buttons
+    //Strings for Title, message, and buttons
     private  String alertTitle = getResources().getString(R.string.alert_title);
     private  String alertMessage = getResources().getString(R.string.alert_message);
     private  String alertButtonExit = getResources().getString(R.string.alert_button_exit);
