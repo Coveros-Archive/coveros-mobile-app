@@ -45,35 +45,7 @@ class CustomWebViewClient extends WebViewClient {
                 classNames = document.body().className();
                 isBlogPost = checkIsBlogPost(classNames);
 
-                view.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        //If a Blog Post was clicked on from the home page, redirect to native blog associated with post
-                        if (isBlogPost) {
-                            postId = Integer.parseInt(parsePostId(classNames));
-
-                            //Start individual blog
-                            Intent startBlogPostRead = new Intent(view.getContext(), BlogPostReadActivity.class);
-                            startBlogPostRead.putExtra("blogId", postId);
-                            view.getContext().startActivity(startBlogPostRead);
-                        }
-                        //If blog website or blog web page is categorically loaded (hybrid)
-                        else if (checkIsBlog(url)) {
-                            //Load Blog List
-                            Intent startBlogPost = new Intent(view.getContext(), BlogPostsListActivity.class);
-                            view.getContext().startActivity(startBlogPost);
-                        }
-                        //Default stay in WebView (Recognizes url associated with Coveros content)
-                        else if (checkIsCoveros(url)) {
-                            view.loadUrl(url);
-                        }
-                        //Otherwise, resort to Browser for external content
-                        else {
-                            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                            view.getContext().startActivity(i);
-                        }
-                    }
-                });
+                view.post(new RedirectManager(view, url));
 
             }
         });
@@ -113,21 +85,58 @@ class CustomWebViewClient extends WebViewClient {
         return false;
     }
 
-    public String parsePostId(String classNames) {
+    public String parsePostId(String classNamesToParse) {
         // get index of class name that contains the post id
-        int postIdIndex = classNames.indexOf(POST_ID_CLASS_PREFIX);
+        int postIdIndex = classNamesToParse.indexOf(POST_ID_CLASS_PREFIX);
         // start substring at the post id number
-        classNames = classNames.substring(postIdIndex + POST_ID_CLASS_PREFIX.length());
+        classNamesToParse = classNamesToParse.substring(postIdIndex + POST_ID_CLASS_PREFIX.length());
 
-        String postId;
+        String parsedPostId;
         // stop parsing at space character
         StringBuilder builder = new StringBuilder();
-        while(classNames.charAt(0) != ' '){
-            builder.append(classNames.charAt(0));
-            classNames = classNames.substring(1);
+        while(classNamesToParse.charAt(0) != ' '){
+            builder.append(classNamesToParse.charAt(0));
+            classNamesToParse = classNamesToParse.substring(1);
         }
-        postId = builder.toString();
-        return postId;
+        parsedPostId = builder.toString();
+        return parsedPostId;
+    }
+
+    private class RedirectManager implements Runnable {
+        WebView webView;
+        String redirectUrl;
+
+            private RedirectManager(WebView webView, String redirectUrl) {
+                this.webView = webView;
+                this.redirectUrl = redirectUrl;
+            }
+            @Override
+            public void run() {
+                //If a Blog Post was clicked on from the home page, redirect to native blog associated with post
+                if (isBlogPost) {
+                    postId = Integer.parseInt(parsePostId(classNames));
+
+                    //Start individual blog
+                    Intent startBlogPostRead = new Intent(webView.getContext(), BlogPostReadActivity.class);
+                    startBlogPostRead.putExtra("blogId", postId);
+                    webView.getContext().startActivity(startBlogPostRead);
+                }
+                //If blog website or blog web page is categorically loaded (hybrid)
+                else if (checkIsBlog(redirectUrl)) {
+                    //Load Blog List
+                    Intent startBlogPost = new Intent(webView.getContext(), BlogPostsListActivity.class);
+                    webView.getContext().startActivity(startBlogPost);
+                }
+                //Default stay in WebView (Recognizes url associated with Coveros content)
+                else if (checkIsCoveros(redirectUrl)) {
+                    webView.loadUrl(redirectUrl);
+                }
+                //Otherwise, resort to Browser for external content
+                else {
+                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(redirectUrl));
+                    webView.getContext().startActivity(i);
+                }
+            }
     }
 
     @Override
