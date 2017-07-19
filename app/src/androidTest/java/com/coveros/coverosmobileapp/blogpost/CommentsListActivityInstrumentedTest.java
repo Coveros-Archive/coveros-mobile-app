@@ -19,7 +19,7 @@ import static junit.framework.Assert.assertTrue;
  */
 
 @RunWith(AndroidJUnit4.class)
-public class CommentsListActivityInstrumentedTest {ru
+public class CommentsListActivityInstrumentedTest {
 
     CommentsListActivity commentsListActivity;
 
