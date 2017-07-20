@@ -1,12 +1,15 @@
 package com.coveros.coverosmobileapp.blogpost;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.ImageView;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -61,8 +64,23 @@ public class BlogPostReadActivity extends AppCompatActivity {
             }
         });
 
-        Button viewComments = (Button) findViewById(R.id.view_comments);
+        Button b1;
+        Button b2;
+        ImageView iw;
 
+        b1 = (Button) findViewById(R.id.bookmark_button_unchecked);
+        b2 = (Button) findViewById(R.id.bookmark_button_checked);
+        iw = (ImageView) findViewById(R.id.icon);
+
+        b1.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+
+            }
+        });
+
+
+        Button viewComments = (Button) findViewById(R.id.view_comments);
         // when user clicks on "View comments" button, open up CommentsListActivity to display comments for this post
         viewComments.setOnClickListener(new View.OnClickListener() {
             @Override
