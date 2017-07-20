@@ -78,6 +78,12 @@ public class BlogPostReadActivity extends AppCompatActivity {
 
             }
         });
+        b2.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+
+            }
+        });
 
 
         Button viewComments = (Button) findViewById(R.id.view_comments);
