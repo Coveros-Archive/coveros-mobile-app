@@ -1,5 +1,6 @@
 package com.coveros.coverosmobileapp.blogpost;
 
+import android.accounts.AccountManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -72,7 +73,8 @@ public class CommentsListActivity extends BlogListActivity {
         openCommentFormButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), CommentFormActivity.class);
+                Intent intent = AccountManager.newChooseAccountIntent(null, null, new String[]{"com.google"}, null, null, null,
+                        null);
                 intent.putExtra("postId", postId);
                 startActivity(intent);
             }
