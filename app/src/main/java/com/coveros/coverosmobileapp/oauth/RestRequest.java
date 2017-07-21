@@ -10,27 +10,27 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Request that takes in and passes on an access to make an authenticated REST call.
+ * Request class that can handle passing optional access token to make authenticated REST call.
+ *
  * @author Maria Kim
  */
-public class RestRequest extends Request<JSONObject> {
+public class RestRequest extends Request<JsonObject> {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String AUTHORIZATION_FORMAT = "Bearer %s";
     private static final String PROTOCOL_CHARSET = "utf-8";
     private static final String PROTOCOL_CONTENT_TYPE = String.format("application/json; charset=%s", PROTOCOL_CHARSET);
 
-    public static final String ORIGINAL_RESPONSE_TAG = "Original response";
+    public static final String JSON_OBJECT_RESPONSE_TAG = "response";
     public static final String APP_NAME = "CoverosMobileApp";
 
     private final Map<String, String> headers = new HashMap<>(2);
@@ -38,20 +38,23 @@ public class RestRequest extends Request<JSONObject> {
 
     private boolean isAuthenticated;
 
-    private final RestRequestListener restRequestListener;
+    private final Response.Listener listener;
     private OnAuthFailedListener onAuthFailedListener;
 
-    public enum RestMethod { GET, POST }
+    public enum RestMethod {GET, POST}
+
+    public enum JsonType {OBJECT, ARRAY, PRIMITIVE}
+
     private RestMethod restMethod;
 
     /**
-     * @param url    url the request is made to
-     * @param accessToken    access token for authentication that is passed with the request
-     * @param body    content for POST request
-     * @param restRequestListener    restRequestListener that responds on request success
-     * @param restRequestErrorListener    restRequestListener that responds on request error
+     * @param url                      url the request is made to
+     * @param accessToken              access token for authentication that is passed with the request
+     * @param body                     content for POST request
+     * @param listener                 listener that responds on request success
+     * @param restRequestErrorListener listener that responds on request error
      */
-    public RestRequest(String url, @Nullable String accessToken, @Nullable JSONObject body, RestRequestListener restRequestListener, RestRequestErrorListener restRequestErrorListener) {
+    public RestRequest(String url, @Nullable String accessToken, @Nullable JsonObject body, Response.Listener listener, Response.ErrorListener restRequestErrorListener) {
         super(body == null ? Method.GET : Method.POST, url, restRequestErrorListener);
         if (body == null) {
             restMethod = RestMethod.GET;
@@ -59,7 +62,7 @@ public class RestRequest extends Request<JSONObject> {
             this.body = body.toString();
             restMethod = RestMethod.POST;
         }
-        this.restRequestListener = restRequestListener;
+        this.listener = listener;
         if (accessToken == null) {
             isAuthenticated = false;
         } else {
@@ -68,23 +71,15 @@ public class RestRequest extends Request<JSONObject> {
         }
     }
 
-    /**
-     * Sets the OnAuthFailedListener for the request.
-     * @param onAuthFailedListener
-     */
-    public void setOnAuthFailedListener(OnAuthFailedListener onAuthFailedListener) {
-        this.onAuthFailedListener = onAuthFailedListener;
-    }
-
     @Override
     public Map<String, String> getHeaders() {
         return headers;
     }
 
     @Override
-    protected void deliverResponse(JSONObject response) {
-        if (restRequestListener != null) {
-            restRequestListener.onResponse(response);
+    protected void deliverResponse(JsonObject response) {
+        if (listener != null) {
+            listener.onResponse(response);
         }
     }
 
@@ -102,16 +97,9 @@ public class RestRequest extends Request<JSONObject> {
                 Log.e(APP_NAME, "jsonString assigned to empty string", e);
             }
 
-            JSONObject responseObject;
-            try {
-                responseObject = new JSONObject(jsonString);
-            } catch (JSONException e) {
-                responseObject = new JSONObject();
-                Log.e(APP_NAME, "responseObject assigned to empty JSONObject", e);
+            JsonObject responseJson = (JsonObject) new JsonParser().parse(jsonString);
 
-            }
-
-            String restError = responseObject.optString("error", "");
+            String restError = responseJson.get("error").getAsString();
             if ("authorization_required".equals(restError) || "invalid_token".equals(restError)) {
                 onAuthFailedListener.onAuthFailed();
             }
@@ -119,19 +107,13 @@ public class RestRequest extends Request<JSONObject> {
     }
 
     @Override
-    protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+    protected Response<JsonObject> parseNetworkResponse(NetworkResponse response) {
         try {
-            String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-            JSONObject jsonObject = new JSONObject();
-            if (isJson(jsonString)) {
-                jsonObject = jsonObjectFromResponse(jsonString);
-            } else if (isJsonArray(jsonString)) {
-                jsonObject = jsonArrayObjectFromResponse(jsonString);
-            } else if (isJsonBoolean(jsonString)) {
-                jsonObject = jsonBooleanObjectFromResponse(jsonString);
-            }
-            return Response.success(jsonObject, HttpHeaderParser.parseCacheHeaders(response));
-        } catch (UnsupportedEncodingException | JSONException e) {
+            String responseString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+            JsonObject responseJson = getTypedJsonObject(new JsonParser().parse(responseString));
+
+            return Response.success(responseJson, HttpHeaderParser.parseCacheHeaders(response));
+        } catch (UnsupportedEncodingException | UnsupportedJsonFormatException e) {
             return Response.error(new ParseError(e));
         }
     }
@@ -143,7 +125,8 @@ public class RestRequest extends Request<JSONObject> {
 
     /**
      * {@inheritDoc}
-     * @return    body or null, because the super class depends on null being returned in certain cases, so you have to do it.
+     *
+     * @return body or null, because the super class depends on null being returned in certain cases, so you have to do it.
      */
     @Override
     @SuppressWarnings("squid:S1168")
@@ -158,118 +141,62 @@ public class RestRequest extends Request<JSONObject> {
         }
     }
 
-    /**
-     * Tests if jsonString is a simple JSON string.
-     * @param jsonString    string under test
-     * "squid:S1848" suppressed because while JSONObject is not explicitly used, it is used to test if creating the object with jsonString throws the JSONException
-     */
-    @SuppressWarnings("squid:S1848")
-    private boolean isJson(String jsonString) {
-        try {
-            new JSONObject(jsonString);
-            return true;
-        } catch (JSONException je) {
-            Log.d(APP_NAME, "isJson is false", je);
-            return false;
-        }
-    }
-
-    /**
-     * Tests if jsonString is a JSON array string.
-     * @param jsonString    string under test
-     */
-    private boolean isJsonArray(String jsonString) {
-        try {
-            JSONArray responseArray = new JSONArray(jsonString);
-            JSONObject wrapper = new JSONObject();
-            wrapper.put(ORIGINAL_RESPONSE_TAG, responseArray);
-            return true;
-        } catch (JSONException je) {
-            Log.d(APP_NAME, "isJsonArray is false", je);
-            return false;
-        }
-    }
-
-    /**
-     * Tests if jsonString is a JSON boolean string.
-     * @param jsonString    string under test
-     */
-    private boolean isJsonBoolean(String jsonString) {
-        try {
-            JSONObject jsonObject = new JSONObject();
-            if (jsonString.equals(Boolean.TRUE.toString())) {
-                jsonObject.put(ORIGINAL_RESPONSE_TAG, true);
-            }
-            if (jsonString.equals(Boolean.FALSE.toString())) {
-                jsonObject.put(ORIGINAL_RESPONSE_TAG, false);
-            }
-            return true;
-        } catch (JSONException je) {
-            Log.d(APP_NAME, "isJsonBoolean is false", je);
-            return false;
-        }
-    }
-
-    /**
-     * Creates JSONObject from a string representation of a JSON.
-     * @param jsonString    string to be used to create JSONObject
-     * @return JSONObject    JSONObject created from jsonString
-     * @throws JSONException    should never be thrown if used in conjunction with isJson[]() methods above
-     */
-    protected JSONObject jsonObjectFromResponse(String jsonString) throws JSONException {
-        return new JSONObject(jsonString);
-    }
-
-    /**
-     * Creates JSONObject from a string representation of a JSON array.
-     * @param jsonString    string to be used to create JSONObject
-     * @return wrapper    JSONObject created from jsonString
-     * @throws JSONException    should never be thrown if used in conjunction with isJson[]() methods above
-     */
-    protected JSONObject jsonArrayObjectFromResponse(String jsonString) throws JSONException {
-        JSONArray responseArray = new JSONArray(jsonString);
-        JSONObject wrapper = new JSONObject();
-        wrapper.put(ORIGINAL_RESPONSE_TAG, responseArray);
-
-        return wrapper;
-    }
-
-    /**
-     * Creates JSONObject from a string representation of a JSON boolean.
-     * @param jsonString    string to be used to create JSONObject
-     * @return jsonObject    JSONObject created from jsonString
-     * @throws JSONException    should never be thrown if used in conjunction with isJson[]() methods above
-     */
-    protected JSONObject jsonBooleanObjectFromResponse(String jsonString) throws JSONException {
-        JSONObject jsonObject = new JSONObject();
-
-        if (jsonString.equals(Boolean.TRUE.toString())) {
-            jsonObject.put(ORIGINAL_RESPONSE_TAG, true);
-            return jsonObject;
-        } else if (jsonString.equals(Boolean.FALSE.toString())) {
-            jsonObject.put(ORIGINAL_RESPONSE_TAG, false);
-            return jsonObject;
+    public JsonObject getTypedJsonObject(JsonElement jsonElement) throws UnsupportedJsonFormatException {
+        JsonType jsonType = checkJsonType(jsonElement);
+        JsonObject jsonObject = new JsonObject();
+        if (jsonType == null) {
+            throw new UnsupportedJsonFormatException("Json cannot be typed.");
         } else {
-            throw new JSONException("Not a valid JSON response: " + jsonString);
+            switch (jsonType) {
+                case OBJECT:
+                    jsonObject = jsonElement.getAsJsonObject();
+                    break;
+                case ARRAY:
+                    jsonObject.add(JSON_OBJECT_RESPONSE_TAG, jsonElement.getAsJsonArray());
+                    break;
+                case PRIMITIVE:
+                    jsonObject.add(JSON_OBJECT_RESPONSE_TAG, jsonElement.getAsJsonPrimitive());
+                    break;
+            }
+            return jsonObject;
         }
+    }
+
+    public JsonType checkJsonType(JsonElement jsonElement) {
+        if (jsonElement.isJsonObject()) {
+            return JsonType.OBJECT;
+        } else if (jsonElement.isJsonArray()) {
+            return JsonType.ARRAY;
+        } else if (jsonElement.isJsonPrimitive()) {
+            return JsonType.PRIMITIVE;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Sets the OnAuthFailedListener for the request.
+     *
+     * @param onAuthFailedListener
+     */
+    public void setOnAuthFailedListener(OnAuthFailedListener onAuthFailedListener) {
+        this.onAuthFailedListener = onAuthFailedListener;
+    }
+
+    public boolean getIsAuthenticated() {
+        return isAuthenticated;
     }
 
     public RestMethod getRestMethod() {
         return restMethod;
     }
 
-    public RestRequestListener getRestRequestListener() {
-        return restRequestListener;
+    public Response.Listener getListener() {
+        return listener;
     }
 
     public OnAuthFailedListener getOnAuthFailedListener() {
         return onAuthFailedListener;
-    }
-
-    public interface RestRequestListener extends Response.Listener<JSONObject> {
-    }
-
-    public interface RestRequestErrorListener extends Response.ErrorListener {
     }
 
     /**
@@ -277,6 +204,15 @@ public class RestRequest extends Request<JSONObject> {
      */
     public interface OnAuthFailedListener {
         void onAuthFailed();
+    }
+
+    /**
+     * Thrown when Json String cannot be typed as JsonObject, JsonArray, or JsonPrimitive
+     */
+    class UnsupportedJsonFormatException extends Exception {
+        public UnsupportedJsonFormatException(String message) {
+            super(message);
+        }
     }
 
 

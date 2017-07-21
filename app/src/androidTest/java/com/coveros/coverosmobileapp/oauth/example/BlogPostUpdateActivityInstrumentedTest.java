@@ -90,7 +90,7 @@ public class BlogPostUpdateActivityInstrumentedTest extends LooperTestSuite {
     public void onResponse_checkSuccessResponseAlertDialogIsShowing() {
 
         onView(withId(R.id.post_button)).perform(click());  // sets listener
-        blogPostUpdateActivity.getRestRequest().getRestRequestListener().onResponse(new JSONObject());
+        blogPostUpdateActivity.getRestRequest().getListener().onResponse(new JSONObject());
 
         boolean isSuccessResponseShowing = blogPostUpdateActivity.getSuccessDialog().isShowing();
         assertThat(isSuccessResponseShowing, equalTo(true));
