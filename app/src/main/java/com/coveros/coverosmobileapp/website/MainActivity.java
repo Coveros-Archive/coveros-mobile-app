@@ -98,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
         browser.addJavascriptInterface(new Object(){
             @JavascriptInterface
             public void openMenu(){
-                //Toast.makeText(browser.getContext(), "Found the gold!", Toast.LENGTH_SHORT).show();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
