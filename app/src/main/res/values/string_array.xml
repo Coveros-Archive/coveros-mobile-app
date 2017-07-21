@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="menu_Titles">
-        <item><b>Home</b></item>
+        <item>Home</item>
         <item>Product</item>
-        <item>SecureCI</item>
-        <item>Selenified</item>
+        <item>\t\t\t\t\t\t\t SecureCI</item>
+        <item>\t\t\t\t\t\t\t Selenified</item>
         <item>Services</item>
-        <item>Agile Development</item>
-        <item>Agile Transformation</item>
-        <item>DevOps</item>
-        <item>Software Security</item>
-        <item>Training</item>
+        <item>\t\t\t\t\t\t\t Agile Development</item>
+        <item>\t\t\t\t\t\t\t Agile Transformation</item>
+        <item>\t\t\t\t\t\t\t DevOps</item>
+        <item>\t\t\t\t\t\t\t Software Security</item>
+        <item>\t\t\t\t\t\t\t Training</item>
         <item>Thought Leadership</item>
-        <item>Blogs</item>
-        <item>Presentations</item>
-        <item>Publications</item>
-        <item>Webinars and Videos</item>
+        <item>\t\t\t\t\t\t\t Blogs</item>
+        <item>\t\t\t\t\t\t\t Presentations</item>
+        <item>\t\t\t\t\t\t\t Publications</item>
+        <item>\t\t\t\t\t\t\t Webinars and Videos</item>
         <item>About Us</item>
-        <item>Our Team</item>
-        <item>Careers</item>
-        <item>Contact</item>
+        <item>\t\t\t\t\t\t\t Our Team</item>
+        <item>\t\t\t\t\t\t\t Careers</item>
+        <item>\t\t\t\t\t\t\t Contact</item>
     </string-array>
 </resources>
