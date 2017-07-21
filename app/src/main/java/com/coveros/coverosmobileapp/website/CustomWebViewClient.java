@@ -151,6 +151,8 @@ class CustomWebViewClient extends WebViewClient {
     @Override
     public void onPageFinished(WebView view, String url) {
         getMainActivity().setWebName(url);
+        view.evaluateJavascript("jQuery('.open-responsive-menu').unbind();", null);
+        view.evaluateJavascript("jQuery('.open-responsive-menu').click(function() { android.openMenu();});", null);
     }
 
     @Override

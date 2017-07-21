@@ -1,5 +1,6 @@
 package com.coveros.coverosmobileapp.website;
 
+import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -7,9 +8,14 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,6 +26,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
+
+import static android.widget.Toast.*;
 
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
@@ -66,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
         //constructing the menu navigation drawer
         menu = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ListView drawerList;
+        final ListView drawerList;
         drawerList = (ListView)findViewById(R.id.left_drawer);
         menuTitles = getResources().getStringArray(R.array.menu_Titles);
         drawerList.setAdapter(new ArrayAdapter<>(this,
@@ -83,6 +91,18 @@ public class MainActivity extends AppCompatActivity {
         //Links open in WebView with Coveros regex check
         cwvc.setMainActivity(this);
         browser.setWebViewClient(cwvc);
+        browser.setVerticalScrollBarEnabled(true);
+        browser.setHorizontalScrollBarEnabled(true);
+        //Get Location of dragged mouse in webview
+        //Javascript Call to open menu from hamburger menu click
+        browser.addJavascriptInterface(new Object(){
+            @JavascriptInterface
+            public void openMenu(){
+                //Toast.makeText(browser.getContext(), "Found the gold!", Toast.LENGTH_SHORT).show();
+                menu.openDrawer();
+            }
+        }, "android");
+
         if(!isOnline()){
             browser.loadUrl("file:///android_asset/sampleErrorPage.html");
         }
@@ -147,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                 .setNeutralButton(ALERT_BUTTON_RELOAD, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogs, int which) {
-                        Toast.makeText(getApplicationContext(), "Loading App", Toast.LENGTH_SHORT).show();
+                        makeText(getApplicationContext(), "Loading App", LENGTH_SHORT).show();
                         dialogs.dismiss();
                         recreate();
                     }
@@ -160,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton(ALERT_BUTTON_EXIT, new DialogInterface.OnClickListener(){
                     @Override
                     public void onClick(DialogInterface dialogs, int which){
-                        Toast.makeText(getApplicationContext(), "Thank You", Toast.LENGTH_SHORT).show();
+                        makeText(getApplicationContext(), "Thank You", LENGTH_SHORT).show();
                         dialogs.dismiss();
                         finish();
                     }
