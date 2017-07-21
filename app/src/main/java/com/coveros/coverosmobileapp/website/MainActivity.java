@@ -69,8 +69,7 @@ public class MainActivity extends AppCompatActivity {
         ListView drawerList;
         drawerList = (ListView)findViewById(R.id.left_drawer);
         menuTitles = getResources().getStringArray(R.array.menu_Titles);
-        drawerList.setAdapter(new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1 , menuTitles));
+        drawerList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1 , menuTitles));
         drawerList.setOnItemClickListener(new DrawerItemClickListener());
         menu.addDrawerListener(new DrawerLayout.SimpleDrawerListener(){
             @Override

@@ -1,7 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="menu_Titles">
-        <item>Home</item>
+        <item><b>Home</b></item>
+        <item>Product</item>
+        <item>SecureCI</item>
+        <item>Selenified</item>
+        <item>Services</item>
+        <item>Agile Development</item>
+        <item>Agile Transformation</item>
+        <item>DevOps</item>
+        <item>Software Security</item>
+        <item>Training</item>
+        <item>Thought Leadership</item>
         <item>Blogs</item>
+        <item>Presentations</item>
+        <item>Publications</item>
+        <item>Webinars and Videos</item>
+        <item>About Us</item>
+        <item>Our Team</item>
+        <item>Careers</item>
+        <item>Contact</item>
     </string-array>
 </resources>
