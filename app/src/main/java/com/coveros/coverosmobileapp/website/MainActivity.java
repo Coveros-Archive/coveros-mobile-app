@@ -282,6 +282,7 @@ public class MainActivity extends AppCompatActivity {
                 default:
                     //No Case found (Position further than current list (Load Home Page)
                     browser.loadUrl(website);
+                    break;
             }
         }
     }
