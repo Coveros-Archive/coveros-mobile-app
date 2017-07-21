@@ -32,7 +32,9 @@ public class BlogListActivity extends ListActivity {
             public void onErrorResponse(VolleyError volleyError) {
                 // creates and displays errorMessage
                 errorMessage = createErrorMessage(context);
-                errorMessage.show();
+                if (!isFinishing()) {
+                    errorMessage.show();
+                }
                 NetworkResponse errorNetworkResponse = volleyError.networkResponse;
                 String errorData = "";
                 if (errorNetworkResponse != null && errorNetworkResponse.data != null) {
