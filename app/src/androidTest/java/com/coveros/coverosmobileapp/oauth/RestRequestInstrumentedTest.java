@@ -3,9 +3,11 @@ package com.coveros.coverosmobileapp.oauth;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 
 import org.json.JSONException;
 import org.junit.Before;
@@ -204,6 +206,66 @@ public class RestRequestInstrumentedTest {
         assertThat(actualGetBody, is(nullValue()));
     }
 
+    @Test
+    public void checkJsonType_withJsonObject() {
+        RestRequest.JsonType expectedJsonType = RestRequest.JsonType.OBJECT;
+        JsonElement jsonElement = new JsonParser().parse("{\"content\": \"I Love cats, with a capital L.\"}");
+        RestRequest.JsonType actualJsonType = postRequest.checkJsonType(jsonElement);
+
+        assertThat(actualJsonType, equalTo(expectedJsonType));
+    }
+
+    @Test
+    public void checkJsonType_withJsonArray() {
+        RestRequest.JsonType expectedJsonType = RestRequest.JsonType.ARRAY;
+        JsonElement jsonElement = new JsonParser().parse("[{\"content\":\"I Love cats, with a capital L.\"},{\"content\":\"I Love cats, with a capital L.\"}]");
+        RestRequest.JsonType actualJsonType = postRequest.checkJsonType(jsonElement);
+
+        assertThat(actualJsonType, equalTo(expectedJsonType));
+    }
+
+    @Test
+    public void checkJsonType_withJsonPrimitive() {
+        RestRequest.JsonType expectedJsonType = RestRequest.JsonType.PRIMITIVE;
+        JsonElement jsonElement = new JsonParser().parse("true");
+        RestRequest.JsonType actualJsonType = postRequest.checkJsonType(jsonElement);
+
+        assertThat(actualJsonType, equalTo(expectedJsonType));
+    }
+
+    @Test
+    public void getTypedJsonObject_withJsonObject() throws RestRequest.UnsupportedJsonFormatException {
+        JsonElement jsonElement = new JsonParser().parse("{\"content\": \"I Love cats, with a capital L.\"}");
+        JsonObject jsonObject = postRequest.getTypedJsonObject(jsonElement);
+
+        String expectedFirstValue = "I Love cats, with a capital L.";
+        String actualFirstValue = jsonObject.get("content").getAsString();
+
+        assertThat(actualFirstValue, equalTo(expectedFirstValue));
+    }
+
+    @Test
+    public void getTypedJsonObject_withJsonArray() throws RestRequest.UnsupportedJsonFormatException {
+        JsonElement jsonElement = new JsonParser().parse("[{\"content\":\"I Love cats, with a capital L.\"},{\"content\":\"I Love cats, with a capital L.\"}]");
+        JsonObject jsonObject = postRequest.getTypedJsonObject(jsonElement);
+
+        JsonArray expectedFirstValue = (JsonArray) new JsonParser().parse("[{\"content\":\"I Love cats, with a capital L.\"},{\"content\":\"I Love cats, with a capital L.\"}]");
+        JsonArray actualFirstValue = jsonObject.get("response").getAsJsonArray();
+
+        assertThat(actualFirstValue, equalTo(expectedFirstValue));
+
+    }
+
+    @Test
+    public void getTypedJsonObject_withJsonPrimitive() throws RestRequest.UnsupportedJsonFormatException {
+        JsonElement jsonElement = new JsonParser().parse("true");
+        JsonObject jsonObject = postRequest.getTypedJsonObject(jsonElement);
+
+        JsonPrimitive expectedFirstValue = (JsonPrimitive) (new JsonParser()).parse("true");
+        JsonPrimitive actualFirstValue = jsonObject.get("response").getAsJsonPrimitive();
+
+        assertThat(actualFirstValue, equalTo(expectedFirstValue));
 
 
+    }
 }
