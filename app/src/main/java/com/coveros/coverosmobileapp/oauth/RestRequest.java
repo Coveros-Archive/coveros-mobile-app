@@ -157,6 +157,9 @@ public class RestRequest extends Request<JsonObject> {
                 case PRIMITIVE:
                     jsonObject.add(JSON_OBJECT_RESPONSE_TAG, jsonElement.getAsJsonPrimitive());
                     break;
+                default:
+                    Log.e(APP_NAME, "jsonElement is not JsonObject, JsonArray, nor JsonPrimitive. This point should never be reached.");
+                    break;
             }
             return jsonObject;
         }

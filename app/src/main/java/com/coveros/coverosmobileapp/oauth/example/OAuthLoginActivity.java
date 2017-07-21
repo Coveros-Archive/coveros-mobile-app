@@ -127,7 +127,9 @@ public class OAuthLoginActivity extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     errorDialog = createAccessTokenRequestErrorDialog(OAuthLoginActivity.this);
-                    errorDialog.show();
+                    if (!isFinishing()) {
+                        errorDialog.show();
+                    }
                 }
             });
 

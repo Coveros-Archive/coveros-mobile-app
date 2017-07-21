@@ -1,14 +1,13 @@
 package com.coveros.coverosmobileapp.blogpost;
 
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
 import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.oauth.RestRequest;
 
@@ -26,11 +25,7 @@ public class CommentFormActivity extends AppCompatActivity {
     private String email;
     private String message;
     private AlertDialog emptyFieldAlertDialog;
-    private static final int REQUEST_GET_ACCOUNTS = 79;
-    private RestRequest postComment;
-    private boolean readContactsPermissionGranted = false;
-    PackageManager packageManager;
-    String packageName;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,8 +34,6 @@ public class CommentFormActivity extends AppCompatActivity {
         final String postId = getIntent().getExtras().getString("postId");
 
         Button sendMessage = (Button) findViewById(R.id.send_button);
-        packageManager = this.getPackageManager();
-        packageName = this.getPackageName();
         sendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,7 +46,9 @@ public class CommentFormActivity extends AppCompatActivity {
                 List<String> emptyFields = checkFieldIsEmpty(author, email, message);
                 if (!emptyFields.isEmpty()) {
                     emptyFieldAlertDialog = createEmptyFieldAlertDialog(emptyFields);
-                    emptyFieldAlertDialog.show();
+                    if (!isFinishing()) {
+                        emptyFieldAlertDialog.show();
+                    }
                 }
 
             }

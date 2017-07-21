@@ -62,13 +62,17 @@ public class BlogPostUpdateActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(JsonObject response) {
                     successDialog = createRestRequestSuccessDialog(BlogPostUpdateActivity.this);
-                    successDialog.show();
+                    if (!isFinishing()) {
+                        successDialog.show();
+                    }
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     errorDialog = createRestRequestErrorDialog(BlogPostUpdateActivity.this);
-                    errorDialog.show();
+                    if (!isFinishing()) {
+                        errorDialog.show();
+                    }
                 }
             });
 
