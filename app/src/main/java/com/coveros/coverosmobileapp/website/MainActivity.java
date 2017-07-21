@@ -107,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }, "android");
-
         if(!isOnline()){
             browser.loadUrl("file:///android_asset/sampleErrorPage.html");
         }
