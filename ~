@@ -1,9 +1,0 @@
-Minor spacing changes
-# Please enter the commit message for your changes. Lines starting
-# with '#' will be ignored, and an empty message aborts the commit.
-# On branch feature/suppress-web-menu
-# Your branch is up-to-date with 'origin/feature/suppress-web-menu'.
-#
-# Changes to be committed:
-#	modified:   app/src/main/java/com/coveros/coverosmobileapp/website/MainActivity.java
-#
