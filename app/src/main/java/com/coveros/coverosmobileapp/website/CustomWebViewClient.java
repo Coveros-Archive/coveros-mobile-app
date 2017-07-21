@@ -89,14 +89,14 @@ class CustomWebViewClient extends WebViewClient {
         // get index of class name that contains the post id
         int postIdIndex = classNamesToParse.indexOf(POST_ID_CLASS_PREFIX);
         // start substring at the post id number
-        classNamesToParse = classNamesToParse.substring(postIdIndex + POST_ID_CLASS_PREFIX.length());
+        String classNamesStartingAtPostId = classNamesToParse.substring(postIdIndex + POST_ID_CLASS_PREFIX.length());
 
         String parsedPostId;
         // stop parsing at space character
         StringBuilder builder = new StringBuilder();
-        while(classNamesToParse.charAt(0) != ' '){
-            builder.append(classNamesToParse.charAt(0));
-            classNamesToParse = classNamesToParse.substring(1);
+        while(classNamesStartingAtPostId.charAt(0) != ' '){
+            builder.append(classNamesStartingAtPostId.charAt(0));
+            classNamesStartingAtPostId = classNamesStartingAtPostId.substring(1);
         }
         parsedPostId = builder.toString();
         return parsedPostId;

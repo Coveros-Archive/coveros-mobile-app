@@ -21,7 +21,7 @@ public class DocumentGenerator implements Runnable {
     @Override
     public void run() {
         try {
-            Document document = Jsoup.connect(url).get();
+            document = Jsoup.connect(url).get();
             this.documentGeneratorCallback.onDocumentReceived(document);
         }
         catch (IOException i){
