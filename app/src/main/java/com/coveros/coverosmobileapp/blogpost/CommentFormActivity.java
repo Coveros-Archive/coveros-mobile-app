@@ -1,9 +1,15 @@
 package com.coveros.coverosmobileapp.blogpost;
 
 import android.Manifest;
+import android.app.LoaderManager;
+import android.content.CursorLoader;
 import android.content.DialogInterface;
+import android.content.Loader;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -30,7 +36,9 @@ public class CommentFormActivity extends AppCompatActivity {
     private AlertDialog emptyFieldAlertDialog;
     private static final int REQUEST_GET_ACCOUNTS = 79;
     private RestRequest postComment;
-
+    private boolean readContactsPermissionGranted = false;
+    PackageManager packageManager;
+    String packageName;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +47,8 @@ public class CommentFormActivity extends AppCompatActivity {
         final String postId = getIntent().getExtras().getString("postId");
 
         Button sendMessage = (Button) findViewById(R.id.send_button);
+        packageManager = this.getPackageManager();
+        packageName = this.getPackageName();
         sendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,66 +63,12 @@ public class CommentFormActivity extends AppCompatActivity {
                     emptyFieldAlertDialog = createEmptyFieldAlertDialog(emptyFields);
                     emptyFieldAlertDialog.show();
                 }
-                // logging for now until we make the actual request
 
-                requestLocationPermission();
             }
         });
-        PackageManager packageManager = this.getPackageManager();
-        String packageName = this.getPackageName();
-        boolean isAllowed = packageManager.checkPermission(Manifest.permission.GET_ACCOUNTS, packageName) == PackageManager.PERMISSION_GRANTED;
-        if (isAllowed) {
-            OwnerBuilder.Owner owner = OwnerBuilder.getOwner(CommentFormActivity.this);
-            email = owner.getEmail();
-            Log.d("OWNER", owner.toString());
-            Log.d("ALERT", "GET_ACCOUNTS ALREADY ALLOWED");
-            if (email != null) {
-                Log.d("EMAIL", email);
-            }
-        }
-        else {
-            requestLocationPermission();
-        }
-    }
-
-    protected void requestLocationPermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.GET_ACCOUNTS)) {
-            // show UI part if you want here to show some rationale !!!
-
-        } else {
-
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.GET_ACCOUNTS},
-                    REQUEST_GET_ACCOUNTS);
-        }
 
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_GET_ACCOUNTS: {
-
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    OwnerBuilder.Owner owner = OwnerBuilder.getOwner(CommentFormActivity.this);
-                    email = owner.getEmail();
-
-                    if (email != null) {
-                        Log.d("EMAIL", email);
-                    }
-
-                } else {
-
-                    // permission denied,Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-            }
-
-        }
-    }
 
     static List<String> checkFieldIsEmpty(String author, String email, String message) {
         List<String> emptyFields = new ArrayList<>();

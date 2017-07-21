@@ -73,8 +73,7 @@ public class CommentsListActivity extends BlogListActivity {
         openCommentFormButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = AccountManager.newChooseAccountIntent(null, null, new String[]{"com.google"}, null, null, null,
-                        null);
+                Intent intent = new Intent(getApplicationContext(), CommentFormActivity.class);
                 intent.putExtra("postId", postId);
                 startActivity(intent);
             }

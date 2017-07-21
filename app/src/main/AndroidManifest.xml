@@ -8,10 +8,6 @@
     <!-- Check if the device has a network connection -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <!-- To access device owner's name and email for commenting -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-
-
 
     <!-- Collecting Metadata -->
     <meta-data
