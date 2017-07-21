@@ -2,11 +2,12 @@
 <resources>
     <string-array name="menu_Titles">
         <item>Home</item>
-        <item>Product</item>
+        <item>Products</item>
         <item>\t\t\t\t\t\t\t SecureCI</item>
         <item>\t\t\t\t\t\t\t Selenified</item>
         <item>Services</item>
         <item>\t\t\t\t\t\t\t Agile Development</item>
+        <item>\t\t\t\t\t\t\t Agile Testing</item>
         <item>\t\t\t\t\t\t\t Agile Transformation</item>
         <item>\t\t\t\t\t\t\t DevOps</item>
         <item>\t\t\t\t\t\t\t Software Security</item>

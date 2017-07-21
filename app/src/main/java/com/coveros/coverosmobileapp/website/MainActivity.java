@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.AdapterView;
@@ -24,7 +25,8 @@ import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
 public class MainActivity extends AppCompatActivity {
-    //MainActivity
+    //MainActivity\
+    private boolean isDevSite = true;
     private String webName;
     private WebView browser;
     private AlertDialog dialog;
@@ -186,10 +188,100 @@ public class MainActivity extends AppCompatActivity {
          */
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if (position == 0) {
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-            } else {
-                startActivity(new Intent(getApplicationContext(), BlogPostsListActivity.class));
+            String website;
+            if(isDevSite){
+                //Use dev site URL
+                website = "https://www3.dev.secureci.com/";
+            }
+            else{
+                //Use Main website
+                website = "https://www.coveros.com/";
+            }
+
+            switch (position) {
+                //Break statements include dev and main websites
+                case 0:
+                    menu.closeDrawer(Gravity.START);
+                    browser.loadUrl(website);
+                    break;
+                case 1:
+                    menu.closeDrawer(Gravity.START);
+                    browser.loadUrl(website + "#projects");
+                    break;
+                case 2:
+                    menu.closeDrawer(Gravity.START);
+                    browser.loadUrl(website + "products/secure-ci/");
+                    break;
+                case 3:
+                    menu.closeDrawer(Gravity.START);
+                    browser.loadUrl(website + "products/selenified/");
+                    break;
+                case 4:
+                    menu.closeDrawer(Gravity.START);
+                    browser.loadUrl(website + "#services");
+                    break;
+                case 5:
+                    menu.closeDrawer(Gravity.START);
+                    browser.loadUrl(website + "services/agile-development/");
+                    break;
+                case 6:
+                    menu.closeDrawer(Gravity.START);
+                    browser.loadUrl(website + "services/agile-testing/");
+                    break;
+                case 7:
+                    menu.closeDrawer(Gravity.START);
+                    browser.loadUrl(website + "services/agile-transition/");
+                    break;
+                case 8:
+                    menu.closeDrawer(Gravity.START);
+                    browser.loadUrl(website+  "services/devops/");
+                    break;
+                case 9:
+                    menu.closeDrawer(Gravity.START);
+                    browser.loadUrl(website + "services/software-security/");
+                    break;
+                case 10:
+                    menu.closeDrawer(Gravity.START);
+                    browser.loadUrl(website + "services/training/");
+                    break;
+                case 11:
+                    menu.closeDrawer(Gravity.START);
+                    browser.loadUrl(website + "#latest-news");
+                    break;
+                case 12:
+                    startActivity(new Intent(getApplicationContext(), BlogPostsListActivity.class));
+                    break;
+                case 13:
+                    menu.closeDrawer(Gravity.START);
+                    browser.loadUrl(website + "presentations/");
+                    break;
+                case 14:
+                    menu.closeDrawer(Gravity.START);
+                    browser.loadUrl(website + "publications/");
+                    break;
+                case 15:
+                    menu.closeDrawer(Gravity.START);
+                    browser.loadUrl(website + "webinars-videos/");
+                    break;
+                case 16:
+                    menu.closeDrawer(Gravity.START);
+                    browser.loadUrl(website + "#about");
+                    break;
+                case 17:
+                    menu.closeDrawer(Gravity.START);
+                    browser.loadUrl(website + "#team");
+                    break;
+                case 18:
+                    menu.closeDrawer(Gravity.START);
+                    browser.loadUrl(website + "careers/");
+                    break;
+                case 19:
+                    menu.closeDrawer(Gravity.START);
+                    browser.loadUrl(website + "#contact-us");
+                    break;
+                default:
+                    //No Case found (Position further than current list (Load Home Page)
+                    browser.loadUrl(website);
             }
         }
     }
