@@ -180,7 +180,11 @@ public class RestRequest extends Request<JsonObject> {
      * @param onAuthFailedListener
      */
     public void setOnAuthFailedListener(OnAuthFailedListener onAuthFailedListener) {
-        this.onAuthFailedListener = onAuthFailedListener;
+        if (isAuthenticated) {
+            this.onAuthFailedListener = onAuthFailedListener;
+        } else {
+            Log.e("RestRequest", "Not an authenticated request: onAuthFailedListener was not set");
+        }
     }
 
     public boolean getIsAuthenticated() {
