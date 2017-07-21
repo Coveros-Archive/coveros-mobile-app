@@ -93,13 +93,18 @@ public class MainActivity extends AppCompatActivity {
         browser.setWebViewClient(cwvc);
         browser.setVerticalScrollBarEnabled(true);
         browser.setHorizontalScrollBarEnabled(true);
-        //Get Location of dragged mouse in webview
         //Javascript Call to open menu from hamburger menu click
+        //Referenced in CustomWebViewClient onPageFinished()
         browser.addJavascriptInterface(new Object(){
             @JavascriptInterface
             public void openMenu(){
                 //Toast.makeText(browser.getContext(), "Found the gold!", Toast.LENGTH_SHORT).show();
-                menu.openDrawer();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        menu.openDrawer(Gravity.START, true);
+                    }
+                });
             }
         }, "android");
 
