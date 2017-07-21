@@ -30,7 +30,7 @@ public class CommentsListActivityInstrumentedTest {
         @Override
         public Intent getActivityIntent() {
             Intent intent = new Intent();
-            intent.putExtra("postId", "" + "7509");  // passing id of specific blog post
+            intent.putExtra("postId", "7509");  // passing id of specific blog post
             return intent;
         }
     };

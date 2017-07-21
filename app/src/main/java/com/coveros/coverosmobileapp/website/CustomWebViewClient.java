@@ -28,7 +28,10 @@ class CustomWebViewClient extends WebViewClient {
 
     private static final String TAG = "CustomWebViewClient";
     private static final String POST_ID_CLASS_PREFIX = "postid-";
-  
+    private static final String[] BLOG_URLS = {"coveros.com/blog/", "coveros.com/category/blogs/", "dev.secureci.com/blog/", "dev.secureci.com/category/blogs/"};
+    private static final String[] COVEROS_URLS = {"coveros.com", "dev.secureci.com"};
+
+
     CustomWebViewClient(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }
@@ -59,15 +62,11 @@ class CustomWebViewClient extends WebViewClient {
     }
 
     public boolean checkIsBlogPost(String classNames){
-        if (classNames.contains(POST_ID_CLASS_PREFIX)) {
-            return true;
-        }
-        return false;
+        return classNames.contains(POST_ID_CLASS_PREFIX);
     }
 
     public boolean checkIsBlog(String url) {
-        final String[] blogUrls = {"coveros.com/blog/", "coveros.com/category/blogs/", "dev.secureci.com/blog/", "dev.secureci.com/category/blogs/"};
-        for (String blogUrl : blogUrls) {
+        for (String blogUrl : BLOG_URLS) {
             if (url.contains(blogUrl)) {
                 return true;
             }
@@ -76,8 +75,7 @@ class CustomWebViewClient extends WebViewClient {
     }
 
     public boolean checkIsCoveros(String url) {
-        final String[] coverosUrls = {"coveros.com", "dev.secureci.com"};
-        for (String coverosUrl : coverosUrls) {
+        for (String coverosUrl : COVEROS_URLS) {
             if (url.contains(coverosUrl)) {
                 return true;
             }
