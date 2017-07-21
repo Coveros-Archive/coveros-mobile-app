@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private String webName;
     private WebView browser;
     private AlertDialog dialog;
-    private CustomWebViewClient cwvc = new CustomWebViewClient();
+    private CustomWebViewClient customWebViewClient;
 
     private String[] menuTitles;
     private DrawerLayout menu;
@@ -49,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
     public WebView getWebViewBrowser(){ return browser; }
     public void setWebViewBrowser(WebView br){ browser = br; }
     public AlertDialog getDialog() { return dialog; }
-    public CustomWebViewClient getCustomClient() { return cwvc; }
-    public void setCustomClient(CustomWebViewClient cc) { cwvc = cc;}
+    public CustomWebViewClient getCustomClient() { return customWebViewClient; }
+    public void setCustomClient(CustomWebViewClient cc) { customWebViewClient = cc;}
 
     /*
      * On Creation/Declaration of App/Activity
@@ -81,8 +81,8 @@ public class MainActivity extends AppCompatActivity {
             }}
         );
         //Links open in WebView with Coveros regex check
-        cwvc.setMainActivity(this);
-        browser.setWebViewClient(cwvc);
+        customWebViewClient = new CustomWebViewClient(MainActivity.this);
+        browser.setWebViewClient(customWebViewClient);
         if(!isOnline()){
             browser.loadUrl("file:///android_asset/sampleErrorPage.html");
         }

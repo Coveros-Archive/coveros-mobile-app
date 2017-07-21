@@ -4,11 +4,12 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
 import com.coveros.coverosmobileapp.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,10 +46,7 @@ public class CommentFormActivity extends AppCompatActivity {
                         emptyFieldAlertDialog.show();
                     }
                 }
-                // logging for now until we make the actual request
-                Log.d("AUTHOR", author);
-                Log.d("EMAIL", email);
-                Log.d("MESSAGE", message);
+
             }
         });
     }

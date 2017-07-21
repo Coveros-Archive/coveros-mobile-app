@@ -72,7 +72,7 @@ public class BlogPostUpdateActivityInstrumentedTest extends LooperTestSuite {
         final String expectedUrl = "https://www3.dev.secureci.com/wp-json/wp/v2/posts/7601";
 
         onView(withId(R.id.enter_post_id)).perform(ViewActions.typeText(expectedPostId), closeSoftKeyboard());
-        onView(withId(R.id.enter_new_content)).perform(ViewActions.typeText("Hello, Ryane."), closeSoftKeyboard());
+        onView(withId(R.id.enter_new_content)).perform(ViewActions.typeText(expectedNewContent), closeSoftKeyboard());
         onView(withId(R.id.post_button)).perform(click());
 
         String actualPostId = blogPostUpdateActivity.getPostId();
@@ -89,7 +89,13 @@ public class BlogPostUpdateActivityInstrumentedTest extends LooperTestSuite {
     @Test
     public void onResponse_checkSuccessResponseAlertDialogIsShowing() {
 
+        final String postId = "7601";
+        final String newContent = "Hello, Ryane.";
+
+        onView(withId(R.id.enter_post_id)).perform(ViewActions.typeText(postId), closeSoftKeyboard());
+        onView(withId(R.id.enter_new_content)).perform(ViewActions.typeText(newContent), closeSoftKeyboard());
         onView(withId(R.id.post_button)).perform(click());  // sets listener
+
         blogPostUpdateActivity.getRestRequest().getRestRequestListener().onResponse(new JSONObject());
 
         boolean isSuccessResponseShowing = blogPostUpdateActivity.getSuccessDialog().isShowing();
