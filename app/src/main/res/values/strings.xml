@@ -32,6 +32,9 @@
     <string name="error_dialog_title">Oops!</string>
     <string name="error_dialog_message">Something went wrong. Please try submitting your comment again.</string>
     <string name="error_dialog_button">Dismiss</string>
+    <string name="invalid_email_dialog_title">Error</string>
+    <string name="invalid_email_dialog_message">Please provide a valid email.</string>
+    <string name="invalid_email_dialog_button">Dismiss</string>
 
     <!-- text for post update form -->
     <string name="post_update_form_new_content_hint">New content</string>
