@@ -16,13 +16,12 @@ import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
-
-import static android.widget.Toast.*;
 
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
@@ -31,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private String webName;
     private WebView browser;
     private AlertDialog dialog;
-    private CustomWebViewClient cwvc = new CustomWebViewClient();
+    private CustomWebViewClient customWebViewClient;
 
     private String[] menuTitles;
     private DrawerLayout menu;
@@ -52,8 +51,8 @@ public class MainActivity extends AppCompatActivity {
     public WebView getWebViewBrowser(){ return browser; }
     public void setWebViewBrowser(WebView br){ browser = br; }
     public AlertDialog getDialog() { return dialog; }
-    public CustomWebViewClient getCustomClient() { return cwvc; }
-    public void setCustomClient(CustomWebViewClient cc) { cwvc = cc;}
+    public CustomWebViewClient getCustomClient() { return customWebViewClient; }
+    public void setCustomClient(CustomWebViewClient cc) { customWebViewClient = cc;}
 
     /*
      * On Creation/Declaration of App/Activity
@@ -84,8 +83,8 @@ public class MainActivity extends AppCompatActivity {
             }}
         );
         //Links open in WebView with Coveros regex check
-        cwvc.setMainActivity(this);
-        browser.setWebViewClient(cwvc);
+        customWebViewClient = new CustomWebViewClient(MainActivity.this);
+        browser.setWebViewClient(customWebViewClient);
         browser.setVerticalScrollBarEnabled(true);
         browser.setHorizontalScrollBarEnabled(true);
         //Javascript Call to open menu from hamburger menu click
@@ -165,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
                 .setNeutralButton(ALERT_BUTTON_RELOAD, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogs, int which) {
-                        makeText(getApplicationContext(), "Loading App", LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Loading App", Toast.LENGTH_SHORT).show();
                         dialogs.dismiss();
                         recreate();
                     }
@@ -178,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton(ALERT_BUTTON_EXIT, new DialogInterface.OnClickListener(){
                     @Override
                     public void onClick(DialogInterface dialogs, int which){
-                        makeText(getApplicationContext(), "Thank You", LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Thank You", Toast.LENGTH_SHORT).show();
                         dialogs.dismiss();
                         finish();
                     }
