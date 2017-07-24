@@ -1,5 +1,6 @@
 package com.coveros.coverosmobileapp.blogpost;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -31,6 +32,7 @@ public class CommentFormActivity extends AppCompatActivity {
     private String email;
     private String message;
     private AlertDialog emptyFieldAlertDialog;
+    private String postId;
 
     private static final String COMMENT_URL = "https://www3.dev.secureci.com/wp-json/wp/v2/comments/";
 
@@ -39,7 +41,7 @@ public class CommentFormActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.comment_form);
 
-        final String postId = getIntent().getExtras().getString("postId");
+        postId = getIntent().getExtras().getString("postId");
 
         Button sendMessage = (Button) findViewById(R.id.send_button);
         sendMessage.setOnClickListener(new View.OnClickListener() {
@@ -55,18 +57,22 @@ public class CommentFormActivity extends AppCompatActivity {
 
                 JsonObject body = new JsonObject();
                 body.addProperty("post", postId);
+                Log.d("postId", postId);
                 body.addProperty("author_name", author);
+                Log.d("author_name", author);
                 body.addProperty("author_email", email);
+                Log.d("author_email", email);
                 body.addProperty("content", message);
+                Log.d("content", message);
                 RestRequest commentRequest = new RestRequest(COMMENT_URL, null, body, new Response.Listener() {
                     @Override
                     public void onResponse(Object response) {
-                        Log.d("SUCCESS", "COMMENT POSTED");
+                        showSuccessDialog(CommentFormActivity.this);
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d("ERROR", "COMMENT NOT POSTED");
+                        showErrorDialog(CommentFormActivity.this);
                     }
                 });
                 if (emptyFields.isEmpty()) {
@@ -83,6 +89,35 @@ public class CommentFormActivity extends AppCompatActivity {
         });
 
     }
+
+    void showSuccessDialog(Context context) {
+        AlertDialog commentPostedDialog = new AlertDialog.Builder(context).create();
+        commentPostedDialog.setTitle(context.getString(R.string.success_dialog_title));
+        commentPostedDialog.setMessage(context.getString(R.string.success_dialog_message));
+        commentPostedDialog.setButton(AlertDialog.BUTTON_NEUTRAL, context.getString(R.string.success_dialog_button), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                finish();
+            }
+        });
+        commentPostedDialog.show();
+    }
+
+    void showErrorDialog(Context context) {
+        AlertDialog commentFailedDialog = new AlertDialog.Builder(context).create();
+        commentFailedDialog.setTitle(context.getString(R.string.error_dialog_title));
+        commentFailedDialog.setMessage(context.getString(R.string.error_dialog_message));
+        commentFailedDialog.setButton(AlertDialog.BUTTON_NEUTRAL, context.getString(R.string.error_dialog_button), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        commentFailedDialog.show();
+    }
+
+
 
 
     static List<String> checkFieldIsEmpty(String author, String email, String message) {

@@ -26,6 +26,12 @@
     <string name="empty_field_alert_dialog_title">Error</string>
     <string name="empty_field_alert_dialog_message">All fields are required. Please provide your</string>
     <string name="empty_field_alert_dialog_dismiss_message">Dismiss</string>
+    <string name="success_dialog_title">Success</string>
+    <string name="success_dialog_message">Your comment has been sent for approval.</string>
+    <string name="success_dialog_button">Got it</string>
+    <string name="error_dialog_title">Oops!</string>
+    <string name="error_dialog_message">Something went wrong. Please try submitting your comment again.</string>
+    <string name="error_dialog_button">Dismiss</string>
 
     <!-- text for post update form -->
     <string name="post_update_form_new_content_hint">New content</string>
@@ -36,4 +42,6 @@
     <string name="post_update_request_response_error_title">Error</string>
     <string name="post_update_request_response_error_message">An error occured. Please try again.</string>
     <string name="post_update_request_response_dismiss_button">Dismiss</string>
+
+
 </resources>
