@@ -25,6 +25,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -58,24 +59,24 @@ public class CommentFormActivityInstrumentedTest extends LooperTestSuite {
     @Test
     public void onCreate_checkFormLabelIsShown() {
         boolean formLabelIsShown = commentFormActivity.findViewById(R.id.comment_form_label).isShown();
-        assertThat(formLabelIsShown, equalTo(true));
+        assertThat(formLabelIsShown, is(true));
     }
 
     @Test
     public void onCreate_checkNameEditTextIsShown() {
         boolean enterNameIsShown = commentFormActivity.findViewById(R.id.enter_name).isShown();
-        assertThat(enterNameIsShown, equalTo(true));
+        assertThat(enterNameIsShown, is(true));
     }
 
     @Test
     public void onCreate_checkEmailEditTextIsShown() {
         boolean enterEmailIsShown = commentFormActivity.findViewById(R.id.enter_email).isShown();
-        assertThat(enterEmailIsShown, equalTo(true));
+        assertThat(enterEmailIsShown, is(true));
     }
     @Test
     public void onCreate_checkMessageEditTextIsShown() {
         boolean enterMessageIsShown = commentFormActivity.findViewById(R.id.enter_message).isShown();
-        assertThat(enterMessageIsShown, equalTo(true));
+        assertThat(enterMessageIsShown, is(true));
     }
 
     @Test
@@ -101,7 +102,7 @@ public class CommentFormActivityInstrumentedTest extends LooperTestSuite {
         onView(withId(R.id.send_button)).perform(click());
         boolean emptyFieldsAlertDialogIsShowing = commentFormActivity.getEmptyFieldDialog().isShowing();
 
-        assertThat(emptyFieldsAlertDialogIsShowing, equalTo(true));
+        assertThat(emptyFieldsAlertDialogIsShowing, is(true));
     }
 
     @Test
@@ -114,7 +115,7 @@ public class CommentFormActivityInstrumentedTest extends LooperTestSuite {
 
         boolean invalidEmailDialogIsShowing = commentFormActivity.getInvalidEmailDialog().isShowing();
 
-        assertThat(invalidEmailDialogIsShowing, equalTo(true));
+        assertThat(invalidEmailDialogIsShowing, is(true));
     }
 
     @Test
@@ -150,7 +151,7 @@ public class CommentFormActivityInstrumentedTest extends LooperTestSuite {
 
         boolean isSuccessDialogShowing = successDialog.isShowing();
 
-        assertThat(isSuccessDialogShowing, equalTo(true));
+        assertThat(isSuccessDialogShowing, is(true));
     }
 
     @Test
@@ -166,7 +167,7 @@ public class CommentFormActivityInstrumentedTest extends LooperTestSuite {
         AlertDialog errorDialog = commentFormActivity.getErrorDialog();
 
         boolean isErrorDialogShowing = errorDialog.isShowing();
-        assertThat(isErrorDialogShowing, equalTo(true));
+        assertThat(isErrorDialogShowing, is(true));
     }
 
 
