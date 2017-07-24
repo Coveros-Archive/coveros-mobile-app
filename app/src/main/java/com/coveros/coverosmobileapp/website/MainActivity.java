@@ -9,7 +9,9 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.View;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -66,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
         //constructing the menu navigation drawer
         menu = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ListView drawerList;
+        final ListView drawerList;
         drawerList = (ListView)findViewById(R.id.left_drawer);
         menuTitles = getResources().getStringArray(R.array.menu_Titles);
         drawerList.setAdapter(new ArrayAdapter<>(this,
@@ -83,6 +85,21 @@ public class MainActivity extends AppCompatActivity {
         //Links open in WebView with Coveros regex check
         customWebViewClient = new CustomWebViewClient(MainActivity.this);
         browser.setWebViewClient(customWebViewClient);
+        browser.setVerticalScrollBarEnabled(true);
+        browser.setHorizontalScrollBarEnabled(true);
+        //Javascript Call to open menu from hamburger menu click
+        //Referenced in CustomWebViewClient onPageFinished()
+        browser.addJavascriptInterface(new Object(){
+            @JavascriptInterface
+            public void openMenu(){
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        menu.openDrawer(Gravity.START, true);
+                    }
+                });
+            }
+        }, "android");
         if(!isOnline()){
             browser.loadUrl("file:///android_asset/sampleErrorPage.html");
         }
