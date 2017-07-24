@@ -5,46 +5,41 @@
     <string name="comments_label">Comments</string>
     <string name="blogposts_label">Blog posts</string>
 
-    <!-- text for error message displayed in blogpost feature -->
-    <string name="error_message_title">Error</string>
-    <string name="error_message_message">An error occurred.</string>
-    <string name="error_message_dismiss_button">Okay</string>
-
     <!-- text for "no comments" comment to be displayed when there are no comments -->
     <string name="no_comments_text">No comments to display.</string>
+
+    <!-- AlertDialogFactory text -->
+    <string name="success_title">Success</string>
+    <string name="success_button">Okay</string>
+
+    <string name="error_title">Error</string>
+    <string name="error_button">Dismiss</string>
+
+    <!-- Custom success and error messages -->
+
+    <string name="comment_form_success_message">Your comment is now pending approval.</string>
+    <string name="blogpost_update_form_success_message">Blogpost was successfully updated.</string>
+
+    <string name="try_again_error_message">Please try again later.</string>
+    <string name="blogposts_error_message">Cannot retrieve blogposts.</string>
+    <string name="comments_error_message">Cannot retrieve comments.</string>
+    <string name="comment_form_empty_field_error_message">All fields are required. Please provide your</string>
+    <string name="comment_form_invalid_email_error_message">Please provide a valid email.</string>
+    <string name="blogpost_update_form_error_message">An error occurred. Blogpost was not updated.</string>
 
     <!-- text for "View Comments" and "Leave a Comment" buttons -->
     <string name="view_comments">View comments</string>
     <string name="leave_comment">Leave a comment</string>
 
     <!-- text for comment form -->
-    <string name="comment_form_label">Leave a comment</string>
-    <string name="comment_form_name_hint">Name</string>
-    <string name="comment_form_email_hint">Email</string>
-    <string name="comment_form_message_hint">Message</string>
+    <string name="comment_form_name">name</string>
+    <string name="comment_form_email">email</string>
+    <string name="comment_form_message">message</string>
     <string name="comment_form_send_button">Send</string>
-    <string name="empty_field_alert_dialog_title">Error</string>
-    <string name="empty_field_alert_dialog_message">All fields are required. Please provide your</string>
-    <string name="empty_field_alert_dialog_dismiss_message">Dismiss</string>
-    <string name="success_dialog_title">Success</string>
-    <string name="success_dialog_message">Your comment has been sent for approval.</string>
-    <string name="success_dialog_button">Got it</string>
-    <string name="error_dialog_title">Oops!</string>
-    <string name="error_dialog_message">Something went wrong. Please try submitting your comment again.</string>
-    <string name="error_dialog_button">Dismiss</string>
-    <string name="invalid_email_dialog_title">Error</string>
-    <string name="invalid_email_dialog_message">Please provide a valid email.</string>
-    <string name="invalid_email_dialog_button">Dismiss</string>
 
     <!-- text for post update form -->
     <string name="post_update_form_new_content_hint">New content</string>
     <string name="post_update_form_post_id_hint">Post ID (####)</string>
     <string name="post_update_form_post_button">Post</string>
-    <string name="post_update_request_response_success_title">Success</string>
-    <string name="post_update_request_response_success_message">Post sucessfully updated.</string>
-    <string name="post_update_request_response_error_title">Error</string>
-    <string name="post_update_request_response_error_message">An error occured. Please try again.</string>
-    <string name="post_update_request_response_dismiss_button">Dismiss</string>
-
 
 </resources>

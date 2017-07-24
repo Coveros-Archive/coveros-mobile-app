@@ -58,8 +58,8 @@ public class BlogListActivityInstrumentedTest extends LooperTestSuite {
 
     @Test
     public void createErrorMessage_checkAlertDialogNotNull() {
-        blogListActivity.errorMessage = blogListActivity.createErrorMessage(blogListActivity);
-        assertNotNull("errorMessage should not be null.", blogListActivity.errorMessage);
+        blogListActivity.errorAlertDialog = blogListActivity.createErrorMessage(blogListActivity);
+        assertNotNull("errorAlertDialog should not be null.", blogListActivity.errorAlertDialog);
     }
 
     @Test
@@ -79,8 +79,8 @@ public class BlogListActivityInstrumentedTest extends LooperTestSuite {
         blogListActivity.errorListener = blogListActivity.createErrorListener(blogListActivity);
         blogListActivity.errorListener.onErrorResponse(volleyError);
 
-        boolean errorMessageIsShowing = blogListActivity.getErrorMessage().isShowing();
-        assertTrue("errorMessage should be displayed.", errorMessageIsShowing);
+        boolean errorMessageIsShowing = blogListActivity.getErrorAlertDialog().isShowing();
+        assertTrue("errorAlertDialog should be displayed.", errorMessageIsShowing);
 
     }
 
