@@ -1,5 +1,6 @@
 package com.coveros.coverosmobileapp.blogpost;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.List;
 
 /**
@@ -62,21 +66,20 @@ public class BlogPostReadActivity extends AppCompatActivity {
             }
         });
 
-        final ImageButton b1 = (ImageButton) findViewById(R.id.bookmark_button_unchecked);
-        final ImageButton b2 = (ImageButton) findViewById(R.id.bookmark_button_checked);
-        b1.setOnClickListener(new View.OnClickListener(){
+        final ImageButton addBookmark = (ImageButton) findViewById(R.id.bookmark_button_unchecked);
+        final ImageButton removeBookmark = (ImageButton) findViewById(R.id.bookmark_button_checked);
+        addBookmark.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                if(b1.performClick()) {
-                    Intent intent = new Intent(getApplicationContext(), BlogPostReadActivity.class);
-                    intent.putExtra("bookmarkId", Integer.toString(blogId));
-                    startActivity(intent);
-                }
-                else if(b2.performClick()){
-                    Intent intent = new Intent(getApplicationContext(), BlogPostReadActivity.class);
-                    intent.removeExtra("bookmarkId");
-                    startActivity(intent);
-                }
+                removeBookmark.bringToFront();
+            }
+        });
+
+        removeBookmark.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                addBookmark.bringToFront();
+
             }
         });
 
