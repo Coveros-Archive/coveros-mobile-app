@@ -12,7 +12,6 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -56,7 +55,7 @@ public class CommentsListActivity extends BlogListActivity {
                     @Override
                     public void onSuccess(List<Comment> newComments) {
                         if (newComments.isEmpty()) {
-                            JsonObject noCommentsJson = new Gson().fromJson("{\"author_name\": \"\", \"date\": \"\", \"content\": {\"rendered\": \"<p>No comments to display.</p>\"}}", JsonObject.class);
+                            JsonObject noCommentsJson = (JsonObject) new JsonParser().parse("{\"author_name\": \"\", \"date\": \"\", \"content\": {\"rendered\": \"<p>No comments to display.</p>\"}}");
                             newComments.add(new Comment(noCommentsJson));
                         }
                         CommentsListAdapter commentsAdapter = new CommentsListAdapter(CommentsListActivity.this, R.layout.comment_list_text, newComments);

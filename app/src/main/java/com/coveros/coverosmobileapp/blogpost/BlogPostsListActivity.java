@@ -88,10 +88,13 @@ public class BlogPostsListActivity extends BlogListActivity {
         blogPostsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                BlogPost blogPost = blogPosts.get(position - 1);  // -1 because the TextView offsets the blogPosts by one for some reason
-                Intent intent = new Intent(getApplicationContext(), BlogPostReadActivity.class);
-                intent.putExtra("blogId", blogPost.getId());
-                startActivity(intent);
+                if (position > 0 ) {  // if header that says "Blogposts" is clicked, do nothing
+                    BlogPost blogPost = blogPosts.get(position - 1);  // -1 because the TextView header offsets the blogPosts by one
+                    Intent intent = new Intent(getApplicationContext(), BlogPostReadActivity.class);
+                    intent.putExtra("blogId", blogPost.getId());
+                    startActivity(intent);
+                }
+
             }
         });
     }

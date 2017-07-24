@@ -4,9 +4,8 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -84,14 +83,12 @@ public class AccessTokenRequest extends com.android.volley.toolbox.StringRequest
     @Override
     protected Response<String> parseNetworkResponse(NetworkResponse response) {
         try {
-            String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-            JSONObject tokenData = new JSONObject(jsonString);
-            String token = tokenData.getString("access_token");
+            String responseString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+            JsonObject responseJson  = (JsonObject) new JsonParser().parse(responseString);
+            String token = responseJson.get("access_token").getAsString();
             return Response.success(token, HttpHeaderParser.parseCacheHeaders(response));
         } catch (UnsupportedEncodingException e) {
             return Response.error(new ParseError(e));
-        } catch (JSONException je) {
-            return Response.error(new ParseError(je));
         }
     }
 

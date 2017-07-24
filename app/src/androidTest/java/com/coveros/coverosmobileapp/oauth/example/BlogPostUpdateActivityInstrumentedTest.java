@@ -8,8 +8,8 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.test.util.LooperTestSuite;
+import com.google.gson.JsonObject;
 
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -96,7 +96,7 @@ public class BlogPostUpdateActivityInstrumentedTest extends LooperTestSuite {
         onView(withId(R.id.enter_new_content)).perform(ViewActions.typeText(newContent), closeSoftKeyboard());
         onView(withId(R.id.post_button)).perform(click());  // sets listener
 
-        blogPostUpdateActivity.getRestRequest().getRestRequestListener().onResponse(new JSONObject());
+        blogPostUpdateActivity.getRestRequest().getListener().onResponse(new JsonObject());
 
         boolean isSuccessResponseShowing = blogPostUpdateActivity.getSuccessDialog().isShowing();
         assertThat(isSuccessResponseShowing, equalTo(true));

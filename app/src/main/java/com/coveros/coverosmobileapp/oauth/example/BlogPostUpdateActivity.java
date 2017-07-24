@@ -6,20 +6,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.oauth.RestRequest;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.JsonObject;
 
 /**
  * Update form that collects the id and new content for the blog post that is to be modified.
@@ -57,22 +55,18 @@ public class BlogPostUpdateActivity extends AppCompatActivity {
             newContent = ((TextView) findViewById(R.id.enter_new_content)).getText().toString();
             url = "https://www3.dev.secureci.com/wp-json/wp/v2/posts/" + postId;
 
-            JSONObject body = new JSONObject();
-            try {
-                body.put("content", newContent);
-            } catch (JSONException e) {
-                Log.e("JSON Exception", "JSON Object body not populated", e);
-            }
+            JsonObject body = new JsonObject();
+            body.addProperty("content", newContent);
 
-            restRequest = new RestRequest(url, accessToken, body, new RestRequest.RestRequestListener() {
+            restRequest = new RestRequest(url, accessToken, body, new Response.Listener<JsonObject>() {
                 @Override
-                public void onResponse(JSONObject response) {
+                public void onResponse(JsonObject response) {
                     successDialog = createRestRequestSuccessDialog(BlogPostUpdateActivity.this);
                     if (!isFinishing()) {
                         successDialog.show();
                     }
                 }
-            }, new RestRequest.RestRequestErrorListener() {
+            }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     errorDialog = createRestRequestErrorDialog(BlogPostUpdateActivity.this);
