@@ -8,8 +8,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.oauth.RestRequest;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +31,8 @@ public class CommentFormActivity extends AppCompatActivity {
     private String email;
     private String message;
     private AlertDialog emptyFieldAlertDialog;
+
+    private static final String COMMENT_URL = "https://www3.dev.secureci.com/wp-json/wp/v2/comments/";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,7 +52,27 @@ public class CommentFormActivity extends AppCompatActivity {
                 email = enterEmail.getText().toString();
                 message = enterMessage.getText().toString();
                 List<String> emptyFields = checkFieldIsEmpty(author, email, message);
-                if (!emptyFields.isEmpty()) {
+
+                JsonObject body = new JsonObject();
+                body.addProperty("post", postId);
+                body.addProperty("author_name", author);
+                body.addProperty("author_email", email);
+                body.addProperty("content", message);
+                RestRequest commentRequest = new RestRequest(COMMENT_URL, null, body, new Response.Listener() {
+                    @Override
+                    public void onResponse(Object response) {
+                        Log.d("SUCCESS", "COMMENT POSTED");
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("ERROR", "COMMENT NOT POSTED");
+                    }
+                });
+                if (emptyFields.isEmpty()) {
+                    RequestQueue requestQueue = Volley.newRequestQueue(CommentFormActivity.this);
+                    requestQueue.add(commentRequest);
+                } else {
                     emptyFieldAlertDialog = createEmptyFieldAlertDialog(emptyFields);
                     if (!isFinishing()) {
                         emptyFieldAlertDialog.show();
