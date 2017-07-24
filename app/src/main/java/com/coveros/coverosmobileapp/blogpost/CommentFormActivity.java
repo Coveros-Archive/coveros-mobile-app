@@ -32,6 +32,7 @@ public class CommentFormActivity extends AppCompatActivity {
     private String author;
     private String email;
     private String message;
+    private String postId;
     RestRequest commentRequest;
     AlertDialog successDialog;
     AlertDialog errorDialog;
@@ -45,52 +46,10 @@ public class CommentFormActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.comment_form);
 
-        final String postId = getIntent().getExtras().getString("postId");
-        String emailRegex = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";  // intellij may complain about it, but \\x08 compiles fine.
-        final Pattern emailPattern = Pattern.compile(emailRegex);
-
+        postId = getIntent().getExtras().getString("postId");
 
         Button sendMessage = (Button) findViewById(R.id.send_button);
-        sendMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                author = ((EditText) findViewById(R.id.enter_name)).getText().toString();
-                email = ((EditText) findViewById(R.id.enter_email)).getText().toString();
-                message = ((EditText) findViewById(R.id.enter_message)).getText().toString();
-                List<String> emptyFields = checkFieldIsEmpty(author, email, message);
-
-                Matcher emailMatcher = emailPattern.matcher(email);
-                boolean isValidEmail = emailMatcher.matches();
-
-                JsonObject body = createCommentRequestBody(postId, author, email, message);
-
-                commentRequest = new RestRequest(COMMENT_URL, null, body, new Response.Listener() {
-                    @Override
-                    public void onResponse(Object response) {
-                        successDialog = createSuccessDialog(CommentFormActivity.this);
-                        successDialog.show();
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        errorDialog = createErrorDialog(CommentFormActivity.this);
-                        errorDialog.show();
-                    }
-                });
-
-                if (emptyFields.isEmpty() && isValidEmail) {
-                    RequestQueue requestQueue = Volley.newRequestQueue(CommentFormActivity.this);
-                    requestQueue.add(commentRequest);
-                } else if (!emptyFields.isEmpty() && !isFinishing()){
-                    emptyFieldDialog = createEmptyFieldDialog(emptyFields);
-                    emptyFieldDialog.show();
-                } else if (!isValidEmail && !isFinishing()){
-                    invalidEmailDialog = createInvalidEmailDialog();
-                    invalidEmailDialog.show();
-                }
-
-            }
-        });
+        sendMessage.setOnClickListener(new SendButtonOnClickListener());
 
     }
 
@@ -101,47 +60,6 @@ public class CommentFormActivity extends AppCompatActivity {
         body.addProperty("author_email", email);
         body.addProperty("content", content);
         return body;
-    }
-
-    private AlertDialog createSuccessDialog(Context context) {
-        AlertDialog commentPostedDialog = new AlertDialog.Builder(context).create();
-        commentPostedDialog.setTitle(context.getString(R.string.success_dialog_title));
-        commentPostedDialog.setMessage(context.getString(R.string.success_dialog_message));
-        commentPostedDialog.setButton(AlertDialog.BUTTON_NEUTRAL, context.getString(R.string.success_dialog_button), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                finish();
-            }
-        });
-        return commentPostedDialog;
-    }
-
-    private AlertDialog createErrorDialog(Context context) {
-        AlertDialog commentFailedDialog = new AlertDialog.Builder(context).create();
-        commentFailedDialog.setTitle(context.getString(R.string.error_dialog_title));
-        commentFailedDialog.setMessage(context.getString(R.string.error_dialog_message));
-        commentFailedDialog.setButton(AlertDialog.BUTTON_NEUTRAL, context.getString(R.string.error_dialog_button), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        return commentFailedDialog;
-    }
-
-    private AlertDialog createInvalidEmailDialog () {
-        AlertDialog invalidEmailDialog = new AlertDialog.Builder(CommentFormActivity.this).create();
-        invalidEmailDialog.setTitle(R.string.invalid_email_dialog_title);
-        invalidEmailDialog.setMessage(getResources().getString(R.string.invalid_email_dialog_message));
-        invalidEmailDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getString(R.string.invalid_email_dialog_button),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        return invalidEmailDialog;
     }
 
 
@@ -160,28 +78,111 @@ public class CommentFormActivity extends AppCompatActivity {
         return emptyFields;
     }
 
-    private AlertDialog createEmptyFieldDialog(List<String> emptyFields) {
-        emptyFieldDialog = new AlertDialog.Builder(CommentFormActivity.this).create();
-        emptyFieldDialog.setTitle(R.string.empty_field_alert_dialog_title);
-        String emptyFieldsString;
-        if (emptyFields.size() == 1) {
-            emptyFieldsString = emptyFields.get(0);
-        } else if (emptyFields.size() == 2) {
-            emptyFieldsString = emptyFields.get(0) + " and " + emptyFields.get(1);
-        } else {
-            emptyFieldsString = emptyFields.get(0) + ", " + emptyFields.get(1) + ", and " + emptyFields.get(2);
+    class SendButtonOnClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            author = ((EditText) findViewById(R.id.enter_name)).getText().toString();
+            email = ((EditText) findViewById(R.id.enter_email)).getText().toString();
+            message = ((EditText) findViewById(R.id.enter_message)).getText().toString();
+            List<String> emptyFields = checkFieldIsEmpty(author, email, message);
+
+            String emailRegex = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";  // intellij may complain about it, but \\x08 compiles fine.
+            final Pattern emailPattern = Pattern.compile(emailRegex);
+            Matcher emailMatcher = emailPattern.matcher(email);
+            boolean isValidEmail = emailMatcher.matches();
+
+            JsonObject body = createCommentRequestBody(postId, author, email, message);
+
+            commentRequest = new RestRequest(COMMENT_URL, null, body, new Response.Listener() {
+                @Override
+                public void onResponse(Object response) {
+                    createSuccessDialog(CommentFormActivity.this);
+                    successDialog.show();
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    createErrorDialog(CommentFormActivity.this);
+                    errorDialog.show();
+                }
+            });
+
+            boolean hasNoEmptyFields = emptyFields.isEmpty();
+            if (hasNoEmptyFields && isValidEmail) {
+                RequestQueue requestQueue = Volley.newRequestQueue(CommentFormActivity.this);
+                requestQueue.add(commentRequest);
+            } else if (!isFinishing()) {
+                if (!hasNoEmptyFields) {
+                    createEmptyFieldDialog(emptyFields);
+                    emptyFieldDialog.show();
+                } else {  // if not a valid email
+                    createInvalidEmailDialog();
+                    invalidEmailDialog.show();
+                }
+            }
         }
 
-        emptyFieldDialog.setMessage(getResources().getString(R.string.empty_field_alert_dialog_message) + " " + emptyFieldsString + ".");
-        emptyFieldDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getString(R.string.empty_field_alert_dialog_dismiss_message),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        return emptyFieldDialog;
+        private void createSuccessDialog(Context context) {
+            successDialog = new AlertDialog.Builder(context).create();
+            successDialog.setTitle(context.getString(R.string.success_dialog_title));
+            successDialog.setMessage(context.getString(R.string.success_dialog_message));
+            successDialog.setButton(AlertDialog.BUTTON_NEUTRAL, context.getString(R.string.success_dialog_button), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    finish();
+                }
+            });
+        }
+
+        private void createErrorDialog(Context context) {
+            errorDialog = new AlertDialog.Builder(context).create();
+            errorDialog.setTitle(context.getString(R.string.error_dialog_title));
+            errorDialog.setMessage(context.getString(R.string.error_dialog_message));
+            errorDialog.setButton(AlertDialog.BUTTON_NEUTRAL, context.getString(R.string.error_dialog_button), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+        }
+
+        private void createInvalidEmailDialog () {
+            invalidEmailDialog = new AlertDialog.Builder(CommentFormActivity.this).create();
+            invalidEmailDialog.setTitle(R.string.invalid_email_dialog_title);
+            invalidEmailDialog.setMessage(getResources().getString(R.string.invalid_email_dialog_message));
+            invalidEmailDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getString(R.string.invalid_email_dialog_button),
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+        }
+
+        private void createEmptyFieldDialog(List<String> emptyFields) {
+            emptyFieldDialog = new AlertDialog.Builder(CommentFormActivity.this).create();
+            emptyFieldDialog.setTitle(R.string.empty_field_alert_dialog_title);
+            String emptyFieldsString;
+            if (emptyFields.size() == 1) {
+                emptyFieldsString = emptyFields.get(0);
+            } else if (emptyFields.size() == 2) {
+                emptyFieldsString = emptyFields.get(0) + " and " + emptyFields.get(1);
+            } else {
+                emptyFieldsString = emptyFields.get(0) + ", " + emptyFields.get(1) + ", and " + emptyFields.get(2);
+            }
+
+            emptyFieldDialog.setMessage(getResources().getString(R.string.empty_field_alert_dialog_message) + " " + emptyFieldsString + ".");
+            emptyFieldDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getString(R.string.empty_field_alert_dialog_dismiss_message),
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+        }
     }
+
 
     String getAuthor() {
         return author;
