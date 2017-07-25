@@ -182,7 +182,9 @@ public class MainActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
         //Show dialog and make text changes (font color, size, etc.)
-        dialog.show();
+        if (!isFinishing()) {
+            dialog.show();
+        }
     }
 
     /**
