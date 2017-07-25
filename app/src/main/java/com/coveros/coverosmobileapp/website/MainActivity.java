@@ -22,7 +22,6 @@ import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
 
-
 @SuppressWarnings("squid:MaximumInheritanceDepth")
 public class MainActivity extends AppCompatActivity {
     //MainActivity\
@@ -148,8 +147,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /*
-         * Checks if the user is connected to the Internet
-         */
+     * Checks if the user is connected to the Internet
+     */
     public boolean isOnline(){
         //Get Connectivity Manager and network info
         ConnectivityManager conMgr = (ConnectivityManager)

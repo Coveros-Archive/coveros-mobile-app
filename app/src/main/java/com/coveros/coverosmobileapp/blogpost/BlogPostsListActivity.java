@@ -1,7 +1,5 @@
 package com.coveros.coverosmobileapp.blogpost;
 
-
-import android.app.LauncherActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -266,5 +264,3 @@ public class BlogPostsListActivity extends BlogListActivity {
         return blogPostsListView;
     }
 }
-
-
