@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="menuEndings">
+        <item></item>
+        <item>#projects</item>
+        <item>products/secure-ci/</item>
+        <item>products/selenified/</item>
+        <item>#services</item>
+        <item>services/agile-development/</item>
+        <item>services/agile-testing/</item>
+        <item>services/agile-transition/</item>
+        <item>services/devops/</item>
+        <item>services/software-security/</item>
+        <item>services/training/</item>
+        <item>#latest-news</item>
+        <item>BLOG-LIST</item>
+        <item>presentations/</item>
+        <item>publications/</item>
+        <item>webinars-videos/</item>
+        <item>#about</item>
+        <item>#team</item>
+        <item>careers/</item>
+        <item>#contact-us</item>
+    </string-array>
+</resources>

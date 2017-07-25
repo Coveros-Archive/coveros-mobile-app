@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.webkit.WebView;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String ALERT_BUTTON_EXIT = "Exit App";
     private static final String ALERT_BUTTON_RELOAD= "Reload App";
     private static final String ALERT_BUTTON_OK = "OK";
+    static final String website = "https://www3.dev.secureci.com/";
 
     public MainActivity(){ webName = "https://www3.dev.secureci.com"; }
     public MainActivity(String specificUrl) { webName = specificUrl; }
@@ -80,6 +82,11 @@ public class MainActivity extends AppCompatActivity {
                 menu.requestLayout();
             }}
         );
+        int i = 0;
+        while(i<menuTitles.length){
+            Log.i("Int: " + i," menuTitles["+i+"]: " + menuTitles[i]);
+            i++;
+        }
         //Links open in WebView with Coveros regex check
         cwvc.setMainActivity(this);
         browser.setWebViewClient(cwvc);
@@ -214,18 +221,7 @@ public class MainActivity extends AppCompatActivity {
          */
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            String website;
-            String[] stringsToAddLast = {"","#projects","products/secure-ci/","products/selenified/","#services", "services/agile-development/", "services/agile-testing/",
-                    "services/agile-transition/", "services/devops/", "services/software-security/", "services/training/", "#latest-news", "BLOG-LIST", "presentations/",
-                    "publications/", "webinars-videos/",  "#about", "#team", "#contact-us"};
-            if(isDevSite){
-                //Use dev site URL
-                website = "https://www3.dev.secureci.com/";
-            }
-            else{
-                //Use Main website
-                website = "https://www.coveros.com/";
-            }
+            String[] stringsToAddLast = getResources().getStringArray(R.array.menuEndings);
             //Start an activity ("BLOG-LIST" is a referenced to start Blog Post List Activity)
             if(position == 12){
                 startActivity(new Intent(getApplicationContext(), BlogPostsListActivity.class));

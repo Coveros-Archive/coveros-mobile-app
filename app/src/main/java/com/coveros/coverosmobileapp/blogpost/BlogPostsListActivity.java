@@ -47,10 +47,12 @@ public class BlogPostsListActivity extends BlogListActivity {
     private int currentListSize;
     private boolean isDevSite = true;
     private static final int POSTS_PER_PAGE = 10;
+    static final int DRAWER_OPEN_BLOG_MENU_POSITION = 12;
     private int postsOffset = 0;
     private static final int NUM_OF_AUTHORS = 100;  // number of users that will be returned by the REST call... so if someday Coveros has over 100 employees, this needs to be changed
     private static final String AUTHORS_URL = "https://www3.dev.secureci.com/wp-json/wp/v2/users?orderby=id&per_page=" + NUM_OF_AUTHORS;
     private static final String POSTS_URL = "https://www3.dev.secureci.com/wp-json/wp/v2/posts?per_page=" + POSTS_PER_PAGE + "&order=desc&orderby=date&fields=id,title,date,author&offset=%d";
+    static final String website = "https://www3.dev.secureci.com/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -234,26 +236,12 @@ public class BlogPostsListActivity extends BlogListActivity {
          */
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            String website;
-            String[] stringsToAddLast = {"","#projects","products/secure-ci/","products/selenified/","#services", "services/agile-development/", "services/agile-testing/",
-                    "services/agile-transition/", "services/devops/", "services/software-security/", "services/training/", "#latest-news", "BLOG-LIST", "presentations/",
-                    "publications/", "webinars-videos/",  "#about", "#team", "#contact-us"};
+            String[] stringsToAddLast = getResources().getStringArray(R.array.menuEndings);
             Intent newIntent = new Intent(getApplicationContext(), MainActivity.class);
-
-            if(isDevSite){
-                //Use dev site URL
-                website = "https://www3.dev.secureci.com/";
-            }
-            else{
-                //Use Main website
-                website = "https://www.coveros.com/";
-            }
             //Going to blog list
-            if(position == 12){
+            if(position == DRAWER_OPEN_BLOG_MENU_POSITION) {
                 menu.closeDrawer(Gravity.START);
-            }
-            //Return to a web page in Main Activity
-            else{
+            } else{                                     //Return to a web page in Main Activity
                 newIntent.putExtra("WEBSITE", website + stringsToAddLast[position]);
                 startActivity(newIntent);
             }
