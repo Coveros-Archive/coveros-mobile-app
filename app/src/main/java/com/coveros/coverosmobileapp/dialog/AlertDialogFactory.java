@@ -14,6 +14,7 @@ import com.coveros.coverosmobileapp.R;
 
 public class AlertDialogFactory {
 
+    private AlertDialogFactory() {}
 
     public static AlertDialog createSuccessAlertDialogDefaultButton(Context context, String message) {
         final String title = context.getString(R.string.success_title);
@@ -56,7 +57,7 @@ public class AlertDialogFactory {
      * @param message
      * @return
      */
-    public static AlertDialog createNetworkErrorAlertDialogFinishButton(final Context context, String message) {
+    public static AlertDialog createNetworkErrorAlertDialogFinishButton(Context context, String message) {
         final String title = context.getString(R.string.error_title);
         final String buttonText = context.getString(R.string.error_button);
         final String tryAgain = context.getString(R.string.try_again_error_message);
@@ -64,6 +65,12 @@ public class AlertDialogFactory {
         return createAlertDialog(context, title, message + " " + tryAgain, buttonText, true);
     }
 
+    public static AlertDialog createNetworkErrorAlertDialogCustomButton(Context context, String message) {
+        final String title = context.getString(R.string.error_title);
+        final String tryAgain = context.getString(R.string.try_again_error_message);
+
+        return createAlertDialogCustomButton(context, title, message  + " " + tryAgain);
+    }
     /**
      * Returns AlertDialog with one button that dismisses the AlertDialog and, if flagged, finishes the activity.
      * @param context   context on which button will be displayed

@@ -92,6 +92,7 @@ public class BlogPostUpdateActivity extends AppCompatActivity {
 
 
         }
+    }
 
         String getPostId() {
             return postId;
@@ -117,5 +118,5 @@ public class BlogPostUpdateActivity extends AppCompatActivity {
             return restRequest;
         }
 
-    }
+
 }

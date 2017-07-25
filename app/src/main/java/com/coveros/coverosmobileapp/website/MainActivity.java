@@ -1,6 +1,5 @@
 package com.coveros.coverosmobileapp.website;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
@@ -22,6 +22,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
+import com.coveros.coverosmobileapp.dialog.AlertDialogFactory;
 
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
@@ -37,8 +38,6 @@ public class MainActivity extends AppCompatActivity {
     RequestQueue rQueue;
 
     //Create Strings for Title, message, and buttons
-    private static final String ALERT_TITLE = "Alert";
-    private static final String ALERT_MESSAGE = "Sorry, we cannot currently retrieve the requested information.";
     private static final String ALERT_BUTTON_EXIT = "Exit App";
     private static final String ALERT_BUTTON_RELOAD= "Reload App";
     private static final String ALERT_BUTTON_OK = "OK";
@@ -48,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
 
     public String getWebName(){ return webName; }
     public void setWebName(String website){ webName = website; }
-    public WebView getWebViewBrowser(){ return browser; }
     public void setWebViewBrowser(WebView br){ browser = br; }
     public AlertDialog getDialog() { return dialog; }
     public CustomWebViewClient getCustomClient() { return customWebViewClient; }
@@ -160,33 +158,34 @@ public class MainActivity extends AppCompatActivity {
      */
     protected void alertView(){
         //Init Alert Dialog menu & Cancel only if pressed on button
-        dialog = new AlertDialog.Builder(MainActivity.this)
-                .setNeutralButton(ALERT_BUTTON_RELOAD, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogs, int which) {
-                        Toast.makeText(getApplicationContext(), "Loading App", Toast.LENGTH_SHORT).show();
-                        dialogs.dismiss();
-                        recreate();
-                    }
-                })
-                .setNegativeButton(ALERT_BUTTON_OK, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogs, int which) {
-                        dialogs.dismiss(); }
-                })
-                .setPositiveButton(ALERT_BUTTON_EXIT, new DialogInterface.OnClickListener(){
-                    @Override
-                    public void onClick(DialogInterface dialogs, int which){
-                        Toast.makeText(getApplicationContext(), "Thank You", Toast.LENGTH_SHORT).show();
-                        dialogs.dismiss();
-                        finish();
-                    }
-                }).create();
+        final String dialogMessage = getString(R.string.webview_error_message);
+        final String reloadButtonText = getString(R.string.reload_button);
+        final String okayButtonText = getString(R.string.success_button);
+        final String exitButtonText = getString(R.string.exit_button);
+
+        dialog = AlertDialogFactory.createNetworkErrorAlertDialogCustomButton(MainActivity.this, dialogMessage);
+        dialog.setButton(AlertDialog.BUTTON_NEUTRAL, reloadButtonText, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogs, int which) {
+                Toast.makeText(getApplicationContext(), "Loading App", Toast.LENGTH_SHORT).show();
+                dialogs.dismiss();
+                recreate();
+            }
+        });
+        dialog.setButton(AlertDialog.BUTTON_NEGATIVE, okayButtonText, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogs, int which) {
+                dialogs.dismiss(); }
+        });
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, exitButtonText, new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialogs, int which){
+                dialogs.dismiss();
+                finish();
+            }
+        });
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
-        //Setters (title, default message, button 1 -> Exit, button2 -> Reload)
-        dialog.setTitle(ALERT_TITLE);
-        dialog.setMessage(ALERT_MESSAGE);
         //Show dialog and make text changes (font color, size, etc.)
         dialog.show();
     }

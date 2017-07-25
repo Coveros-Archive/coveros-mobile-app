@@ -15,12 +15,17 @@
     <string name="error_title">Error</string>
     <string name="error_button">Dismiss</string>
 
+    <!-- for MainActivity's dialog -->
+    <string name="reload_button">Reload</string>
+    <string name="exit_button">Exit</string>
+
     <!-- Custom success and error messages -->
 
     <string name="comment_form_success_message">Your comment is now pending approval.</string>
     <string name="blogpost_update_form_success_message">Blogpost was successfully updated.</string>
 
     <string name="try_again_error_message">Please try again later.</string>
+    <string name="webview_error_message">Cannot retrieve webpage.</string>
     <string name="blogposts_network_error_message">Cannot retrieve blogposts.</string>
     <string name="blogpost_network_error_message">Cannot retrieve blogpost.</string>
     <string name="comments_network_error_message">Cannot retrieve comments.</string>

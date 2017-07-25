@@ -57,8 +57,7 @@ public class BlogPostReadActivity extends AppCompatActivity {
         RestRequest authorsRequest = new RestRequest(AUTHORS_URL, null, null, new Response.Listener<JsonObject>() {
             @Override
             public void onResponse(JsonObject response) {
-                JsonArray authorsJson = response.get("response").getAsJsonArray();
-                for (JsonElement author : authorsJson) {
+                for (JsonElement author : response.get("response").getAsJsonArray()) {
                     JsonObject authorJson = (JsonObject) author;
                     Integer id = authorJson.get("id").getAsInt();
                     authors.put(id, authorJson.get("name").getAsString());
