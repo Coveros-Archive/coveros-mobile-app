@@ -21,12 +21,9 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.mock;
 
 /**
  * @author Maria Kim
@@ -37,9 +34,6 @@ public class CommentFormActivityInstrumentedTest extends LooperTestSuite {
     private static CommentFormActivity commentFormActivity;
 
     private static final String POST_ID = "0";
-    private static String EXPECTED_NAME = "Ryan Kenney";
-    private static String EXPECTED_EMAIL = "ultimatecatluver@catlovers.com";
-    private static String EXPECTED_MESSAGE = "I love cats so much, even though they are jerks. No, especially because they are jerks.";
 
     @Rule
     public ActivityTestRule<CommentFormActivity> commentFormActivityRule = new ActivityTestRule<CommentFormActivity>(CommentFormActivity.class) {
@@ -81,39 +75,45 @@ public class CommentFormActivityInstrumentedTest extends LooperTestSuite {
 
     @Test
     public void onClick_checkInputStringsAreReadCorrectly() {
-        onView(withId(R.id.enter_name)).perform(ViewActions.typeText(EXPECTED_NAME), closeSoftKeyboard());
-        onView(withId(R.id.enter_email)).perform(ViewActions.typeText(EXPECTED_EMAIL), closeSoftKeyboard());
-        onView(withId(R.id.enter_message)).perform(ViewActions.typeText(EXPECTED_MESSAGE), closeSoftKeyboard());
+        final String expectedName = "Ryan Kenney";
+        final String expectedEmail = "ultimatecatluver@catlovers.com";
+        final String expectedMessage = "I love cats so much, even though they are jerks. No, especially because they are jerks.";
+
+        onView(withId(R.id.enter_name)).perform(ViewActions.typeText(expectedName), closeSoftKeyboard());
+        onView(withId(R.id.enter_email)).perform(ViewActions.typeText(expectedEmail), closeSoftKeyboard());
+        onView(withId(R.id.enter_message)).perform(ViewActions.typeText(expectedMessage), closeSoftKeyboard());
 
         onView(withId(R.id.send_button)).perform(click());
 
         String actualName = commentFormActivity.getAuthor();
-        assertThat(actualName, equalTo(EXPECTED_NAME));
+        assertThat(actualName, equalTo(expectedName));
 
         String actualEmail = commentFormActivity.getEmail();
-        assertThat(actualEmail, equalTo(EXPECTED_EMAIL));
+        assertThat(actualEmail, equalTo(expectedEmail));
 
         String actualMessage = commentFormActivity.getMessage();
-        assertThat(actualMessage, equalTo(EXPECTED_MESSAGE));
+        assertThat(actualMessage, equalTo(expectedMessage));
     }
 
     @Test
     public void onClick_withEmptyFields() {
         onView(withId(R.id.send_button)).perform(click());
-        boolean emptyFieldsAlertDialogIsShowing = commentFormActivity.getEmptyFieldDialog().isShowing();
+        boolean emptyFieldsAlertDialogIsShowing = commentFormActivity.getEmptyFieldAlertDialog().isShowing();
 
         assertThat(emptyFieldsAlertDialogIsShowing, is(true));
     }
 
     @Test
     public void onClick_withInvalidEmail() {
+        final String name = "ryan";
         final String invalidEmail = "ryane";
-        onView(withId(R.id.enter_name)).perform(ViewActions.typeText(EXPECTED_NAME), closeSoftKeyboard());
+        final String message = "I am ryan kenneth";
+        onView(withId(R.id.enter_name)).perform(ViewActions.typeText(name), closeSoftKeyboard());
         onView(withId(R.id.enter_email)).perform(ViewActions.typeText(invalidEmail), closeSoftKeyboard());
-        onView(withId(R.id.enter_message)).perform(ViewActions.typeText(EXPECTED_MESSAGE), closeSoftKeyboard());
+        onView(withId(R.id.enter_message)).perform(ViewActions.typeText(message), closeSoftKeyboard());
         onView(withId(R.id.send_button)).perform(click());
 
-        boolean invalidEmailDialogIsShowing = commentFormActivity.getInvalidEmailDialog().isShowing();
+        boolean invalidEmailDialogIsShowing = commentFormActivity.getInvalidEmailAlertDialog().isShowing();
 
         assertThat(invalidEmailDialogIsShowing, is(true));
     }
@@ -141,13 +141,16 @@ public class CommentFormActivityInstrumentedTest extends LooperTestSuite {
 
     @Test
     public void commentRequestOnResponse_checkSuccessDialogIsShowing() {
-        onView(withId(R.id.enter_name)).perform(ViewActions.typeText(EXPECTED_NAME), closeSoftKeyboard());
-        onView(withId(R.id.enter_email)).perform(ViewActions.typeText(EXPECTED_EMAIL), closeSoftKeyboard());
-        onView(withId(R.id.enter_message)).perform(ViewActions.typeText(EXPECTED_MESSAGE), closeSoftKeyboard());
+        final String name = "ryan";
+        final String email = "ryane@cath8rs.com";
+        final String message = "I hate cats.";
+        onView(withId(R.id.enter_name)).perform(ViewActions.typeText(name), closeSoftKeyboard());
+        onView(withId(R.id.enter_email)).perform(ViewActions.typeText(email), closeSoftKeyboard());
+        onView(withId(R.id.enter_message)).perform(ViewActions.typeText(message), closeSoftKeyboard());
         onView(withId(R.id.send_button)).perform(click());
 
         commentFormActivity.getCommentRequest().getListener().onResponse(new JsonObject());
-        AlertDialog successDialog = commentFormActivity.getSuccessDialog();
+        AlertDialog successDialog = commentFormActivity.getSuccessAlertDialog();
 
         boolean isSuccessDialogShowing = successDialog.isShowing();
 
@@ -164,9 +167,9 @@ public class CommentFormActivityInstrumentedTest extends LooperTestSuite {
         onView(withId(R.id.send_button)).perform(click());
 
         commentFormActivity.getCommentRequest().getErrorListener().onErrorResponse(volleyError);
-        AlertDialog errorDialog = commentFormActivity.getErrorDialog();
+        AlertDialog networkErrorAlertDialog = commentFormActivity.getNetworkErrorDialog();
 
-        boolean isErrorDialogShowing = errorDialog.isShowing();
+        boolean isErrorDialogShowing = networkErrorAlertDialog.isShowing();
         assertThat(isErrorDialogShowing, is(true));
     }
 

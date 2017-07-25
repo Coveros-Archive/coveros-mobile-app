@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- label for above blogposts list -->
+    <string name="blogposts_label">Blog posts</string>
+</resources>

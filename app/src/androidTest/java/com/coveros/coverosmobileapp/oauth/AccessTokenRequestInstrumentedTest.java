@@ -27,12 +27,13 @@ public class AccessTokenRequestInstrumentedTest {
 
     @Before
     public void setUp() {
-        accessTokenRequest = new AccessTokenRequest("https://rtykl525.com", "12345", "54321", "https://rtykl525.com/redirect", "525", "authorization_code", new AccessTokenRequest.AccessTokenRequestListener() {
+        accessTokenRequest = new AccessTokenRequest("https://rtykl525.com", "12345", "54321", "https://rtykl525.com/redirect", "525", "authorization_code", new Response.Listener() {
             @Override
-            public void onResponse(String response) {
+            public void onResponse(Object response) {
                 isListenerOnResponseCalled = true;
+
             }
-        }, new AccessTokenRequest.AccessTokenRequestErrorListener() {
+        }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
             }

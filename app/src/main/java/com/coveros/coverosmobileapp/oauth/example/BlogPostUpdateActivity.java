@@ -1,7 +1,5 @@
 package com.coveros.coverosmobileapp.oauth.example;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -13,9 +11,10 @@ import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
+import com.coveros.coverosmobileapp.dialog.AlertDialogFactory;
+import com.coveros.coverosmobileapp.errorlistener.NetworkErrorListener;
 import com.coveros.coverosmobileapp.oauth.RestRequest;
 import com.google.gson.JsonObject;
 
@@ -30,8 +29,9 @@ public class BlogPostUpdateActivity extends AppCompatActivity {
     private String newContent;
     private String url;
 
-    private AlertDialog successDialog;
-    private AlertDialog errorDialog;
+    private AlertDialog successAlertDialog;
+    private AlertDialog networkErrorAlertDialog;
+    private NetworkErrorListener networkErrorListener;
 
     private RestRequest restRequest;
     private String accessToken;
@@ -43,8 +43,14 @@ public class BlogPostUpdateActivity extends AppCompatActivity {
 
         accessToken = getIntent().getStringExtra("accessToken");
 
-        Button postNewContentButton = (Button) findViewById(R.id.post_button);
+        final String successAlertDialogMessage = getString(R.string.blogpost_update_form_success_message);
+        successAlertDialog = AlertDialogFactory.createSuccessAlertDialogFinishButton(BlogPostUpdateActivity.this, successAlertDialogMessage);
 
+        final String networkErrorAlertDialogMessage = getString(R.string.blogpost_update_form_network_error_message);
+        networkErrorAlertDialog = AlertDialogFactory.createNetworkErrorAlertDialogDefaultButton(BlogPostUpdateActivity.this, networkErrorAlertDialogMessage);
+        networkErrorListener = new NetworkErrorListener(BlogPostUpdateActivity.this, networkErrorAlertDialog);
+
+        Button postNewContentButton = (Button) findViewById(R.id.post_button);
         postNewContentButton.setOnClickListener(new PostButtonOnClickListener());
     }
 
@@ -61,20 +67,11 @@ public class BlogPostUpdateActivity extends AppCompatActivity {
             restRequest = new RestRequest(url, accessToken, body, new Response.Listener<JsonObject>() {
                 @Override
                 public void onResponse(JsonObject response) {
-                    successDialog = createRestRequestSuccessDialog(BlogPostUpdateActivity.this);
                     if (!isFinishing()) {
-                        successDialog.show();
+                        successAlertDialog.show();
                     }
                 }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    errorDialog = createRestRequestErrorDialog(BlogPostUpdateActivity.this);
-                    if (!isFinishing()) {
-                        errorDialog.show();
-                    }
-                }
-            });
+            }, networkErrorListener);
 
             restRequest.setOnAuthFailedListener(new RestRequest.OnAuthFailedListener() {
                 @Override
@@ -93,73 +90,33 @@ public class BlogPostUpdateActivity extends AppCompatActivity {
                 requestQueue.add(restRequest);
             }
 
+
         }
-        /**
-         * Creates AlertDialog that is displayed when the request is successful.
-         * @param context    context on which to display AlertDialog
-         */
-        private AlertDialog createRestRequestSuccessDialog(Context context) {
-            final String successTitle = context.getString(R.string.post_update_request_response_success_title);
-            final String successMessage = context.getString(R.string.post_update_request_response_success_message);
-            return createRestRequestDialog(context, successTitle, successMessage);
+    }
+
+        String getPostId() {
+            return postId;
         }
 
-        /**
-         * Creates AlertDialog that is displayed when the request returns an error.
-         * @param context    context on which to display AlertDialog
-         */
-        private AlertDialog createRestRequestErrorDialog(Context context) {
-            final String errorTitle = context.getString(R.string.post_update_request_response_error_title);
-            final String errorMessage = context.getString(R.string.post_update_request_response_error_message);
-            return createRestRequestDialog(context, errorTitle, errorMessage);
+        String getNewContent() {
+            return newContent;
         }
 
-    }
+        String getUrl() {
+            return url;
+        }
 
+        AlertDialog getSuccessAlertDialog() {
+            return successAlertDialog;
+        }
 
-    /**
-     * Creates an AlertDialog to display the response (success or error) from the REST request.
-     * @param context    context on which to display the AlertDialog
-     * @param title    title of the AlertDialog
-     * @param message    message of the AlertDialog
-     * @return    AlertDialog with these data
-     */
-    AlertDialog createRestRequestDialog(Context context, String title, String message) {
-        final String buttonText = context.getString(R.string.post_update_request_response_dismiss_button);
-        AlertDialog requestResponse = new AlertDialog.Builder(context).create();
-        requestResponse.setTitle(title);
-        requestResponse.setMessage(message);
-        requestResponse.setButton(AlertDialog.BUTTON_NEUTRAL, buttonText, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        return requestResponse;
-    }
+        AlertDialog getNetworkErrorAlertDialog() {
+            return networkErrorAlertDialog;
+        }
 
-    String getPostId() {
-        return postId;
-    }
+        RestRequest getRestRequest() {
+            return restRequest;
+        }
 
-    String getNewContent() {
-        return newContent;
-    }
-
-    String getUrl() {
-        return url;
-    }
-
-    AlertDialog getSuccessDialog() {
-        return successDialog;
-    }
-
-    AlertDialog getErrorDialog() {
-        return errorDialog;
-    }
-
-    RestRequest getRestRequest() {
-        return restRequest;
-    }
 
 }

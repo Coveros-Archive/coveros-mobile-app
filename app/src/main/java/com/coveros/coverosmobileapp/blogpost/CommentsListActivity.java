@@ -12,6 +12,8 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
+import com.coveros.coverosmobileapp.dialog.AlertDialogFactory;
+import com.coveros.coverosmobileapp.errorlistener.NetworkErrorListener;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -31,7 +33,6 @@ public class CommentsListActivity extends BlogListActivity {
     private RequestQueue rQueue;
     private ListView commentsListView;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -44,7 +45,10 @@ public class CommentsListActivity extends BlogListActivity {
 
         final String postId = getIntent().getExtras().getString("postId");
 
-        errorListener = createErrorListener(CommentsListActivity.this);
+        final String networkErrorAlertDialogMessage = getString(R.string.comments_network_error_message);
+        networkErrorAlertDialog = AlertDialogFactory.createNetworkErrorAlertDialogDefaultButton(CommentsListActivity.this, networkErrorAlertDialogMessage);
+        networkErrorListener = new NetworkErrorListener(CommentsListActivity.this, networkErrorAlertDialog);
+
         final String commentsUrl = "http://www3.dev.secureci.com/wp-json/wp/v2/comments?post=" + postId;
 
         Thread commentRequest = new Thread() {
@@ -94,7 +98,7 @@ public class CommentsListActivity extends BlogListActivity {
                 }
                 postReadCallback.onSuccess(comments);
             }
-        }, errorListener);
+        }, networkErrorListener);
         rQueue.add(commentsRequest);
     }
 

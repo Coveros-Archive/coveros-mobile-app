@@ -2,7 +2,6 @@ package com.coveros.coverosmobileapp.test.util;
 
 import android.os.Looper;
 
-import org.junit.After;
 import org.junit.BeforeClass;
 
 /**

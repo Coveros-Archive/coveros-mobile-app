@@ -3,22 +3,15 @@ package com.coveros.coverosmobileapp.blogpost;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 import android.util.SparseArray;
-import android.webkit.WebView;
 
 import com.coveros.coverosmobileapp.R;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
 public class BlogPostReadActivityInstrumentedTest {
 
@@ -46,12 +39,14 @@ public class BlogPostReadActivityInstrumentedTest {
     @Test
     public void onCreate_checkWebViewContentIsShown() {
         boolean webViewContentIsShown = blogPostReadActivity.findViewById(R.id.content).isShown();
-        assertTrue("Content should be displayed", webViewContentIsShown);
+        assertThat(webViewContentIsShown, is(true));
     }
 
     @Test
     public void onCreate_checkViewCommentsButtonIsShown() {
         boolean viewCommentsButtonIsShown = blogPostReadActivity.findViewById(R.id.view_comments).isShown();
-        assertTrue("Content should be displayed", viewCommentsButtonIsShown);
+        assertThat(viewCommentsButtonIsShown, is(true));
     }
+
+
 }

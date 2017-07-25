@@ -1,13 +1,10 @@
 package com.coveros.coverosmobileapp.oauth.example;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.ValueCallback;
 import android.webkit.WebResourceRequest;
@@ -15,9 +12,11 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.VolleyError;
+import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
+import com.coveros.coverosmobileapp.dialog.AlertDialogFactory;
+import com.coveros.coverosmobileapp.errorlistener.NetworkErrorListener;
 import com.coveros.coverosmobileapp.oauth.AccessTokenRequest;
 import com.coveros.coverosmobileapp.oauth.AuthUrl;
 
@@ -37,7 +36,8 @@ public class OAuthLoginActivity extends AppCompatActivity {
     private static final String GRANT_TYPE = "authorization_code";
 
     private AccessTokenRequest accessTokenRequest;
-    private AlertDialog errorDialog;
+    private AlertDialog accessTokenRequestErrorAlertDialog;
+    private NetworkErrorListener networkErrorListener;
 
     WebViewAuthCallback webViewAuthCallback = new WebViewAuthCallback();
 
@@ -47,11 +47,14 @@ public class OAuthLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.oauth);
 
+        final String accessTokenRequestErrorAlertDialogMessage = getString(R.string.oauth_login_access_token_error_message);
+        accessTokenRequestErrorAlertDialog = AlertDialogFactory.createErrorAlertDialogDefaultButton(OAuthLoginActivity.this, accessTokenRequestErrorAlertDialogMessage);
+        networkErrorListener = new NetworkErrorListener(OAuthLoginActivity.this, accessTokenRequestErrorAlertDialog);
+
         String responseType = "code";
         AuthUrl authUrl = new AuthUrl(AUTH_ENDPOINT, CLIENT_ID, REDIRECT_URI, responseType);
 
         WebView login = (WebView) findViewById(R.id.login);
-        Log.d("Auth url", authUrl.toString());
         login.loadUrl(authUrl.toString());
 
         setWebViewClient(login, webViewAuthCallback);
@@ -78,33 +81,12 @@ public class OAuthLoginActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Creates an AlertDialog to display the response (success or error) from the REST request.
-     * @param context    context on which to display the AlertDialog
-     * @return    AlertDialog with these data
-     */
-    AlertDialog createAccessTokenRequestErrorDialog(Context context) {
-        final String errorTitle = context.getString(R.string.post_update_request_response_error_title);
-        final String errorMessage = context.getString(R.string.post_update_request_response_error_message);
-        final String buttonText = context.getString(R.string.post_update_request_response_dismiss_button);
-        AlertDialog requestResponse = new AlertDialog.Builder(context).create();
-        requestResponse.setTitle(errorTitle);
-        requestResponse.setMessage(errorMessage);
-        requestResponse.setButton(AlertDialog.BUTTON_NEUTRAL, buttonText, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        return requestResponse;
-    }
-
     AccessTokenRequest getAccessTokenRequest() {
         return accessTokenRequest;
     }
 
-    AlertDialog getErrorDialog() {
-        return errorDialog;
+    AlertDialog getAccessTokenRequestErrorAlertDialog() {
+        return accessTokenRequestErrorAlertDialog;
     }
 
     AuthCallback getWebViewAuthCallback() {
@@ -114,24 +96,16 @@ public class OAuthLoginActivity extends AppCompatActivity {
     class WebViewAuthCallback implements AuthCallback {
         @Override
         public void onSuccess(String authCode) {
-            accessTokenRequest = new AccessTokenRequest(TOKEN_ENDPOINT, CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, authCode, GRANT_TYPE, new AccessTokenRequest.AccessTokenRequestListener() {
+            accessTokenRequest = new AccessTokenRequest(TOKEN_ENDPOINT, CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, authCode, GRANT_TYPE, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    clearCookies();
-                    Intent intent = new Intent(getApplicationContext(), BlogPostUpdateActivity.class);
-                    intent.putExtra("accessToken", response);
-                    startActivity(intent);
-                    finish();
+                clearCookies();
+                Intent intent = new Intent(getApplicationContext(), BlogPostUpdateActivity.class);
+                intent.putExtra("accessToken", response);
+                startActivity(intent);
+                finish();
                 }
-            }, new AccessTokenRequest.AccessTokenRequestErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    errorDialog = createAccessTokenRequestErrorDialog(OAuthLoginActivity.this);
-                    if (!isFinishing()) {
-                        errorDialog.show();
-                    }
-                }
-            });
+            }, networkErrorListener);
 
             RequestQueue requestQueue = Volley.newRequestQueue(OAuthLoginActivity.this);
             requestQueue.add(accessTokenRequest);
