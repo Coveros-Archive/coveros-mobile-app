@@ -154,6 +154,8 @@ dependencies {
     // handling OAuth for Wordpress
     compile 'com.automattic:wordpresscom-rest:1.+'
 
+    compile group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.10-java7'
+
     // required for local unit tests (JUnit 4 framework)
     testCompile 'junit:junit:4.12'
     // for testing error message

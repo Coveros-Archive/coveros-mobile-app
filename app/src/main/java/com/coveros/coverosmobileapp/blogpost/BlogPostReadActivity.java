@@ -24,6 +24,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.thoughtworks.xstream.XStream;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -80,16 +81,24 @@ public class BlogPostReadActivity extends AppCompatActivity {
 
         final ImageButton addBookmark = (ImageButton) findViewById(R.id.bookmark_button_unchecked);
         final ImageButton removeBookmark = (ImageButton) findViewById(R.id.bookmark_button_checked);
-        final String ids = "";
-        File newXml = new File(getFilesDir()+"C:/Users/SRynestad/AndroidStudioProjects/coveros-mobile-app/app/src/main/res/values/ids.xml");
+
+        // TODO this should happen somewhere on application startup
+        /*try (FileInputStream fis = openFileInput(Bookmarks.BOOKMARKS_FILE)) {
+            Bookmarks.getInstance().loadExistingBookmarks(fis);
+        } catch(IOException ex) {
+            // TODO add Toast message
+            Log.e("", "Removing saved bookmark from file caused an error");
+        }*/
+
         addBookmark.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View v){
-                try(FileOutputStream fos = openFileOutput(ids, Context.MODE_APPEND)){
-                   fos.write(blogId);
+            public void onClick(View v) {
+                try (FileOutputStream fos = openFileOutput(Bookmarks.BOOKMARKS_FILE, Context.MODE_PRIVATE)) {
+                    Bookmarks.getInstance().addBookmark(blogId, fos);
                     fos.close();
                     removeBookmark.bringToFront();
-                }catch(IOException ex){
+                } catch(IOException ex) {
+                    // TODO add Toast message
                     Log.e("", "Saving bookmark to file caused an error");
                 }
 
@@ -100,7 +109,7 @@ public class BlogPostReadActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 StringBuilder sb = new StringBuilder();
-                try(FileInputStream fis = openFileInput(ids)){
+                try(FileInputStream fis = openFileInput(Bookmarks.BOOKMARKS_FILE)){
                     Scanner s = new Scanner(fis);
                     while(s.hasNext()){
                         sb.append(s.nextLine());
@@ -108,11 +117,9 @@ public class BlogPostReadActivity extends AppCompatActivity {
                     }
                     Log.e("THE DATAZ: ", sb.toString());
                     addBookmark.bringToFront();
-                }catch(IOException ex){
+                } catch(IOException ex) {
                     Log.e("", "Removing saved bookmark from file caused an error");
                 }
-
-
             }
         });
 
