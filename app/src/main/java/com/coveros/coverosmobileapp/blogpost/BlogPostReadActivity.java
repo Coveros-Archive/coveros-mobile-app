@@ -72,6 +72,7 @@ public class BlogPostReadActivity extends AppCompatActivity {
         }
 
         final Context context = this;
+        //when user clicks on an unmarked bookmark button, then it marks it red and the id is added to the xml file
         addBookmark.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -80,7 +81,7 @@ public class BlogPostReadActivity extends AppCompatActivity {
 
             }
         });
-
+        //when user clicks on a marked bookmark button, then it returns to unmarked and the id is removed from the xml file
         removeBookmark.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){

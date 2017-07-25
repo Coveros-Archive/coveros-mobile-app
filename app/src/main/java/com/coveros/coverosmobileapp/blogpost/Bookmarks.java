@@ -3,6 +3,7 @@ package com.coveros.coverosmobileapp.blogpost;
 import android.content.Context;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
+import android.widget.Toast;
 import com.thoughtworks.xstream.XStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -85,7 +86,7 @@ public class Bookmarks {
             try (FileInputStream fis = context.openFileInput(fileName)) {
                 bookmarks.addAll((Set<Integer>) stream.fromXML(fis));
             } catch (IOException ex) {
-                // TODO add Toast message
+                Toast.makeText(context, "Could not load bookmark data from device", Toast.LENGTH_SHORT).show();
                 Log.e(TAG, "Could not load bookmark data from device");
                 ex.printStackTrace();
             }
@@ -103,7 +104,7 @@ public class Bookmarks {
         try (FileOutputStream fos = context.openFileOutput(fileName, Context.MODE_PRIVATE)) {
             stream.toXML(bookmarks, fos);
         } catch(IOException ex) {
-            // TODO add Toast message
+            Toast.makeText(context, "Could not save bookmark state to fileName", Toast.LENGTH_SHORT).show();
             Log.e(TAG, "Could not save bookmark state to fileName");
         }
     }

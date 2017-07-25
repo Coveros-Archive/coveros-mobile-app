@@ -30,16 +30,13 @@ public class MainActivity extends AppCompatActivity {
     private WebView browser;
     private AlertDialog dialog;
     private CustomWebViewClient cwvc = new CustomWebViewClient();
-
     private String[] menuTitles;
     private DrawerLayout menu;
-    private ListView drawerList;
 
     RequestQueue rQueue;
 
     public MainActivity(){ webName = "https://www3.dev.secureci.com"; }
     public MainActivity(String specificUrl) { webName = specificUrl; }
-
     public String getWebName(){ return webName; }
     public void setWebName(String website){ webName = website; }
     public WebView getWebViewBrowser(){ return browser; }
