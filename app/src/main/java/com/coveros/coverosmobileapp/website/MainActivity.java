@@ -37,11 +37,6 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout menu;
     RequestQueue rQueue;
 
-    //Create Strings for Title, message, and buttons
-    private static final String ALERT_BUTTON_EXIT = "Exit App";
-    private static final String ALERT_BUTTON_RELOAD= "Reload App";
-    private static final String ALERT_BUTTON_OK = "OK";
-
     public MainActivity(){ webName = "https://www3.dev.secureci.com"; }
     public MainActivity(String specificUrl) { webName = specificUrl; }
 

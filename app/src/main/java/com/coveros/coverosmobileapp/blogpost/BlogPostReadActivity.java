@@ -16,7 +16,6 @@ import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.dialog.AlertDialogFactory;
 import com.coveros.coverosmobileapp.errorlistener.NetworkErrorListener;
 import com.coveros.coverosmobileapp.oauth.RestRequest;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
