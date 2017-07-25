@@ -4,11 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.SparseArray;
+import android.util.Xml;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageButton;
+
+import com.android.volley.Cache;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -21,9 +25,17 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import java.io.FileNotFoundException;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * Creates and displays a single blog post when it is selected from the list of blog post_list.
@@ -68,17 +80,38 @@ public class BlogPostReadActivity extends AppCompatActivity {
 
         final ImageButton addBookmark = (ImageButton) findViewById(R.id.bookmark_button_unchecked);
         final ImageButton removeBookmark = (ImageButton) findViewById(R.id.bookmark_button_checked);
+        final String ids = "";
+        File newXml = new File(getFilesDir()+"C:/Users/SRynestad/AndroidStudioProjects/coveros-mobile-app/app/src/main/res/values/ids.xml");
         addBookmark.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                removeBookmark.bringToFront();
+                try(FileOutputStream fos = openFileOutput(ids, Context.MODE_APPEND)){
+                   fos.write(blogId);
+                    fos.close();
+                    removeBookmark.bringToFront();
+                }catch(IOException ex){
+                    Log.e("", "Saving bookmark to file caused an error");
+                }
+
             }
         });
 
         removeBookmark.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                addBookmark.bringToFront();
+                StringBuilder sb = new StringBuilder();
+                try(FileInputStream fis = openFileInput(ids)){
+                    Scanner s = new Scanner(fis);
+                    while(s.hasNext()){
+                        sb.append(s.nextLine());
+                        sb.append("\n");
+                    }
+                    Log.e("THE DATAZ: ", sb.toString());
+                    addBookmark.bringToFront();
+                }catch(IOException ex){
+                    Log.e("", "Removing saved bookmark from file caused an error");
+                }
+
 
             }
         });
@@ -118,6 +151,67 @@ public class BlogPostReadActivity extends AppCompatActivity {
 
     interface PostListCallback<T> {
         void onSuccess(List<T> newItems);
+    }
+    private static final String ns = null;
+    public List parse(InputStream in) throws XmlPullParserException, IOException {
+        try {
+            XmlPullParser parser = Xml.newPullParser();
+            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+            parser.setInput(in, null);
+            parser.nextTag();
+            return readResources(parser);
+        } finally {
+            in.close();
+        }
+    }
+    private List readResources(XmlPullParser parser) throws XmlPullParserException, IOException {
+        List entries = new ArrayList();
+
+        parser.require(XmlPullParser.START_TAG, ns, "resources");
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = parser.getName();
+            // Starts by looking for the entry tag
+            if (name.equals("id")) {
+                entries.add(readId(parser));
+            } else {
+                skip(parser);
+            }
+        }
+        return entries;
+    }
+
+    private String readId(XmlPullParser parser) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, ns, "id");
+        String id = readText(parser);
+        parser.require(XmlPullParser.END_TAG, ns, "id");
+        return id;
+    }
+    private String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
+        String result = "";
+        if (parser.next() == XmlPullParser.TEXT) {
+            result = parser.getText();
+            parser.nextTag();
+        }
+        return result;
+    }
+    private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
+        if (parser.getEventType() != XmlPullParser.START_TAG) {
+            throw new IllegalStateException();
+        }
+        int depth = 1;
+        while (depth != 0) {
+            switch (parser.next()) {
+                case XmlPullParser.END_TAG:
+                    depth--;
+                    break;
+                case XmlPullParser.START_TAG:
+                    depth++;
+                    break;
+            }
+        }
     }
 
 }
