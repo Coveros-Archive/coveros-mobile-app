@@ -13,6 +13,9 @@ import org.junit.runner.RunWith;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
 /**
  * @author Maria Kim
@@ -43,19 +46,20 @@ public class CommentsListActivityInstrumentedTest {
     @Test
     public void onCreate_checkListViewIsShown() {
         boolean listViewIsShown = commentsListActivity.getCommentsListView().isShown();
-        assertTrue("ListView should be shown.", listViewIsShown);
+        assertThat(listViewIsShown, is(true));
     }
 
     @Test
     public void onCreate_checkButtonIsShown() {
         boolean buttonIsShown = commentsListActivity.findViewById(R.id.leave_comment).isShown();
-        assertTrue("\"Leave a Comment\" button should be shown.", buttonIsShown);
+        assertThat(buttonIsShown, is(true));
     }
 
     @Test
     public void onCreate_checkHeaderViewTextViewAdded() {
+        final int expectedHeaderCount = 1;
         int actualHeaderCount = commentsListActivity.getCommentsListView().getHeaderViewsCount();
-        assertEquals("One header view should be added", EXPECTED_HEADER_COUNT, actualHeaderCount);
+        assertThat(actualHeaderCount, equalTo(expectedHeaderCount));
     }
 
 }
