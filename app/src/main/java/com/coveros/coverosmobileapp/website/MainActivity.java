@@ -20,6 +20,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
+import com.coveros.coverosmobileapp.blogpost.Bookmarks;
 
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
@@ -52,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // This method call loads existing bookmarks
+        Bookmarks.getInstance().loadExistingBookmarks(this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //Link WebView variable with activity_main_webview for Web View Access
