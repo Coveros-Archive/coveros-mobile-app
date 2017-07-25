@@ -1,10 +1,12 @@
 package com.coveros.coverosmobileapp.blogpost;
 
 
+import android.app.LauncherActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.SparseArray;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -45,6 +47,7 @@ public class BlogPostsListActivity extends BlogListActivity {
     private ListView blogPostsListView;
     private BlogPostsListAdapter postsAdapter;
     private int currentListSize;
+    private boolean isDevSite = true;
     private static final int POSTS_PER_PAGE = 10;
     private int postsOffset = 0;
     private static final int NUM_OF_AUTHORS = 100;  // number of users that will be returned by the REST call... so if someday Coveros has over 100 employees, this needs to be changed
@@ -233,11 +236,124 @@ public class BlogPostsListActivity extends BlogListActivity {
          */
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if (position == 0) {
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-            } else {
+            String website;
+            MainActivity mainActivity = new MainActivity();
+            Intent newIntent = new Intent(getApplicationContext(), MainActivity.class);
+            Bundle bundle = new Bundle();
 
-                startActivity(new Intent(getApplicationContext(), BlogPostsListActivity.class));
+            if(isDevSite){
+                //Use dev site URL
+                website = "https://www3.dev.secureci.com/";
+            }
+            else{
+                //Use Main website
+                website = "https://www.coveros.com/";
+            }
+
+            switch(position){
+                case 0:
+                    menu.closeDrawer(Gravity.START);
+                    newIntent.putExtra("WEBSITE",website);
+                    startActivity(newIntent);
+                    break;
+                case 1:
+                    menu.closeDrawer(Gravity.START);
+                    newIntent.putExtra("WEBSITE", website + "#projects");
+                    startActivity(newIntent);
+                    break;
+                case 2:
+                    menu.closeDrawer(Gravity.START);
+                    newIntent.putExtra("WEBSITE", website + "products/secure-ci/");
+                    startActivity(newIntent);
+                    break;
+                case 3:
+                    menu.closeDrawer(Gravity.START);
+                    newIntent.putExtra("WEBSITE",website + "products/selenified/");
+                    startActivity(newIntent);
+                    break;
+                case 4:
+                    menu.closeDrawer(Gravity.START);
+                    newIntent.putExtra("WEBSITE", website + "#services");
+                    startActivity(newIntent);
+                    break;
+                case 5:
+                    menu.closeDrawer(Gravity.START);
+                    newIntent.putExtra("WEBSITE", website + "services/agile-development/");
+                    startActivity(newIntent);
+                    break;
+                case 6:
+                    menu.closeDrawer(Gravity.START);
+                    newIntent.putExtra("WEBSITE", website + "services/agile-testing/");
+                    startActivity(newIntent);
+                    break;
+                case 7:
+                    menu.closeDrawer(Gravity.START);
+                    newIntent.putExtra("WEBSITE", website + "services/agile-transition/");
+                    startActivity(newIntent);
+                    break;
+                case 8:
+                    menu.closeDrawer(Gravity.START);
+                    newIntent.putExtra("WEBSITE", website+  "services/devops/");
+                    startActivity(newIntent);
+                    break;
+                case 9:
+                    menu.closeDrawer(Gravity.START);
+                    newIntent.putExtra("WEBSITE", website + "services/software-security/");
+                    startActivity(newIntent);
+                    break;
+                case 10:
+                    menu.closeDrawer(Gravity.START);
+                    newIntent.putExtra("WEBSITE", website + "services/training/");
+                    startActivity(newIntent);
+                    break;
+                case 11:
+                    menu.closeDrawer(Gravity.START);
+                    newIntent.putExtra("WEBSITE", website + "#latest-news");
+                    startActivity(newIntent);
+                    break;
+                case 12:
+                    menu.closeDrawer(Gravity.START);
+                    break;
+                case 13:
+                    menu.closeDrawer(Gravity.START);
+                    newIntent.putExtra("WEBSITE", website + "presentations/");
+                    startActivity(newIntent);
+                    break;
+                case 14:
+                    menu.closeDrawer(Gravity.START);
+                    newIntent.putExtra("WEBSITE", website + "publications/");
+                    startActivity(newIntent);
+                    break;
+                case 15:
+                    menu.closeDrawer(Gravity.START);
+                    newIntent.putExtra("WEBSITE", website + "webinars-videos/");
+                    startActivity(newIntent);
+                    break;
+                case 16:
+                    menu.closeDrawer(Gravity.START);
+                    newIntent.putExtra("WEBSITE", website + "#about");
+                    startActivity(newIntent);
+                    break;
+                case 17:
+                    menu.closeDrawer(Gravity.START);
+                    newIntent.putExtra("WEBSITE", website + "#team");
+                    startActivity(newIntent);
+                    break;
+                case 18:
+                    menu.closeDrawer(Gravity.START);
+                    newIntent.putExtra("WEBSITE", website + "careers/");
+                    startActivity(newIntent);
+                    break;
+                case 19:
+                    menu.closeDrawer(Gravity.START);
+                    newIntent.putExtra("WEBSITE", website + "#contact-us");
+                    startActivity(newIntent);
+                    break;
+                default:
+                    //No Case found (SHOULD NOT  (Load Home Page)
+                    newIntent.putExtra("WEBSITE", website);
+                    startActivity(newIntent);
+                    break;
             }
         }
     }

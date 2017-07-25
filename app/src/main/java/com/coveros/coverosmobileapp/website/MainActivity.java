@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
         //Links open in WebView with Coveros regex check
         cwvc.setMainActivity(this);
         browser.setWebViewClient(cwvc);
+        overridePendingTransition(0,0);
         if(!isOnline()){
             browser.loadUrl("file:///android_asset/sampleErrorPage.html");
         }
@@ -107,6 +108,34 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
     }
 
+    //Accepting bundle from BlogPostListActivity
+    @Override
+    public void onResume(){
+        Bundle getBundle = null;
+        getBundle = this.getIntent().getExtras();
+        if (getBundle != null) {
+            String website = getBundle.getString("WEBSITE");
+            if(website != null){
+                browser.loadUrl(website);
+            }
+        }
+        super.onResume();
+    }
+
+    //In case MainActivity is stopped while blog post list/read is executing
+    @Override
+    public void onRestart(){
+        Bundle getBundle = null;
+        getBundle = this.getIntent().getExtras();
+        if (getBundle != null) {
+            String website = getBundle.getString("WEBSITE");
+            if(website != null){
+                browser.loadUrl(website);
+            }
+        }
+        super.onRestart();
+    }
+
     /*
      * Back button is pressed in the app. Default implementation
      */
@@ -121,8 +150,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /*
-     * Checks if the user is connected to the Internet
-     */
+         * Checks if the user is connected to the Internet
+         */
     public boolean isOnline(){
         //Get Connectivity Manager and network info
         ConnectivityManager conMgr = (ConnectivityManager)
