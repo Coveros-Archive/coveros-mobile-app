@@ -58,7 +58,7 @@ public class OAuthLoginActivityInstrumentedTest extends LooperTestSuite {
         oAuthLoginActivity.getWebViewAuthCallback().onSuccess("525");
         oAuthLoginActivity.getAccessTokenRequest().getErrorListener().onErrorResponse(volleyError);
 
-        boolean isErrorResponseShowing = oAuthLoginActivity.getErrorDialog().isShowing();
+        boolean isErrorResponseShowing = oAuthLoginActivity.getAccessTokenRequestErrorAlertDialog().isShowing();
 
         assertThat(isErrorResponseShowing, equalTo(isErrorResponseShowing));
     }

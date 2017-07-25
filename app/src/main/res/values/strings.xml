@@ -21,11 +21,14 @@
     <string name="blogpost_update_form_success_message">Blogpost was successfully updated.</string>
 
     <string name="try_again_error_message">Please try again later.</string>
-    <string name="blogposts_error_message">Cannot retrieve blogposts.</string>
-    <string name="comments_error_message">Cannot retrieve comments.</string>
-    <string name="comment_form_empty_field_error_message">All fields are required. Please provide your</string>
+    <string name="blogposts_network_error_message">Cannot retrieve blogposts.</string>
+    <string name="blogpost_network_error_message">Cannot retrieve blogpost.</string>
+    <string name="comments_network_error_message">Cannot retrieve comments.</string>
+    <string name="comment_form_network_error_message">Oops! Something went wrong, and your comment was not sent.</string>
+    <string name="comment_form_empty_field_error_message">All fields are required.</string>
     <string name="comment_form_invalid_email_error_message">Please provide a valid email.</string>
-    <string name="blogpost_update_form_error_message">An error occurred. Blogpost was not updated.</string>
+    <string name="blogpost_update_form_network_error_message">An error occurred. Blogpost was not updated.</string>
+    <string name="oauth_login_access_token_error_message">Request for access token was not completed.</string>
 
     <!-- text for "View Comments" and "Leave a Comment" buttons -->
     <string name="view_comments">View comments</string>
@@ -35,6 +38,9 @@
     <string name="comment_form_name">name</string>
     <string name="comment_form_email">email</string>
     <string name="comment_form_message">message</string>
+    <string name="comment_form_name_cap">Name</string>
+    <string name="comment_form_email_cap">Email</string>
+    <string name="comment_form_message_cap">Message</string>
     <string name="comment_form_send_button">Send</string>
 
     <!-- text for post update form -->

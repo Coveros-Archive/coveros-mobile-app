@@ -2,6 +2,7 @@ package com.coveros.coverosmobileapp.blogpost;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
+import com.coveros.coverosmobileapp.dialog.AlertDialogFactory;
 import com.coveros.coverosmobileapp.errorlistener.NetworkErrorListener;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -30,10 +32,13 @@ import java.util.List;
  */
 @SuppressWarnings("squid:MaximumInheritanceDepth")
 public class BlogPostReadActivity extends AppCompatActivity {
+
     private static final int NUM_OF_AUTHORS = 100;  // number of users that will be returned by the REST call... so if someday Coveros has over 100 employees, this needs to be changed
     private static final String AUTHORS_URL = "https://www3.dev.secureci.com/wp-json/wp/v2/users?orderby=id&per_page=" + NUM_OF_AUTHORS;
-    private SparseArray<String> authors = new SparseArray<>();  // to aggregate the ids and names of the authors of displayed blog posts
 
+    private SparseArray<String> authors = new SparseArray<>();  // to aggregate the ids and names of the authors of displayed blog posts
+    private AlertDialog errorAlertDialog;
+    private NetworkErrorListener networkErrorListener;
     /**
      * Grabs post data from Intent and displays it and its comments.
      *
@@ -43,13 +48,19 @@ public class BlogPostReadActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.post);
+
         final int blogId = getIntent().getIntExtra("blogId", 0);
-        final String blogPost = "https://www3.dev.secureci.com/wp-json/wp/v2/posts/" + blogId;
-        final RequestQueue rQueue = Volley.newRequestQueue(BlogPostReadActivity.this);
+        final String blogPostUrl = "https://www3.dev.secureci.com/wp-json/wp/v2/posts/" + blogId;
+        final RequestQueue requestQueue = Volley.newRequestQueue(BlogPostReadActivity.this);
+
+        final String errorAlertDialogMessage = getString(R.string.blogpost_network_error_message);
+        errorAlertDialog = AlertDialogFactory.createNetworkErrorAlertDialogFinishButton(BlogPostReadActivity.this, errorAlertDialogMessage);
+        networkErrorListener = new NetworkErrorListener(BlogPostReadActivity.this, errorAlertDialog);
+
         retrieveAuthors(new PostListCallback<String>() {
             @Override
             public void onSuccess(List<String> newAuthors) {
-                StringRequest blogPostsRequest = new StringRequest(Request.Method.GET, blogPost, new Response.Listener<String>() {
+                StringRequest blogPostsRequest = new StringRequest(Request.Method.GET, blogPostUrl, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         JsonObject blogPostsJson = new JsonParser().parse(response).getAsJsonObject();
@@ -58,8 +69,8 @@ public class BlogPostReadActivity extends AppCompatActivity {
                         content.loadData(post.getContent(), "text/html; charset=utf-8", "UTF-8");
                         setTitle(post.getTitle());
                     }
-                }, new NetworkErrorListener(BlogPostReadActivity.this));
-                rQueue.add(blogPostsRequest);
+                }, networkErrorListener);
+                requestQueue.add(blogPostsRequest);
             }
         });
 
@@ -93,7 +104,7 @@ public class BlogPostReadActivity extends AppCompatActivity {
                 }
                 postListCallback.onSuccess(null);
             }
-        }, new NetworkErrorListener(BlogPostReadActivity.this));
+        }, networkErrorListener);
         rQueue.add(authorsRequest);
     }
 

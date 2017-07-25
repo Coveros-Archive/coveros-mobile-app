@@ -98,7 +98,7 @@ public class BlogPostUpdateActivityInstrumentedTest extends LooperTestSuite {
 
         blogPostUpdateActivity.getRestRequest().getListener().onResponse(new JsonObject());
 
-        boolean isSuccessResponseShowing = blogPostUpdateActivity.getSuccessDialog().isShowing();
+        boolean isSuccessResponseShowing = blogPostUpdateActivity.getSuccessAlertDialog().isShowing();
         assertThat(isSuccessResponseShowing, equalTo(true));
 
     }
@@ -113,7 +113,7 @@ public class BlogPostUpdateActivityInstrumentedTest extends LooperTestSuite {
         onView(withId(R.id.post_button)).perform(click());  // sets errorlistener
         blogPostUpdateActivity.getRestRequest().getErrorListener().onErrorResponse(volleyError);
 
-        boolean isErrorResponseShowing = blogPostUpdateActivity.getErrorDialog().isShowing();
+        boolean isErrorResponseShowing = blogPostUpdateActivity.getNetworkErrorAlertDialog().isShowing();
 
         assertThat(isErrorResponseShowing, equalTo(true));
 

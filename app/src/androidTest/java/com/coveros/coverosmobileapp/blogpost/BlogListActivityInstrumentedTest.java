@@ -58,14 +58,14 @@ public class BlogListActivityInstrumentedTest extends LooperTestSuite {
 
     @Test
     public void createErrorMessage_checkAlertDialogNotNull() {
-        blogListActivity.errorAlertDialog = blogListActivity.createErrorMessage(blogListActivity);
-        assertNotNull("errorAlertDialog should not be null.", blogListActivity.errorAlertDialog);
+        blogListActivity.networkErrorAlertDialog = blogListActivity.createErrorMessage(blogListActivity);
+        assertNotNull("networkErrorAlertDialog should not be null.", blogListActivity.networkErrorAlertDialog);
     }
 
     @Test
     public void createErrorListener_checkErrorListenerNotNull() {
-        blogListActivity.errorListener = blogListActivity.createErrorListener(blogListActivity);
-        assertNotNull("errorListener should not be null.", blogListActivity.errorListener);
+        blogListActivity.networkErrorListener = blogListActivity.createErrorListener(blogListActivity);
+        assertNotNull("networkErrorListener should not be null.", blogListActivity.networkErrorListener);
     }
 
     @Test
@@ -76,11 +76,11 @@ public class BlogListActivityInstrumentedTest extends LooperTestSuite {
         VolleyError volleyError = new VolleyError(networkResponse);
 
         // trigger error and check if error message (an AlertDialog) is displayed
-        blogListActivity.errorListener = blogListActivity.createErrorListener(blogListActivity);
-        blogListActivity.errorListener.onErrorResponse(volleyError);
+        blogListActivity.networkErrorListener = blogListActivity.createErrorListener(blogListActivity);
+        blogListActivity.networkErrorListener.onErrorResponse(volleyError);
 
-        boolean errorMessageIsShowing = blogListActivity.getErrorAlertDialog().isShowing();
-        assertTrue("errorAlertDialog should be displayed.", errorMessageIsShowing);
+        boolean errorMessageIsShowing = blogListActivity.getNetworkErrorAlertDialog().isShowing();
+        assertTrue("networkErrorAlertDialog should be displayed.", errorMessageIsShowing);
 
     }
 

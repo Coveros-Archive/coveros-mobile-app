@@ -36,6 +36,12 @@ public class AlertDialogFactory {
         return createAlertDialog(context, title, message, buttonText, false);
     }
 
+    /**
+     * AlertDialog that has error title and a "try again" addition to the message and a dismiss button that dismisses the AlertDialog when clicked.
+     * @param context
+     * @param message
+     * @return
+     */
     public static AlertDialog createNetworkErrorAlertDialogDefaultButton(Context context, String message) {
         final String title = context.getString(R.string.error_title);
         final String buttonText = context.getString(R.string.error_button);
@@ -44,6 +50,12 @@ public class AlertDialogFactory {
         return createAlertDialog(context, title, message + " " + tryAgain, buttonText, false);
     }
 
+    /**
+     * AlertDialog that has error title and a "try again" addition to the message and a dismiss button that finishes the activity when clicked.
+     * @param context
+     * @param message
+     * @return
+     */
     public static AlertDialog createNetworkErrorAlertDialogFinishButton(final Context context, String message) {
         final String title = context.getString(R.string.error_title);
         final String buttonText = context.getString(R.string.error_button);

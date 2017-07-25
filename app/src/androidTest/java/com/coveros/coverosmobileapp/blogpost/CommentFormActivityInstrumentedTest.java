@@ -100,7 +100,7 @@ public class CommentFormActivityInstrumentedTest extends LooperTestSuite {
     @Test
     public void onClick_withEmptyFields() {
         onView(withId(R.id.send_button)).perform(click());
-        boolean emptyFieldsAlertDialogIsShowing = commentFormActivity.getEmptyFieldDialog().isShowing();
+        boolean emptyFieldsAlertDialogIsShowing = commentFormActivity.getEmptyFieldAlertDialog().isShowing();
 
         assertThat(emptyFieldsAlertDialogIsShowing, is(true));
     }
@@ -113,7 +113,7 @@ public class CommentFormActivityInstrumentedTest extends LooperTestSuite {
         onView(withId(R.id.enter_message)).perform(ViewActions.typeText(EXPECTED_MESSAGE), closeSoftKeyboard());
         onView(withId(R.id.send_button)).perform(click());
 
-        boolean invalidEmailDialogIsShowing = commentFormActivity.getInvalidEmailDialog().isShowing();
+        boolean invalidEmailDialogIsShowing = commentFormActivity.getInvalidEmailAlertDialog().isShowing();
 
         assertThat(invalidEmailDialogIsShowing, is(true));
     }
@@ -147,7 +147,7 @@ public class CommentFormActivityInstrumentedTest extends LooperTestSuite {
         onView(withId(R.id.send_button)).perform(click());
 
         commentFormActivity.getCommentRequest().getListener().onResponse(new JsonObject());
-        AlertDialog successDialog = commentFormActivity.getSuccessDialog();
+        AlertDialog successDialog = commentFormActivity.getSuccessAlertDialog();
 
         boolean isSuccessDialogShowing = successDialog.isShowing();
 
