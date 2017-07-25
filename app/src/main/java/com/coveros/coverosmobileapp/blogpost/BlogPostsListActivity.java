@@ -46,8 +46,6 @@ public class BlogPostsListActivity extends BlogListActivity {
     private RequestQueue requestQueue;
 
     private DrawerLayout menu;
-    private ListView drawerList;
-
     private LinearLayout postList;
     private ListView blogPostsListView;
     private BlogPostsListAdapter postsAdapter;
@@ -74,7 +72,7 @@ public class BlogPostsListActivity extends BlogListActivity {
         //creates the sliding navigation drawer menu
         postList = (LinearLayout) findViewById(R.id.postlist);
         menu = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerList = (ListView) findViewById(R.id.left_drawer);
+        ListView drawerList = (ListView) findViewById(R.id.left_drawer);
         final String[] menuTitles = getResources().getStringArray(R.array.menu_Titles);
         drawerList.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, menuTitles));

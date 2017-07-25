@@ -32,7 +32,6 @@ public class BlogPostReadActivity extends AppCompatActivity {
     private static final String AUTHORS_URL = "https://www3.dev.secureci.com/wp-json/wp/v2/users?orderby=id&per_page=" + NUM_OF_AUTHORS;
 
     private SparseArray<String> authors = new SparseArray<>();  // to aggregate the ids and names of the authors of displayed blog posts
-    private AlertDialog networkErrorAlertDialog;
     private NetworkErrorListener networkErrorListener;
 
     /**
@@ -50,6 +49,7 @@ public class BlogPostReadActivity extends AppCompatActivity {
         final RequestQueue requestQueue = Volley.newRequestQueue(BlogPostReadActivity.this);
 
         final String errorAlertDialogMessage = getString(R.string.blogpost_network_error_message);
+        AlertDialog networkErrorAlertDialog;
         networkErrorAlertDialog = AlertDialogFactory.createNetworkErrorAlertDialogFinishButton(BlogPostReadActivity.this, errorAlertDialogMessage);
         networkErrorListener = new NetworkErrorListener(BlogPostReadActivity.this, networkErrorAlertDialog);
 
