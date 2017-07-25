@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.webkit.WebView;
@@ -17,6 +18,7 @@ import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.dialog.AlertDialogFactory;
 import com.coveros.coverosmobileapp.errorlistener.NetworkErrorListener;
+import com.coveros.coverosmobileapp.oauth.RestRequest;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -39,6 +41,7 @@ public class BlogPostReadActivity extends AppCompatActivity {
     private SparseArray<String> authors = new SparseArray<>();  // to aggregate the ids and names of the authors of displayed blog posts
     private AlertDialog errorAlertDialog;
     private NetworkErrorListener networkErrorListener;
+
     /**
      * Grabs post data from Intent and displays it and its comments.
      *
@@ -57,22 +60,29 @@ public class BlogPostReadActivity extends AppCompatActivity {
         errorAlertDialog = AlertDialogFactory.createNetworkErrorAlertDialogFinishButton(BlogPostReadActivity.this, errorAlertDialogMessage);
         networkErrorListener = new NetworkErrorListener(BlogPostReadActivity.this, errorAlertDialog);
 
-        retrieveAuthors(new PostListCallback<String>() {
+        RestRequest authorsRequest = new RestRequest(AUTHORS_URL, null, null, new Response.Listener<JsonObject>() {
             @Override
-            public void onSuccess(List<String> newAuthors) {
-                StringRequest blogPostsRequest = new StringRequest(Request.Method.GET, blogPostUrl, new Response.Listener<String>() {
+            public void onResponse(JsonObject response) {
+                JsonArray authorsJson = response.get("response").getAsJsonArray();
+                for (JsonElement author : authorsJson) {
+                    JsonObject authorJson = (JsonObject) author;
+                    Integer id = authorJson.get("id").getAsInt();
+                    authors.put(id, authorJson.get("name").getAsString());
+                }
+                RestRequest blogPostRequest = new RestRequest(blogPostUrl, null, null, new Response.Listener<JsonObject>() {
                     @Override
-                    public void onResponse(String response) {
-                        JsonObject blogPostsJson = new JsonParser().parse(response).getAsJsonObject();
-                        BlogPost post = new BlogPost(blogPostsJson, authors);
+                    public void onResponse(JsonObject response) {
+                        BlogPost post = new BlogPost(response, authors);
                         WebView content = (WebView) findViewById(R.id.content);
                         content.loadData(post.getContent(), "text/html; charset=utf-8", "UTF-8");
                         setTitle(post.getTitle());
                     }
                 }, networkErrorListener);
-                requestQueue.add(blogPostsRequest);
+                requestQueue.add(blogPostRequest);
+
             }
-        });
+        }, networkErrorListener);
+        requestQueue.add(authorsRequest);
 
         Button viewComments = (Button) findViewById(R.id.view_comments);
 
@@ -85,31 +95,6 @@ public class BlogPostReadActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
-    /**
-     * Populates List of Authors.
-     *
-     * @param postListCallback A callback function to be executed after the list of authors has been retrieved
-     */
-    protected void retrieveAuthors(final PostListCallback<String> postListCallback) {
-        RequestQueue rQueue = Volley.newRequestQueue(BlogPostReadActivity.this);
-        StringRequest authorsRequest = new StringRequest(Request.Method.GET, AUTHORS_URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                JsonArray authorsJson = new JsonParser().parse(response).getAsJsonArray();
-                for (JsonElement author : authorsJson) {
-                    JsonObject authorJson = (JsonObject) author;
-                    Integer id = authorJson.get("id").getAsInt();
-                    authors.put(id, authorJson.get("name").getAsString());
-                }
-                postListCallback.onSuccess(null);
-            }
-        }, networkErrorListener);
-        rQueue.add(authorsRequest);
-    }
-
-    interface PostListCallback<T> {
-        void onSuccess(List<T> newItems);
     }
 
 }

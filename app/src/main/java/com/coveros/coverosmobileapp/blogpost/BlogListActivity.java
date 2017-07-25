@@ -40,4 +40,8 @@ public class BlogListActivity extends ListActivity {
     AlertDialog getNetworkErrorAlertDialog() {
         return networkErrorAlertDialog;
     }
+
+    NetworkErrorListener getNetworkErrorListener() {
+        return networkErrorListener;
+    }
 }
