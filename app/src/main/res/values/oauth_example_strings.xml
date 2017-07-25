@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- text for post update form -->
+    <string name="post_update_form_new_content_hint">New content</string>
+    <string name="post_update_form_post_id_hint">Post ID (####)</string>
+    <string name="post_update_form_post_button">Post</string>
+</resources>

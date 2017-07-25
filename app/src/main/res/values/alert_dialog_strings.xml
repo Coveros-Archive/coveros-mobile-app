@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- default AlertDialogFactory titles and buttons -->
+    <string name="success_title">Success</string>
+    <string name="success_button">Okay</string>
+
+    <string name="error_title">Error</string>
+    <string name="error_button">Dismiss</string>
+
+    <!-- for MainActivity's dialog buttons -->
+    <string name="reload_button">Reload</string>
+    <string name="exit_button">Exit</string>
+
+    <!-- custom success messages -->
+    <string name="comment_form_success_message">Your comment is now pending approval.</string>
+    <string name="blogpost_update_form_success_message">Blogpost was successfully updated.</string>
+
+    <!-- custom error messages -->
+    <string name="try_again_error_message">Please try again later.</string>
+    <string name="webview_error_message">Cannot retrieve webpage.</string>
+    <string name="blogposts_network_error_message">Cannot retrieve blogposts.</string>
+    <string name="blogpost_network_error_message">Cannot retrieve blogpost.</string>
+    <string name="comments_network_error_message">Cannot retrieve comments.</string>
+    <string name="comment_form_network_error_message">Oops! Something went wrong, and your comment was not sent.</string>
+    <string name="comment_form_empty_field_error_message">All fields are required.</string>
+    <string name="comment_form_invalid_email_error_message">Please provide a valid email.</string>
+    <string name="blogpost_update_form_network_error_message">An error occurred. Blogpost was not updated.</string>
+    <string name="oauth_login_access_token_error_message">Request for access token was not completed.</string>
+</resources>

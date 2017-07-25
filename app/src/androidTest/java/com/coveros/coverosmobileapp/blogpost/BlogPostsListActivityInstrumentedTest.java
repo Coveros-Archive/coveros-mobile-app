@@ -5,6 +5,9 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.SparseArray;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.VolleyError;
+import com.coveros.coverosmobileapp.test.util.LooperTestSuite;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -14,20 +17,20 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
 /**
  * @author Maria Kim
  */
 
 @RunWith(AndroidJUnit4.class)
-public class BlogPostsListActivityInstrumentedTest {
+public class BlogPostsListActivityInstrumentedTest extends LooperTestSuite {
 
     BlogPostsListActivity blogPostsListActivity;
-
-    private static int EXPECTED_HEADER_COUNT = 1;
 
     @Rule
     public ActivityTestRule<BlogPostsListActivity> blogPostsListActivityRule = new ActivityTestRule<BlogPostsListActivity>(BlogPostsListActivity.class) {
@@ -56,13 +59,28 @@ public class BlogPostsListActivityInstrumentedTest {
     @Test
     public void onCreate_checkListViewIsShown() {
         boolean listViewIsShown = blogPostsListActivity.getListView().isShown();
-        assertTrue("ListView should be shown.", listViewIsShown);
+        assertThat(listViewIsShown, is(true));
     }
 
     @Test
     public void onCreate_checkHeaderViewTextViewAdded() {
+        final int expectedHeaderCount = 1;
         int actualHeaderCount = blogPostsListActivity.getListView().getHeaderViewsCount();
-        assertEquals("One header view should be added", EXPECTED_HEADER_COUNT, actualHeaderCount);
+        assertThat(actualHeaderCount, equalTo(expectedHeaderCount));
+    }
+
+    @Test
+    public void errorListenerOnErrorResponse_withVolleyError() {
+        // generate VolleyError to pass into AccessTokenRequestErrorListener
+        byte[] data = {0};
+        NetworkResponse networkResponse = new NetworkResponse(401, data, new HashMap<String, String>(), true);
+        VolleyError volleyError = new VolleyError(networkResponse);
+
+        // trigger error and check if error message (an AlertDialog) is displayed
+        blogPostsListActivity.getNetworkErrorListener().onErrorResponse(volleyError);
+
+        boolean errorMessageIsShowing = blogPostsListActivity.getNetworkErrorAlertDialog().isShowing();
+        assertThat(errorMessageIsShowing, is(true));
     }
 
 }
