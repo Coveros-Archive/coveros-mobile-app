@@ -237,9 +237,10 @@ public class BlogPostsListActivity extends BlogListActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             String website;
-            MainActivity mainActivity = new MainActivity();
+            String[] stringsToAddLast = {"","#projects","products/secure-ci/","products/selenified/","#services", "services/agile-development/", "services/agile-testing/",
+                    "services/agile-transition/", "services/devops/", "services/software-security/", "services/training/", "#latest-news", "BLOG-LIST", "presentations/",
+                    "publications/", "webinars-videos/",  "#about", "#team", "#contact-us"};
             Intent newIntent = new Intent(getApplicationContext(), MainActivity.class);
-            Bundle bundle = new Bundle();
 
             if(isDevSite){
                 //Use dev site URL
@@ -249,111 +250,14 @@ public class BlogPostsListActivity extends BlogListActivity {
                 //Use Main website
                 website = "https://www.coveros.com/";
             }
-
-            switch(position){
-                case 0:
-                    menu.closeDrawer(Gravity.START);
-                    newIntent.putExtra("WEBSITE",website);
-                    startActivity(newIntent);
-                    break;
-                case 1:
-                    menu.closeDrawer(Gravity.START);
-                    newIntent.putExtra("WEBSITE", website + "#projects");
-                    startActivity(newIntent);
-                    break;
-                case 2:
-                    menu.closeDrawer(Gravity.START);
-                    newIntent.putExtra("WEBSITE", website + "products/secure-ci/");
-                    startActivity(newIntent);
-                    break;
-                case 3:
-                    menu.closeDrawer(Gravity.START);
-                    newIntent.putExtra("WEBSITE",website + "products/selenified/");
-                    startActivity(newIntent);
-                    break;
-                case 4:
-                    menu.closeDrawer(Gravity.START);
-                    newIntent.putExtra("WEBSITE", website + "#services");
-                    startActivity(newIntent);
-                    break;
-                case 5:
-                    menu.closeDrawer(Gravity.START);
-                    newIntent.putExtra("WEBSITE", website + "services/agile-development/");
-                    startActivity(newIntent);
-                    break;
-                case 6:
-                    menu.closeDrawer(Gravity.START);
-                    newIntent.putExtra("WEBSITE", website + "services/agile-testing/");
-                    startActivity(newIntent);
-                    break;
-                case 7:
-                    menu.closeDrawer(Gravity.START);
-                    newIntent.putExtra("WEBSITE", website + "services/agile-transition/");
-                    startActivity(newIntent);
-                    break;
-                case 8:
-                    menu.closeDrawer(Gravity.START);
-                    newIntent.putExtra("WEBSITE", website+  "services/devops/");
-                    startActivity(newIntent);
-                    break;
-                case 9:
-                    menu.closeDrawer(Gravity.START);
-                    newIntent.putExtra("WEBSITE", website + "services/software-security/");
-                    startActivity(newIntent);
-                    break;
-                case 10:
-                    menu.closeDrawer(Gravity.START);
-                    newIntent.putExtra("WEBSITE", website + "services/training/");
-                    startActivity(newIntent);
-                    break;
-                case 11:
-                    menu.closeDrawer(Gravity.START);
-                    newIntent.putExtra("WEBSITE", website + "#latest-news");
-                    startActivity(newIntent);
-                    break;
-                case 12:
-                    menu.closeDrawer(Gravity.START);
-                    break;
-                case 13:
-                    menu.closeDrawer(Gravity.START);
-                    newIntent.putExtra("WEBSITE", website + "presentations/");
-                    startActivity(newIntent);
-                    break;
-                case 14:
-                    menu.closeDrawer(Gravity.START);
-                    newIntent.putExtra("WEBSITE", website + "publications/");
-                    startActivity(newIntent);
-                    break;
-                case 15:
-                    menu.closeDrawer(Gravity.START);
-                    newIntent.putExtra("WEBSITE", website + "webinars-videos/");
-                    startActivity(newIntent);
-                    break;
-                case 16:
-                    menu.closeDrawer(Gravity.START);
-                    newIntent.putExtra("WEBSITE", website + "#about");
-                    startActivity(newIntent);
-                    break;
-                case 17:
-                    menu.closeDrawer(Gravity.START);
-                    newIntent.putExtra("WEBSITE", website + "#team");
-                    startActivity(newIntent);
-                    break;
-                case 18:
-                    menu.closeDrawer(Gravity.START);
-                    newIntent.putExtra("WEBSITE", website + "careers/");
-                    startActivity(newIntent);
-                    break;
-                case 19:
-                    menu.closeDrawer(Gravity.START);
-                    newIntent.putExtra("WEBSITE", website + "#contact-us");
-                    startActivity(newIntent);
-                    break;
-                default:
-                    //No Case found (SHOULD NOT  (Load Home Page)
-                    newIntent.putExtra("WEBSITE", website);
-                    startActivity(newIntent);
-                    break;
+            //Going to blog list
+            if(position == 12){
+                menu.closeDrawer(Gravity.START);
+            }
+            //Return to a web page in Main Activity
+            else{
+                newIntent.putExtra("WEBSITE", website + stringsToAddLast[position]);
+                startActivity(newIntent);
             }
         }
     }

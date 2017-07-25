@@ -111,8 +111,7 @@ public class MainActivity extends AppCompatActivity {
     //Accepting bundle from BlogPostListActivity
     @Override
     public void onResume(){
-        Bundle getBundle = null;
-        getBundle = this.getIntent().getExtras();
+        Bundle getBundle = this.getIntent().getExtras();
         if (getBundle != null) {
             String website = getBundle.getString("WEBSITE");
             if(website != null){
@@ -125,8 +124,7 @@ public class MainActivity extends AppCompatActivity {
     //In case MainActivity is stopped while blog post list/read is executing
     @Override
     public void onRestart(){
-        Bundle getBundle = null;
-        getBundle = this.getIntent().getExtras();
+        Bundle getBundle = this.getIntent().getExtras();
         if (getBundle != null) {
             String website = getBundle.getString("WEBSITE");
             if(website != null){
@@ -218,6 +216,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             String website;
+            String[] stringsToAddLast = {"","#projects","products/secure-ci/","products/selenified/","#services", "services/agile-development/", "services/agile-testing/",
+                    "services/agile-transition/", "services/devops/", "services/software-security/", "services/training/", "#latest-news", "BLOG-LIST", "presentations/",
+                    "publications/", "webinars-videos/",  "#about", "#team", "#contact-us"};
             if(isDevSite){
                 //Use dev site URL
                 website = "https://www3.dev.secureci.com/";
@@ -226,92 +227,13 @@ public class MainActivity extends AppCompatActivity {
                 //Use Main website
                 website = "https://www.coveros.com/";
             }
-
-            switch (position) {
-                //Break statements include dev and main websites
-                case 0:
-                    menu.closeDrawer(Gravity.START);
-                    browser.loadUrl(website);
-                    break;
-                case 1:
-                    menu.closeDrawer(Gravity.START);
-                    browser.loadUrl(website + "#projects");
-                    break;
-                case 2:
-                    menu.closeDrawer(Gravity.START);
-                    browser.loadUrl(website + "products/secure-ci/");
-                    break;
-                case 3:
-                    menu.closeDrawer(Gravity.START);
-                    browser.loadUrl(website + "products/selenified/");
-                    break;
-                case 4:
-                    menu.closeDrawer(Gravity.START);
-                    browser.loadUrl(website + "#services");
-                    break;
-                case 5:
-                    menu.closeDrawer(Gravity.START);
-                    browser.loadUrl(website + "services/agile-development/");
-                    break;
-                case 6:
-                    menu.closeDrawer(Gravity.START);
-                    browser.loadUrl(website + "services/agile-testing/");
-                    break;
-                case 7:
-                    menu.closeDrawer(Gravity.START);
-                    browser.loadUrl(website + "services/agile-transition/");
-                    break;
-                case 8:
-                    menu.closeDrawer(Gravity.START);
-                    browser.loadUrl(website+  "services/devops/");
-                    break;
-                case 9:
-                    menu.closeDrawer(Gravity.START);
-                    browser.loadUrl(website + "services/software-security/");
-                    break;
-                case 10:
-                    menu.closeDrawer(Gravity.START);
-                    browser.loadUrl(website + "services/training/");
-                    break;
-                case 11:
-                    menu.closeDrawer(Gravity.START);
-                    browser.loadUrl(website + "#latest-news");
-                    break;
-                case 12:
-                    startActivity(new Intent(getApplicationContext(), BlogPostsListActivity.class));
-                    break;
-                case 13:
-                    menu.closeDrawer(Gravity.START);
-                    browser.loadUrl(website + "presentations/");
-                    break;
-                case 14:
-                    menu.closeDrawer(Gravity.START);
-                    browser.loadUrl(website + "publications/");
-                    break;
-                case 15:
-                    menu.closeDrawer(Gravity.START);
-                    browser.loadUrl(website + "webinars-videos/");
-                    break;
-                case 16:
-                    menu.closeDrawer(Gravity.START);
-                    browser.loadUrl(website + "#about");
-                    break;
-                case 17:
-                    menu.closeDrawer(Gravity.START);
-                    browser.loadUrl(website + "#team");
-                    break;
-                case 18:
-                    menu.closeDrawer(Gravity.START);
-                    browser.loadUrl(website + "careers/");
-                    break;
-                case 19:
-                    menu.closeDrawer(Gravity.START);
-                    browser.loadUrl(website + "#contact-us");
-                    break;
-                default:
-                    //No Case found (Position further than current list (Load Home Page)
-                    browser.loadUrl(website);
-                    break;
+            //Start an activity ("BLOG-LIST" is a referenced to start Blog Post List Activity)
+            if(position == 12){
+                startActivity(new Intent(getApplicationContext(), BlogPostsListActivity.class));
+            }
+            else{
+                menu.closeDrawer(Gravity.START);
+                browser.loadUrl(website + stringsToAddLast[position]);
             }
         }
     }
