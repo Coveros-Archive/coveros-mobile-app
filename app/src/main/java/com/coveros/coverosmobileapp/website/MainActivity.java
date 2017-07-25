@@ -26,7 +26,6 @@ import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
 @SuppressWarnings("squid:MaximumInheritanceDepth")
 public class MainActivity extends AppCompatActivity {
     //MainActivity\
-    private boolean isDevSite = true;
     private String webName;
     private WebView browser;
     private AlertDialog dialog;
@@ -42,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String ALERT_BUTTON_EXIT = "Exit App";
     private static final String ALERT_BUTTON_RELOAD= "Reload App";
     private static final String ALERT_BUTTON_OK = "OK";
-    static final String website = "https://www3.dev.secureci.com/";
+    static final String DEVSITE = "https://www3.dev.secureci.com/";
 
     public MainActivity(){ webName = "https://www3.dev.secureci.com"; }
     public MainActivity(String specificUrl) { webName = specificUrl; }
@@ -119,9 +118,9 @@ public class MainActivity extends AppCompatActivity {
     public void onResume(){
         Bundle getBundle = this.getIntent().getExtras();
         if (getBundle != null) {
-            String website = getBundle.getString("WEBSITE");
-            if(website != null){
-                browser.loadUrl(website);
+            String response = getBundle.getString("WEBSITE");
+            if(response != null){
+                browser.loadUrl(response);
             }
         }
         super.onResume();
@@ -132,9 +131,9 @@ public class MainActivity extends AppCompatActivity {
     public void onRestart(){
         Bundle getBundle = this.getIntent().getExtras();
         if (getBundle != null) {
-            String website = getBundle.getString("WEBSITE");
-            if(website != null){
-                browser.loadUrl(website);
+            String response = getBundle.getString("WEBSITE");
+            if(response != null){
+                browser.loadUrl(response);
             }
         }
         super.onRestart();
@@ -228,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
             }
             else{
                 menu.closeDrawer(Gravity.START);
-                browser.loadUrl(website + stringsToAddLast[position]);
+                browser.loadUrl(DEVSITE + stringsToAddLast[position]);
             }
         }
     }
