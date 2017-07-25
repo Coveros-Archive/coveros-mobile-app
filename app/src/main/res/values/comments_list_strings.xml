@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- labels for blog posts and comments lists -->
+    <string name="comments_label">Comments</string>
+
+    <!-- text for "no comments" comment to be displayed when there are no comments -->
+    <string name="no_comments_text">No comments to display.</string>
+</resources>
