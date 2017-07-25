@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.util.SparseArray;
 import android.util.Xml;
 import android.view.View;
@@ -12,7 +11,6 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageButton;
 
-import com.android.volley.Cache;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -24,19 +22,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.thoughtworks.xstream.XStream;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * Creates and displays a single blog post when it is selected from the list of blog post_list.
@@ -82,25 +75,19 @@ public class BlogPostReadActivity extends AppCompatActivity {
         final ImageButton addBookmark = (ImageButton) findViewById(R.id.bookmark_button_unchecked);
         final ImageButton removeBookmark = (ImageButton) findViewById(R.id.bookmark_button_checked);
 
-        // TODO this should happen somewhere on application startup
-        /*try (FileInputStream fis = openFileInput(Bookmarks.BOOKMARKS_FILE)) {
-            Bookmarks.getInstance().loadExistingBookmarks(fis);
-        } catch(IOException ex) {
-            // TODO add Toast message
-            Log.e("", "Removing saved bookmark from file caused an error");
-        }*/
+        if (Bookmarks.getInstance().contains(blogId)) {
+            removeBookmark.bringToFront();
+        }
 
+        // TODO this should happen somewhere on application startup
+        Bookmarks.getInstance().loadExistingBookmarks(this);
+
+        final Context context = this;
         addBookmark.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                try (FileOutputStream fos = openFileOutput(Bookmarks.BOOKMARKS_FILE, Context.MODE_PRIVATE)) {
-                    Bookmarks.getInstance().addBookmark(blogId, fos);
-                    fos.close();
-                    removeBookmark.bringToFront();
-                } catch(IOException ex) {
-                    // TODO add Toast message
-                    Log.e("", "Saving bookmark to file caused an error");
-                }
+                Bookmarks.getInstance().addBookmark(context, blogId);
+                removeBookmark.bringToFront();
 
             }
         });
@@ -108,18 +95,8 @@ public class BlogPostReadActivity extends AppCompatActivity {
         removeBookmark.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                StringBuilder sb = new StringBuilder();
-                try(FileInputStream fis = openFileInput(Bookmarks.BOOKMARKS_FILE)){
-                    Scanner s = new Scanner(fis);
-                    while(s.hasNext()){
-                        sb.append(s.nextLine());
-                        sb.append("\n");
-                    }
-                    Log.e("THE DATAZ: ", sb.toString());
-                    addBookmark.bringToFront();
-                } catch(IOException ex) {
-                    Log.e("", "Removing saved bookmark from file caused an error");
-                }
+                Bookmarks.getInstance().removeBookmark(context, blogId);
+                addBookmark.bringToFront();
             }
         });
 
@@ -134,6 +111,7 @@ public class BlogPostReadActivity extends AppCompatActivity {
             }
         });
     }
+
     /**
      * Populates List of Authors.
      *
