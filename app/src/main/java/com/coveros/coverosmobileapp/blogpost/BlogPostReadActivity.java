@@ -4,16 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.dialog.AlertDialogFactory;
@@ -22,9 +19,6 @@ import com.coveros.coverosmobileapp.oauth.RestRequest;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import java.util.List;
 
 /**
  * Creates and displays a single blog post when it is selected from the list of blog post_list.
@@ -39,7 +33,7 @@ public class BlogPostReadActivity extends AppCompatActivity {
     private static final String AUTHORS_URL = "https://www3.dev.secureci.com/wp-json/wp/v2/users?orderby=id&per_page=" + NUM_OF_AUTHORS;
 
     private SparseArray<String> authors = new SparseArray<>();  // to aggregate the ids and names of the authors of displayed blog posts
-    private AlertDialog errorAlertDialog;
+    private AlertDialog networkErrorAlertDialog;
     private NetworkErrorListener networkErrorListener;
 
     /**
@@ -57,8 +51,8 @@ public class BlogPostReadActivity extends AppCompatActivity {
         final RequestQueue requestQueue = Volley.newRequestQueue(BlogPostReadActivity.this);
 
         final String errorAlertDialogMessage = getString(R.string.blogpost_network_error_message);
-        errorAlertDialog = AlertDialogFactory.createNetworkErrorAlertDialogFinishButton(BlogPostReadActivity.this, errorAlertDialogMessage);
-        networkErrorListener = new NetworkErrorListener(BlogPostReadActivity.this, errorAlertDialog);
+        networkErrorAlertDialog = AlertDialogFactory.createNetworkErrorAlertDialogFinishButton(BlogPostReadActivity.this, errorAlertDialogMessage);
+        networkErrorListener = new NetworkErrorListener(BlogPostReadActivity.this, networkErrorAlertDialog);
 
         RestRequest authorsRequest = new RestRequest(AUTHORS_URL, null, null, new Response.Listener<JsonObject>() {
             @Override
@@ -79,7 +73,6 @@ public class BlogPostReadActivity extends AppCompatActivity {
                     }
                 }, networkErrorListener);
                 requestQueue.add(blogPostRequest);
-
             }
         }, networkErrorListener);
         requestQueue.add(authorsRequest);

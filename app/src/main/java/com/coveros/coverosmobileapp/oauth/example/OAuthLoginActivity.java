@@ -1,7 +1,5 @@
 package com.coveros.coverosmobileapp.oauth.example;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,7 +13,6 @@ import android.webkit.WebViewClient;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.dialog.AlertDialogFactory;

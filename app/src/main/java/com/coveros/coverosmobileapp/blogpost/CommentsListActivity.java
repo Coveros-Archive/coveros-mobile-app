@@ -33,7 +33,6 @@ public class CommentsListActivity extends BlogListActivity {
     private RequestQueue rQueue;
     private ListView commentsListView;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 

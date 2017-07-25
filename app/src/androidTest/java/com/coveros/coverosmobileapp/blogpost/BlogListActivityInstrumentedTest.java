@@ -3,19 +3,12 @@ package com.coveros.coverosmobileapp.blogpost;
 import android.support.test.rule.ActivityTestRule;
 import android.widget.TextView;
 
-import com.android.volley.NetworkResponse;
-import com.android.volley.VolleyError;
 import com.coveros.coverosmobileapp.test.util.LooperTestSuite;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.HashMap;
-
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
