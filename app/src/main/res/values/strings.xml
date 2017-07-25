@@ -40,9 +40,6 @@
     <string name="leave_comment">Leave a comment</string>
 
     <!-- text for comment form -->
-    <string name="comment_form_name">name</string>
-    <string name="comment_form_email">email</string>
-    <string name="comment_form_message">message</string>
     <string name="comment_form_name_cap">Name</string>
     <string name="comment_form_email_cap">Email</string>
     <string name="comment_form_message_cap">Message</string>
