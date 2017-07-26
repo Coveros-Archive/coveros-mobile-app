@@ -1,5 +1,6 @@
 package com.coveros.coverosmobileapp.blogpost;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -9,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.appium.java_client.android.AndroidDriver;
 
+import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -39,6 +41,13 @@ public class BlogPostReadActivityAppiumTest {
         String actualCommentLabel = driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.ListView/android.widget.TextView").getText();
 
         assertThat(actualCommentLabel, equalTo(expectedCommentLabel));
+    }
+
+    @After
+    public void tearDown() throws Exception{
+        if (driver != null) {
+            driver.quit();
+        }
     }
 
 
