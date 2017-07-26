@@ -1,4 +1,4 @@
-package com.coveros.coverosmobileapp;
+package com.coveros.coverosmobileapp.blogpost;
 
 import org.junit.Before;
 import org.junit.Test;

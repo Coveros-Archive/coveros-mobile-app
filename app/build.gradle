@@ -165,6 +165,8 @@ dependencies {
     testCompile ('io.appium:java-client:4.1.2', {
         exclude group: 'org.apache.commons', module: 'commons-lang3'
     })
+
+
 }
 
 //Defined reports generated
