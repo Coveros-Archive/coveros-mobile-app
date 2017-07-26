@@ -11,8 +11,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -20,13 +18,10 @@ import static org.hamcrest.core.Is.is;
 /**
  * @author Maria Kim
  */
-
 @RunWith(AndroidJUnit4.class)
 public class CommentsListActivityInstrumentedTest {
 
-    CommentsListActivity commentsListActivity;
-
-    private static int EXPECTED_HEADER_COUNT = 1;
+    private CommentsListActivity commentsListActivity;
 
     @Rule
     public ActivityTestRule<CommentsListActivity> commentsListActivityRule = new ActivityTestRule<CommentsListActivity>(CommentsListActivity.class) {

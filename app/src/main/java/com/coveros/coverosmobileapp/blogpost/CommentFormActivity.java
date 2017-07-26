@@ -108,12 +108,16 @@ public class CommentFormActivity extends AppCompatActivity {
             commentRequest = new RestRequest(COMMENT_URL, null, body, new Response.Listener() {
                 @Override
                 public void onResponse(Object response) {
-                    successAlertDialog.show();
+                    if (!isFinishing()) {
+                        successAlertDialog.show();
+                    }
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    networkErrorAlertDialog.show();
+                    if (!isFinishing()) {
+                        networkErrorAlertDialog.show();
+                    }
                 }
             });
 

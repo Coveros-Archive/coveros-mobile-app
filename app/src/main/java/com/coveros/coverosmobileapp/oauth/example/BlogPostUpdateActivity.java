@@ -84,7 +84,9 @@ public class BlogPostUpdateActivity extends AppCompatActivity {
 
             if (postId.isEmpty() || newContent.isEmpty()) {  // if either field is empty, don't send request and show Toast
                 Toast emptyField = Toast.makeText(BlogPostUpdateActivity.this, "All fields must be filled.", Toast.LENGTH_SHORT);
-                emptyField.show();
+                if (!isFinishing()) {
+                    emptyField.show();
+                }
             } else {  // if both fields are not empty, make request
                 RequestQueue requestQueue = Volley.newRequestQueue(BlogPostUpdateActivity.this);
                 requestQueue.add(restRequest);
