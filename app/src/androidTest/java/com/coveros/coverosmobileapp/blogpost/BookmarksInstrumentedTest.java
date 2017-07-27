@@ -6,18 +6,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
-
-import android.content.Context;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 import android.util.SparseArray;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-
-import static junit.framework.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
 /**
  * Created by SRynestad on 7/25/2017.
@@ -27,7 +22,6 @@ public class BookmarksInstrumentedTest {
     private Bookmarks instance;
     private BlogPostReadActivity blogPostReadActivity;
     private String fakeBookmarkFile = "fakeBookmarkFile.xml";
-    //instantiate
     private BlogPost blogPost;
     @Rule
     public ActivityTestRule<BlogPostReadActivity> blogPostsReadActivityRule = new ActivityTestRule<BlogPostReadActivity>(BlogPostReadActivity.class) {
@@ -49,34 +43,44 @@ public class BookmarksInstrumentedTest {
     @Before
     public void setup(){
         blogPostReadActivity = blogPostsReadActivityRule.getActivity();
-        instance = new Bookmarks(fakeBookmarkFile);
-        File file = mock(File.class);
-
-        List<String> fileNames = new ArrayList<>();
-        fileNames.add(fakeBookmarkFile);
-        String[] fileNamesStringArr = fileNames.toArray(new String[0]);
-        String[] fileName = {"file1", "file2", "file3"};
+        instance = new Bookmarks(fakeBookmarkFile);;
     }
     @After
     public void clean(File fakeBookmarkFile) {
         fakeBookmarkFile.delete();
     }
     @Test
-    public void checkIfFileWasLoaded(){
-
+    public void loadExistingBookmarks_withAddedBookmarks(){
+        Bookmarks bookmarks = new Bookmarks(fakeBookmarkFile);
+        bookmarks.addBookmark(blogPostReadActivity, 4785);
+        bookmarks.addBookmark(blogPostReadActivity, 5897);
+        bookmarks.addBookmark(blogPostReadActivity, 5698);
         boolean fileLoaded = instance.loadExistingBookmarks(blogPostReadActivity);
-        assertTrue("existing file should be loaded", fileLoaded);
+        assertThat(fileLoaded, is(true));
+    }
+    @Test
+    public void loadExistingBookmarks_withoutAddedBookmarks(){
+        Bookmarks bookmarks = new Bookmarks("noBookmark");
+        boolean fileLoaded = instance.loadExistingBookmarks(blogPostReadActivity);
+        assertThat(fileLoaded, is(false));
     }
     @Test
     public void checkIfBookmarkIdWasAdded(){
-        boolean bookmarkAdded = instance.addBookmark(blogPostReadActivity, blogPost.getId());
-        assertTrue("bookmark should be added", bookmarkAdded);
+        Bookmarks bookmarks = new Bookmarks(fakeBookmarkFile);
+        bookmarks.addBookmark(blogPostReadActivity, 4466);
+        bookmarks.addBookmark(blogPostReadActivity,5071);
+        boolean bookmarkAdded = instance.addBookmark(blogPostReadActivity, 5071);
+        assertThat(bookmarkAdded, is(true));
 
     }
     @Test
     public void checkIfBookmarkIdWasRemoved(){
-        boolean bookmarkRemoved = instance.removeBookmark(blogPostReadActivity, blogPost.getId());
-        assertTrue("bookmark should be removed", bookmarkRemoved);
+        Bookmarks bookmarks = new Bookmarks(fakeBookmarkFile);
+        bookmarks.addBookmark(blogPostReadActivity, 4978);
+        bookmarks.addBookmark(blogPostReadActivity, 3147);
+        bookmarks.addBookmark(blogPostReadActivity, 6464);
+        boolean bookmarkRemoved = instance.removeBookmark(blogPostReadActivity, 3147);
+        assertThat(bookmarkRemoved, is(true));
     }
 
 }
