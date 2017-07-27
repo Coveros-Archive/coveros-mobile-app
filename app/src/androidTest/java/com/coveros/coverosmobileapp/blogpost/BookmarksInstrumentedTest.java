@@ -1,10 +1,8 @@
 package com.coveros.coverosmobileapp.blogpost;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import java.io.File;
 import java.util.ArrayList;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
@@ -33,6 +31,8 @@ public class BookmarksInstrumentedTest {
             blogPost = new BlogPost(blogJson, authors);
             ArrayList<String> blogPostData = new ArrayList<>();
             blogPostData.add(String.valueOf(blogPost.getId()));
+            blogPostData.add(blogPost.getTitle());
+            blogPostData.add(blogPost.getContent());
             Intent intent = new Intent();
             intent.putStringArrayListExtra("blogPostData", blogPostData);
             return intent;
@@ -42,10 +42,6 @@ public class BookmarksInstrumentedTest {
     public void setup(){
         blogPostReadActivity = blogPostsReadActivityRule.getActivity();
         instance = new Bookmarks(fakeBookmarkFile);;
-    }
-    @After
-    public void clean() {
-        
     }
     @Test
     public void loadExistingBookmarks_withAddedBookmarks(){
@@ -59,7 +55,7 @@ public class BookmarksInstrumentedTest {
     @Test
     public void loadExistingBookmarks_withoutAddedBookmarks(){
         Bookmarks bookmarks = new Bookmarks("noBookmark");
-        boolean fileLoaded = instance.loadExistingBookmarks(blogPostReadActivity);
+        boolean fileLoaded = bookmarks.loadExistingBookmarks(blogPostReadActivity);
         assertThat(fileLoaded, is(false));
     }
     @Test
@@ -77,7 +73,7 @@ public class BookmarksInstrumentedTest {
         bookmarks.addBookmark(blogPostReadActivity, 4978);
         bookmarks.addBookmark(blogPostReadActivity, 3147);
         bookmarks.addBookmark(blogPostReadActivity, 6464);
-        boolean bookmarkRemoved = instance.removeBookmark(blogPostReadActivity, 3147);
+        boolean bookmarkRemoved = bookmarks.removeBookmark(blogPostReadActivity, 3147);
         assertThat(bookmarkRemoved, is(true));
     }
 
