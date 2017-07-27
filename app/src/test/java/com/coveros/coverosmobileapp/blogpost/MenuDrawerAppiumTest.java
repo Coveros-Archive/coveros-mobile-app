@@ -55,7 +55,7 @@ public class MenuDrawerAppiumTest {
     public void menuDrawer_slidesOpenInListOfBlogPosts(){
         driver.context("WEBVIEW");
         swipe();
-        driver.findElementByName("Blog");
+        driver.findElementByName("Blog").click();
         swipe();
         //make an assertion
     }
