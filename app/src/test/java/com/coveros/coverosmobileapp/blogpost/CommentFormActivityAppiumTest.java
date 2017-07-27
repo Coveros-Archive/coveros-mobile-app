@@ -22,8 +22,8 @@ public class CommentFormActivityAppiumTest {
 
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability("platformName", "Android");
-        capabilities.setCapability("deviceName", "Pixel");
-        capabilities.setCapability("platformVersion", "7.1.1");
+        capabilities.setCapability("deviceName", "Genymotion 'Phone' version - 7.0");
+        capabilities.setCapability("platformVersion", "7.0.0");
         capabilities.setCapability("appPackage", "com.coveros.coverosmobileapp");
         capabilities.setCapability("appActivity", ".blogpost.BlogPostsListActivity");
 
