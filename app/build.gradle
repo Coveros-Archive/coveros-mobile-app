@@ -66,11 +66,14 @@ task aggregateTestData {
     dependsOn 'aggregateCoverageResults'
 }
 
+
 task fullSonarAnalysis {
+    dependsOn 'installDebug'
     dependsOn 'jacocoTestReport'
     dependsOn 'connectedAndroidTest'
     dependsOn 'aggregateTestData'
     dependsOn 'sonarqube'
+    tasks.findByName('jacocoTestReport').mustRunAfter 'installDebug'
     tasks.findByName('aggregateTestData').mustRunAfter 'jacocoTestReport'
     tasks.findByName('aggregateTestData').mustRunAfter 'connectedAndroidTest'
     tasks.findByName('sonarqube').mustRunAfter 'aggregateTestData'
