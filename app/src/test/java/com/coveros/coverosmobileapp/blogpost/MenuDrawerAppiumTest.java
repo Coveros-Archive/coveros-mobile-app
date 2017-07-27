@@ -1,5 +1,9 @@
 package com.coveros.coverosmobileapp.blogpost;
 
+import android.widget.ListView;
+
+import com.coveros.coverosmobileapp.R;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,6 +12,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.appium.java_client.android.AndroidDriver;
@@ -20,7 +25,7 @@ public class MenuDrawerAppiumTest {
     private AndroidDriver driver;
     public void swipe()
     {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
+        JavascriptExecutor js = driver;
         HashMap<String, Double> swipeObject = new HashMap<String, Double>();
         swipeObject.put("startX", 0.95);
         swipeObject.put("startY", 0.5);
@@ -49,6 +54,8 @@ public class MenuDrawerAppiumTest {
     public void menuDrawer_slidesOpenInWebview(){
         driver.context("WEBVIEW");
         swipe();
+        ListView expectedView;
+        ListView actualView;
         //make an assertion
     }
     @Test
@@ -57,6 +64,8 @@ public class MenuDrawerAppiumTest {
         swipe();
         driver.findElementByName("Blog").click();
         swipe();
+        ListView expectedView;
+        ListView actualView;
         //make an assertion
     }
 }
