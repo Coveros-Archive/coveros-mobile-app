@@ -1,5 +1,5 @@
 package com.coveros.coverosmobileapp.blogpost;
-import android.content.Intent;
+
 import android.content.Context;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
@@ -16,7 +16,6 @@ import java.util.Set;
  * Uses Xstream to convert XML to Java or Java to XML for storing, removing, or loading bookmarks in XML file
  * @author Sadie Rynestad
  */
-
 public class Bookmarks {
 
     private static final String BOOKMARKS_FILE = "bookmarks.xml";
@@ -24,7 +23,7 @@ public class Bookmarks {
 
     private static Bookmarks instance;
 
-    private final Set<Integer> bookmarks = new HashSet<>();
+    private final Set<Integer> bookmarkSet = new HashSet<>();
 
     private final XStream stream = new XStream();
 
@@ -49,7 +48,7 @@ public class Bookmarks {
      * @return true if contains the bookmark and false otherwise
      */
     boolean contains(Integer id) {
-        return bookmarks.contains(id);
+        return bookmarkSet.contains(id);
     }
 
     /**
@@ -59,7 +58,7 @@ public class Bookmarks {
      * @return true if the bookmark id was removed and false otherwise
      */
     boolean removeBookmark(Context context, Integer id) {
-        boolean retVal = bookmarks.remove(id);
+        boolean retVal = bookmarkSet.remove(id);
         saveState(context);
         return retVal;
     }
@@ -71,7 +70,7 @@ public class Bookmarks {
      * @return true if the bookmark was added and false otherwised
      */
     boolean addBookmark(Context context, Integer id) {
-        boolean retVal = bookmarks.add(id);
+        boolean retVal = bookmarkSet.add(id);
         saveState(context);
         return retVal;
     }
@@ -84,15 +83,13 @@ public class Bookmarks {
     public boolean loadExistingBookmarks(Context context) {
         if (Arrays.asList(context.fileList()).contains(fileName)) {
             try (FileInputStream fis = context.openFileInput(fileName)) {
-                bookmarks.addAll((Set<Integer>) stream.fromXML(fis));
+                bookmarkSet.addAll((Set<Integer>) stream.fromXML(fis));
                 return true;
             } catch (IOException ex) {
                 Toast.makeText(context, "Could not load bookmark data from device", Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "Could not load bookmark data from device");
-                ex.printStackTrace();
+                Log.e(TAG, "Could not load bookmark data from device", ex);
                 return false;
             }
-
         }
         return false;
     }
@@ -103,10 +100,10 @@ public class Bookmarks {
      */
     private void saveState(Context context) {
         try (FileOutputStream fos = context.openFileOutput(fileName, Context.MODE_PRIVATE)) {
-            stream.toXML(bookmarks, fos);
+            stream.toXML(bookmarkSet, fos);
         } catch(IOException ex) {
             Toast.makeText(context, "Could not save bookmark state to fileName", Toast.LENGTH_SHORT).show();
-            Log.e(TAG, "Could not save bookmark state to fileName");
+            Log.e(TAG, "Could not save bookmark state to fileName", ex);
         }
     }
 }
