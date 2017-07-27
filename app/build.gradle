@@ -140,6 +140,11 @@ dependencies {
 
     androidTestCompile 'org.mockito:mockito-core:1.10.19'
 
+    // for appium tests
+    testCompile ('io.appium:java-client:4.1.2', {
+        exclude group: 'org.apache.commons', module: 'commons-lang3'
+    })
+
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 

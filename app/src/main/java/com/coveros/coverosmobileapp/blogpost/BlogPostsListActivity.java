@@ -1,10 +1,10 @@
 package com.coveros.coverosmobileapp.blogpost;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.SparseArray;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -40,21 +40,21 @@ public class BlogPostsListActivity extends BlogListActivity {
     private static final int POSTS_PER_PAGE = 10;
     private static final int NUM_OF_AUTHORS = 100;  // number of users that will be returned by the REST call... so if someday Coveros has over 100 employees, this needs to be changed
     private static final String AUTHORS_URL = "https://www3.dev.secureci.com/wp-json/wp/v2/users?orderby=id&per_page=" + NUM_OF_AUTHORS;
-    private static final String POSTS_URL = "https://www3.dev.secureci.com/wp-json/wp/v2/posts?per_page=" + POSTS_PER_PAGE + "&order=desc&orderby=date&fields=id,title,date,author&offset=%d";
 
     private List<BlogPost> blogPosts = new ArrayList<>();
     private SparseArray<String> authors = new SparseArray<>();  // to aggregate the ids and names of the authors of displayed blog posts
     private RequestQueue requestQueue;
 
     private DrawerLayout menu;
-    private ListView drawerList;
-
     private LinearLayout postList;
     private ListView blogPostsListView;
     private BlogPostsListAdapter postsAdapter;
     private int currentListSize;
+    static final int DRAWER_OPEN_BLOG_MENU_POSITION = 12;
     private int postsOffset = 0;
 
+    private static final String POSTS_URL = "https://www3.dev.secureci.com/wp-json/wp/v2/posts?per_page=" + POSTS_PER_PAGE + "&order=desc&orderby=date&fields=id,title,date,author&offset=%d";
+    static final String DEVSITE = "https://www3.dev.secureci.com/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +72,7 @@ public class BlogPostsListActivity extends BlogListActivity {
         //creates the sliding navigation drawer menu
         postList = (LinearLayout) findViewById(R.id.postlist);
         menu = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerList = (ListView) findViewById(R.id.left_drawer);
+        ListView drawerList = (ListView) findViewById(R.id.left_drawer);
         final String[] menuTitles = getResources().getStringArray(R.array.menu_Titles);
         drawerList.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, menuTitles));
@@ -95,7 +95,7 @@ public class BlogPostsListActivity extends BlogListActivity {
         blogPostsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position > 0 ) {  // if header that says "Blogposts" is clicked, do nothing
+                if (position > 0) {  // if header that says "Blogposts" is clicked, do nothing
                     BlogPost blogPost = blogPosts.get(position - 1);  // -1 because the TextView header offsets the blogPosts by one
                     Intent intent = new Intent(getApplicationContext(), BlogPostReadActivity.class);
                     intent.putExtra("blogId", blogPost.getId());
@@ -240,11 +240,14 @@ public class BlogPostsListActivity extends BlogListActivity {
          */
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if (position == 0) {
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-            } else {
-
-                startActivity(new Intent(getApplicationContext(), BlogPostsListActivity.class));
+            String[] stringsToAddLast = getResources().getStringArray(R.array.menuEndings);
+            Intent newIntent = new Intent(getApplicationContext(), MainActivity.class);
+            //Going to blog list
+            if (position == DRAWER_OPEN_BLOG_MENU_POSITION) {
+                menu.closeDrawer(Gravity.START);
+            } else {                                     //Return to a web page in Main Activity
+                newIntent.putExtra("WEBSITE", DEVSITE + stringsToAddLast[position]);
+                startActivity(newIntent);
             }
         }
     }
@@ -253,5 +256,3 @@ public class BlogPostsListActivity extends BlogListActivity {
         return blogPostsListView;
     }
 }
-
-
