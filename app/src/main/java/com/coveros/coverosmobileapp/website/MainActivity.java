@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //Link WebView variable with activity_main_webview for Web View Access
         browser = (WebView) findViewById(R.id.activity_main_webview);
+        browser.setWebContentsDebuggingEnabled(true);
         setWebViewBrowser(browser);
         rQueue = Volley.newRequestQueue(MainActivity.this);
 
