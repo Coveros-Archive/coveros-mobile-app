@@ -33,8 +33,6 @@ public class BookmarksInstrumentedTest {
             blogPost = new BlogPost(blogJson, authors);
             ArrayList<String> blogPostData = new ArrayList<>();
             blogPostData.add(String.valueOf(blogPost.getId()));
-            blogPostData.add(blogPost.getTitle());
-            blogPostData.add(blogPost.getContent());
             Intent intent = new Intent();
             intent.putStringArrayListExtra("blogPostData", blogPostData);
             return intent;
@@ -46,8 +44,8 @@ public class BookmarksInstrumentedTest {
         instance = new Bookmarks(fakeBookmarkFile);;
     }
     @After
-    public void clean(File fakeBookmarkFile) {
-        fakeBookmarkFile.delete();
+    public void clean() {
+        
     }
     @Test
     public void loadExistingBookmarks_withAddedBookmarks(){
