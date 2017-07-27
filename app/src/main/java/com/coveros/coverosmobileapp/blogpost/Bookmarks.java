@@ -1,5 +1,5 @@
 package com.coveros.coverosmobileapp.blogpost;
-
+import android.content.Intent;
 import android.content.Context;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
@@ -20,7 +20,6 @@ import java.util.Set;
 public class Bookmarks {
 
     private static final String BOOKMARKS_FILE = "bookmarks.xml";
-
     private static final String TAG = "Bookmarks";
 
     private static Bookmarks instance;
@@ -30,6 +29,7 @@ public class Bookmarks {
     private final XStream stream = new XStream();
 
     private final String fileName;
+
 
     @VisibleForTesting
     Bookmarks(String fileName) {
@@ -85,15 +85,16 @@ public class Bookmarks {
         if (Arrays.asList(context.fileList()).contains(fileName)) {
             try (FileInputStream fis = context.openFileInput(fileName)) {
                 bookmarks.addAll((Set<Integer>) stream.fromXML(fis));
+                return true;
             } catch (IOException ex) {
                 Toast.makeText(context, "Could not load bookmark data from device", Toast.LENGTH_SHORT).show();
                 Log.e(TAG, "Could not load bookmark data from device");
                 ex.printStackTrace();
+                return false;
             }
-            return true;
-        } else {
-            return false;
+
         }
+        return false;
     }
 
     /**
