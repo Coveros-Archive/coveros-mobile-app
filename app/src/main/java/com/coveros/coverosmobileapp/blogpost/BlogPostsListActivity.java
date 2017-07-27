@@ -95,7 +95,7 @@ public class BlogPostsListActivity extends BlogListActivity {
         blogPostsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position > 0 ) {  // if header that says "Blogposts" is clicked, do nothing
+                if (position > 0) {  // if header that says "Blogposts" is clicked, do nothing
                     BlogPost blogPost = blogPosts.get(position - 1);  // -1 because the TextView header offsets the blogPosts by one
                     Intent intent = new Intent(getApplicationContext(), BlogPostReadActivity.class);
                     intent.putExtra("blogId", blogPost.getId());
@@ -243,9 +243,9 @@ public class BlogPostsListActivity extends BlogListActivity {
             String[] stringsToAddLast = getResources().getStringArray(R.array.menuEndings);
             Intent newIntent = new Intent(getApplicationContext(), MainActivity.class);
             //Going to blog list
-            if(position == DRAWER_OPEN_BLOG_MENU_POSITION) {
+            if (position == DRAWER_OPEN_BLOG_MENU_POSITION) {
                 menu.closeDrawer(Gravity.START);
-            } else{                                     //Return to a web page in Main Activity
+            } else {                                     //Return to a web page in Main Activity
                 newIntent.putExtra("WEBSITE", DEVSITE + stringsToAddLast[position]);
                 startActivity(newIntent);
             }
