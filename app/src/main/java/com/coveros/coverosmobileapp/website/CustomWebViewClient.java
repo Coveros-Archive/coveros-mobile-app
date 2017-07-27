@@ -12,6 +12,8 @@ import android.webkit.WebViewClient;
 import com.coveros.coverosmobileapp.blogpost.BlogPostReadActivity;
 import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
 
+import org.jsoup.nodes.Document;
+
 /**
  * Created by EPainter on 6/16/2017.
  * Provides Custom WebView Client that only loads Coveros-related content through WebView.
@@ -19,142 +21,134 @@ import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
  */
 class CustomWebViewClient extends WebViewClient {
 
-    private boolean weAreConnected;
     private boolean isBlogPost;
-    private String savedClassName;
-    private int postID;
     private MainActivity mainActivity;
+    private int postId;
+    private String classNames;
+
     private static final String TAG = "CustomWebViewClient";
-  
-    CustomWebViewClient(MainActivity ma) {
-        mainActivity = ma;
-        weAreConnected = true;
-    }
+    private static final String POST_ID_CLASS_PREFIX = "postid-";
+    private static final String[] BLOG_URLS = {"coveros.com/blog/", "coveros.com/category/blogs/", "dev.secureci.com/blog/", "dev.secureci.com/category/blogs/"};
+    private static final String[] COVEROS_URLS = {"coveros.com", "dev.secureci.com"};
 
-    CustomWebViewClient() {
-        weAreConnected = true;
-    }
 
-    MainActivity getMainActivity() {
-        return mainActivity;
-    }
-
-    void setMainActivity(MainActivity ma) {
-        mainActivity = ma;
-    }
-
-    boolean getConnection() {
-        return weAreConnected;
-    }
-
-    void setConnection(boolean answer) {
-        weAreConnected = answer;
-    }
-
-    boolean getIsBlogPost() {
-        return isBlogPost;
-    }
-
-    void setIsBlogPost(Boolean blogPost) {
-        isBlogPost = blogPost;
-    }
-
-    int getPostID() {
-        return postID;
-    }
-
-    void setPostID(int newID) {
-        postID = newID;
-    }
-
-    String getSavedClassName() {
-        return savedClassName;
-    }
-
-    void setSavedClassName(String newValue) {
-        savedClassName = newValue;
+    CustomWebViewClient(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
     }
 
     @Override
-    public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+    public boolean shouldOverrideUrlLoading(final WebView view, WebResourceRequest request) {
         //If blog website or blog web page is categorically loaded (hybrid)
         isBlogPost = false;
-        String value;
-        String url = request.getUrl().toString();
-        URLContent content = new URLContent(url);
+        final String url = request.getUrl().toString();
 
-        //Create new thread to handle network operations
-        Thread th = new Thread(content);
-        th.start();
-        try {
-            th.join();
-        } catch (InterruptedException e) {
-            Log.e(TAG, "Interruption Occurred with thread for URL Content");
-            Thread.currentThread().interrupt();
-        }
-        value = content.getHtmlClassName();
+        DocumentGenerator urlHtml = new DocumentGenerator(url, new DocumentGenerator.DocumentGeneratorCallback() {
+            @Override
+            public void onDocumentReceived(Document document) {
+                classNames = document.body().className();
+                isBlogPost = checkIsBlogPost(classNames);
 
-        //Only Blog posts have this body class name listed, Check off that the url is a Blog Post Link
-        checkIfBlogPost(value);
+                view.post(new RedirectManager(view, url));
 
-        //If a Blog Post was clicked on from the home page, redirect to native blog associated with post
-        if (isBlogPost) {
-            //Index at 48 because each blog post has the same index length up until post id numbers
-            //Post ID numbers could be n number of digits. Read values until space
-            value = value.substring(48);
-            String saveID;
-            //Get only numbers after post id (stops when empty space is present)
-            StringBuilder builder = new StringBuilder();
-            while(value.charAt(0) != ' '){
-                builder.append(value.charAt(0));
-                value = value.substring(1);
             }
-            saveID = builder.toString();
-            //Start individual blog
-            Intent startBlogPostRead = new Intent(view.getContext(), BlogPostReadActivity.class);
-            postID = Integer.parseInt(saveID);
-            startBlogPostRead.putExtra("blogId", postID);
-            view.getContext().startActivity(startBlogPostRead);
-            return true;
-        }
-        //If blog website or blog web page is categorically loaded (hybrid)
-        else if (url.contains("coveros.com/blog/") || url.contains("coveros.com/category/blogs/") ||
-                url.contains("dev.secureci.com/blog/") || url.contains("dev.secureci.com/category/blogs/")) {
-            //Load Blog List
-            Intent startBlogPost = new Intent(view.getContext(), BlogPostsListActivity.class);
-            view.getContext().startActivity(startBlogPost);
-            return true;
-        }
-        //Default stay in WebView (Recognizes url associated with Coveros content)
-        else if (url.contains("coveros.com") || url.contains("dev.secureci.com")) {
-            view.loadUrl(url);
-            return true;
-        }
-        //Otherwise, resort to Browser for external content
-        else {
-            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            view.getContext().startActivity(i);
-            return true;
-        }
+        });
+
+        // Create new thread to handle network operations
+        Thread getUrlHtmlThread = new Thread(urlHtml);
+        getUrlHtmlThread.start();
+
+        return true;
+
     }
 
-    public void checkIfBlogPost(String value){
-        if (value.length() >= 22 && ("post-template-default").equals(value.substring(0, 21))) {
-            setSavedClassName(value.substring(0, 21));
-            isBlogPost = true;
+    public boolean checkIsBlogPost(String classNames){
+        return classNames.contains(POST_ID_CLASS_PREFIX);
+    }
+
+    public boolean checkIsBlog(String url) {
+        for (String blogUrl : BLOG_URLS) {
+            if (url.contains(blogUrl)) {
+                return true;
+            }
         }
+        return false;
+    }
+
+    public boolean checkIsCoveros(String url) {
+        for (String coverosUrl : COVEROS_URLS) {
+            if (url.contains(coverosUrl)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public String parsePostId(String classNamesToParse) {
+        // get index of class name that contains the post id
+        int postIdIndex = classNamesToParse.indexOf(POST_ID_CLASS_PREFIX);
+        // start substring at the post id number
+        String classNamesStartingAtPostId = classNamesToParse.substring(postIdIndex + POST_ID_CLASS_PREFIX.length());
+
+        String parsedPostId;
+        // stop parsing at space character
+        StringBuilder builder = new StringBuilder();
+        while(classNamesStartingAtPostId.charAt(0) != ' '){
+            builder.append(classNamesStartingAtPostId.charAt(0));
+            classNamesStartingAtPostId = classNamesStartingAtPostId.substring(1);
+        }
+        parsedPostId = builder.toString();
+        return parsedPostId;
+    }
+
+    private class RedirectManager implements Runnable {
+        WebView webView;
+        String redirectUrl;
+
+            private RedirectManager(WebView webView, String redirectUrl) {
+                this.webView = webView;
+                this.redirectUrl = redirectUrl;
+            }
+            @Override
+            public void run() {
+                //If a Blog Post was clicked on from the home page, redirect to native blog associated with post
+                if (isBlogPost) {
+                    postId = Integer.parseInt(parsePostId(classNames));
+
+                    //Start individual blog
+                    Intent startBlogPostRead = new Intent(webView.getContext(), BlogPostReadActivity.class);
+                    startBlogPostRead.putExtra("blogId", postId);
+                    webView.getContext().startActivity(startBlogPostRead);
+                }
+                //If blog website or blog web page is categorically loaded (hybrid)
+                else if (checkIsBlog(redirectUrl)) {
+                    //Load Blog List
+                    Intent startBlogPost = new Intent(webView.getContext(), BlogPostsListActivity.class);
+                    webView.getContext().startActivity(startBlogPost);
+                }
+                //Default stay in WebView (Recognizes url associated with Coveros content)
+                else if (checkIsCoveros(redirectUrl)) {
+                    webView.loadUrl(redirectUrl);
+                }
+                //Otherwise, resort to Browser for external content
+                else {
+                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(redirectUrl));
+                    webView.getContext().startActivity(i);
+                }
+            }
     }
 
     @Override
     public void onPageStarted(WebView view, String url, Bitmap fav) {
-        if (("https://www.coveros.com/blog/").equals(getMainActivity().getWebName())) {
-            getMainActivity().onBackPressed();
+        if (("https://www.coveros.com/blog/").equals(mainActivity.getWebName())) {
+            mainActivity.onBackPressed();
         }
     }
 
     @Override
     public void onPageFinished(WebView view, String url) {
-        getMainActivity().setWebName(url);
+        mainActivity.setWebName(url);
+        view.evaluateJavascript("jQuery('.open-responsive-menu').unbind();", null);
+        view.evaluateJavascript("jQuery('.open-responsive-menu').click(function() { android.openMenu();});", null);
     }
 
     @Override
@@ -164,4 +158,13 @@ class CustomWebViewClient extends WebViewClient {
         view.loadUrl("file:///android_asset/sampleErrorPage.html");
         super.onReceivedError(view, request, error);
     }
+
+    boolean getIsBlogPost() {
+        return isBlogPost;
+    }
+
+    public int getPostId() {
+        return postId;
+    }
+
 }

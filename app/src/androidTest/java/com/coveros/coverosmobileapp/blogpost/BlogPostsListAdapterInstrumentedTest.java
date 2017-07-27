@@ -23,6 +23,10 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
 /**
  * @author Maria Kim
@@ -32,12 +36,6 @@ import static junit.framework.Assert.assertNotNull;
 public class BlogPostsListAdapterInstrumentedTest {
     private static BlogPostsListAdapter blogPostsListAdapter;
     private static BlogPostsListActivity blogPostsListActivity;
-
-    private static int EXPECTED_ID = 0;
-    private static int EXPECTED_COUNT = 1;
-    private static String EXPECTED_TITLE = "\u201CMy Disdain for the Feline Race--an Autobiography";
-    private static String EXPECTED_AUTHORDATE = "Ryan Kenney\nJun 27, 2017";
-
 
     @Rule
     public ActivityTestRule<BlogPostsListActivity> blogPostsListActivityRule = new ActivityTestRule<BlogPostsListActivity>(BlogPostsListActivity.class) {
@@ -76,43 +74,51 @@ public class BlogPostsListAdapterInstrumentedTest {
 
     @Test
     public void getItem_checkTitle() {
+        final String expectedTitle = "\u201CMy Disdain for the Feline Race--an Autobiography";
         String actualTitle = ((BlogPost) blogPostsListAdapter.getItem(0)).getTitle();
-        assertEquals("Ryan Kenney is expected.", EXPECTED_TITLE, actualTitle);
+        assertThat(actualTitle, equalTo(expectedTitle));
     }
 
     @Test
     public void getItem_checkId() {
+        final int expectedId = 0;
         int actualId = (int) blogPostsListAdapter.getItemId(0);
-        assertEquals("id 0 expected.", EXPECTED_ID, actualId);
+        assertThat(actualId, equalTo(expectedId));
     }
 
     @Test
     public void getCount_withOneItem() {
+        final int expectedCount = 1;
         int actualCount = blogPostsListAdapter.getCount();
-        assertEquals("Count of 1 expected.", EXPECTED_COUNT, actualCount);
+        assertThat(actualCount, equalTo(expectedCount));
     }
 
     @Test
     public void getView_withNullConvertView() {
+        final String expectedTitle = "\u201CMy Disdain for the Feline Race--an Autobiography";
+        final String expectedAuthorDate = "Ryan Kenney\nJun 27, 2017";
+
         View view = blogPostsListAdapter.getView(0, null, blogPostsListActivity.getBlogPostsListView());
 
         TextView title = (TextView) view.findViewById(R.id.title);
         TextView authorDate = (TextView) view.findViewById(R.id.author_date);
 
-        assertNotNull("View should not be null. ", view);
-        assertNotNull("Title TextView should not be null. ", title);
-        assertNotNull("AuthorDate TextView should not be null. ", authorDate);
+        assertThat(view, is(notNullValue()));
+        assertThat(title, is(notNullValue()));
+        assertThat(authorDate, is(notNullValue()));
 
         String actualTitle = title.getText().toString();
-        assertEquals("Names should match.", EXPECTED_TITLE, actualTitle);
+        assertThat(actualTitle, equalTo(expectedTitle));
 
         String actualAuthorDate = authorDate.getText().toString();
-        assertEquals("Dates should match.", EXPECTED_AUTHORDATE, actualAuthorDate);
+        assertThat(actualAuthorDate, equalTo(expectedAuthorDate));
 
     }
 
     @Test
     public void getView_withNonNullConvertView() {
+        final String expectedTitle = "\u201CMy Disdain for the Feline Race--an Autobiography";
+        final String expectedAuthorDate = "Ryan Kenney\nJun 27, 2017";
 
         ViewGroup convertView = new LinearLayout(blogPostsListActivity);
         BlogPostsListAdapter.BlogPostHolder blogPostHolder = new BlogPostsListAdapter.BlogPostHolder();
@@ -123,9 +129,9 @@ public class BlogPostsListAdapterInstrumentedTest {
         View view = blogPostsListAdapter.getView(0, convertView, blogPostsListActivity.getBlogPostsListView());
 
         String actualTitle = blogPostsListAdapter.getBlogPostHolder().title.getText().toString();
-        assertEquals("Names should match.", EXPECTED_TITLE, actualTitle);
+        assertThat(actualTitle, equalTo(expectedTitle));
 
         String actualAuthorDate = blogPostsListAdapter.getBlogPostHolder().authorDate.getText().toString();
-        assertEquals("Dates should match.", EXPECTED_AUTHORDATE, actualAuthorDate);
+        assertThat(actualAuthorDate, equalTo(expectedAuthorDate));
     }
 }

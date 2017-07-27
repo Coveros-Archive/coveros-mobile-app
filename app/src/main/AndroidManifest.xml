@@ -48,15 +48,15 @@
             android:exported="true">
         </activity>
         <activity android:name=".blogpost.CommentFormActivity"
-            android:label="CoverosMobileApp"
+            android:label="@string/app_name"
             android:exported="true">
         </activity>
         <activity android:name=".oauth.example.OAuthLoginActivity"
-            android:label="CoverosMobileApp"
+            android:label="@string/app_name"
             android:exported="true">
         </activity>
         <activity android:name=".oauth.example.BlogPostUpdateActivity"
-            android:label="CoverosMobileApp"
+            android:label="@string/app_name"
             android:exported="true">
         </activity>
     </application>

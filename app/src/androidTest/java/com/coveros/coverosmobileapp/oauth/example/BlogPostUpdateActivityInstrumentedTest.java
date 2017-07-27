@@ -8,8 +8,8 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.test.util.LooperTestSuite;
+import com.google.gson.JsonObject;
 
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -72,7 +72,7 @@ public class BlogPostUpdateActivityInstrumentedTest extends LooperTestSuite {
         final String expectedUrl = "https://www3.dev.secureci.com/wp-json/wp/v2/posts/7601";
 
         onView(withId(R.id.enter_post_id)).perform(ViewActions.typeText(expectedPostId), closeSoftKeyboard());
-        onView(withId(R.id.enter_new_content)).perform(ViewActions.typeText("Hello, Ryane."), closeSoftKeyboard());
+        onView(withId(R.id.enter_new_content)).perform(ViewActions.typeText(expectedNewContent), closeSoftKeyboard());
         onView(withId(R.id.post_button)).perform(click());
 
         String actualPostId = blogPostUpdateActivity.getPostId();
@@ -89,10 +89,16 @@ public class BlogPostUpdateActivityInstrumentedTest extends LooperTestSuite {
     @Test
     public void onResponse_checkSuccessResponseAlertDialogIsShowing() {
 
-        onView(withId(R.id.post_button)).perform(click());  // sets listener
-        blogPostUpdateActivity.getRestRequest().getRestRequestListener().onResponse(new JSONObject());
+        final String postId = "7601";
+        final String newContent = "Hello, Ryane.";
 
-        boolean isSuccessResponseShowing = blogPostUpdateActivity.getSuccessDialog().isShowing();
+        onView(withId(R.id.enter_post_id)).perform(ViewActions.typeText(postId), closeSoftKeyboard());
+        onView(withId(R.id.enter_new_content)).perform(ViewActions.typeText(newContent), closeSoftKeyboard());
+        onView(withId(R.id.post_button)).perform(click());  // sets listener
+
+        blogPostUpdateActivity.getRestRequest().getListener().onResponse(new JsonObject());
+
+        boolean isSuccessResponseShowing = blogPostUpdateActivity.getSuccessAlertDialog().isShowing();
         assertThat(isSuccessResponseShowing, equalTo(true));
 
     }
@@ -107,7 +113,7 @@ public class BlogPostUpdateActivityInstrumentedTest extends LooperTestSuite {
         onView(withId(R.id.post_button)).perform(click());  // sets errorlistener
         blogPostUpdateActivity.getRestRequest().getErrorListener().onErrorResponse(volleyError);
 
-        boolean isErrorResponseShowing = blogPostUpdateActivity.getErrorDialog().isShowing();
+        boolean isErrorResponseShowing = blogPostUpdateActivity.getNetworkErrorAlertDialog().isShowing();
 
         assertThat(isErrorResponseShowing, equalTo(true));
 

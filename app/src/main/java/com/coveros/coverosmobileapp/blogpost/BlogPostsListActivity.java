@@ -18,6 +18,8 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
+import com.coveros.coverosmobileapp.dialog.AlertDialogFactory;
+import com.coveros.coverosmobileapp.errorlistener.NetworkErrorListener;
 import com.coveros.coverosmobileapp.website.MainActivity;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -35,21 +37,24 @@ import java.util.Locale;
 @SuppressWarnings("squid:MaximumInheritanceDepth")
 public class BlogPostsListActivity extends BlogListActivity {
 
+    private static final int POSTS_PER_PAGE = 10;
+    private static final int NUM_OF_AUTHORS = 100;  // number of users that will be returned by the REST call... so if someday Coveros has over 100 employees, this needs to be changed
+    private static final String AUTHORS_URL = "https://www3.dev.secureci.com/wp-json/wp/v2/users?orderby=id&per_page=" + NUM_OF_AUTHORS;
+    private static final String POSTS_URL = "https://www3.dev.secureci.com/wp-json/wp/v2/posts?per_page=" + POSTS_PER_PAGE + "&order=desc&orderby=date&fields=id,title,date,author&offset=%d";
+
     private List<BlogPost> blogPosts = new ArrayList<>();
     private SparseArray<String> authors = new SparseArray<>();  // to aggregate the ids and names of the authors of displayed blog posts
-    private RequestQueue rQueue;
-    private String[] menuTitles;
+    private RequestQueue requestQueue;
+
     private DrawerLayout menu;
     private ListView drawerList;
+
     private LinearLayout postList;
     private ListView blogPostsListView;
     private BlogPostsListAdapter postsAdapter;
     private int currentListSize;
-    private static final int POSTS_PER_PAGE = 10;
     private int postsOffset = 0;
-    private static final int NUM_OF_AUTHORS = 100;  // number of users that will be returned by the REST call... so if someday Coveros has over 100 employees, this needs to be changed
-    private static final String AUTHORS_URL = "https://www3.dev.secureci.com/wp-json/wp/v2/users?orderby=id&per_page=" + NUM_OF_AUTHORS;
-    private static final String POSTS_URL = "https://www3.dev.secureci.com/wp-json/wp/v2/posts?per_page=" + POSTS_PER_PAGE + "&order=desc&orderby=date&fields=id,title,date,author&offset=%d";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,13 +65,15 @@ public class BlogPostsListActivity extends BlogListActivity {
         blogPostsListView = getListView();
         blogPostsListView.addHeaderView(createTextViewLabel(BlogPostsListActivity.this, getResources().getString(R.string.blogposts_label)));  // settings label above blog post list
 
-        errorListener = createErrorListener(BlogPostsListActivity.this);
+        String errorAlertDialogMessage = getString(R.string.blogposts_network_error_message);
+        networkErrorAlertDialog = AlertDialogFactory.createNetworkErrorAlertDialogFinishButton(BlogPostsListActivity.this, errorAlertDialogMessage);
+        networkErrorListener = new NetworkErrorListener(BlogPostsListActivity.this, networkErrorAlertDialog);
 
         //creates the sliding navigation drawer menu
         postList = (LinearLayout) findViewById(R.id.postlist);
         menu = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerList = (ListView) findViewById(R.id.left_drawer);
-        menuTitles = getResources().getStringArray(R.array.menu_Titles);
+        final String[] menuTitles = getResources().getStringArray(R.array.menu_Titles);
         drawerList.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, menuTitles));
         drawerList.setOnItemClickListener(new BlogPostsListActivity.DrawerItemClickListener());
@@ -88,10 +95,13 @@ public class BlogPostsListActivity extends BlogListActivity {
         blogPostsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                BlogPost blogPost = blogPosts.get(position - 1);  // -1 because the TextView offsets the blogPosts by one for some reason
-                Intent intent = new Intent(getApplicationContext(), BlogPostReadActivity.class);
-                intent.putExtra("blogId", blogPost.getId());
-                startActivity(intent);
+                if (position > 0 ) {  // if header that says "Blogposts" is clicked, do nothing
+                    BlogPost blogPost = blogPosts.get(position - 1);  // -1 because the TextView header offsets the blogPosts by one
+                    Intent intent = new Intent(getApplicationContext(), BlogPostReadActivity.class);
+                    intent.putExtra("blogId", blogPost.getId());
+                    startActivity(intent);
+                }
+
             }
         });
     }
@@ -115,17 +125,13 @@ public class BlogPostsListActivity extends BlogListActivity {
         addPostRequest.start();
     }
 
-    Response.ErrorListener getErrorListener() {
-        return errorListener;
-    }
-
     /**
      * Custom thread to run requests for post and author data.
      */
     class RequestsThread extends Thread {
         @Override
         public void run() {
-            rQueue = Volley.newRequestQueue(BlogPostsListActivity.this);
+            requestQueue = Volley.newRequestQueue(BlogPostsListActivity.this);
             retrieveAuthors(new PostListCallback<String>() {
                 @Override
                 public void onSuccess(List<String> newAuthors) {
@@ -160,10 +166,11 @@ public class BlogPostsListActivity extends BlogListActivity {
                     Integer id = authorJson.get("id").getAsInt();
                     authors.put(id, authorJson.get("name").getAsString());
                 }
+
                 postListCallback.onSuccess(null);
             }
-        }, errorListener);
-        rQueue.add(authorsRequest);
+        }, networkErrorListener);
+        requestQueue.add(authorsRequest);
     }
 
     /**
@@ -183,9 +190,9 @@ public class BlogPostsListActivity extends BlogListActivity {
                 postListCallback.onSuccess(newBlogPosts);
                 postsOffset = postsOffset + POSTS_PER_PAGE;
             }
-        }, errorListener);
+        }, networkErrorListener);
 
-        rQueue.add(blogPostsRequest);
+        requestQueue.add(blogPostsRequest);
     }
 
     /**

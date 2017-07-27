@@ -18,7 +18,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="@string/comment_form_label"
+        android:text="@string/leave_comment"
         android:textColor="#000000"
         android:textSize="20sp" />
 
@@ -33,7 +33,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
 
-        android:hint="@string/comment_form_name_hint"
+        android:hint="@string/comment_form_name_cap"
         android:inputType="textPersonName"
         android:lines="1"
         app:layout_constraintHorizontal_bias="0.0"
@@ -54,7 +54,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:hint="@string/comment_form_email_hint"
+        android:hint="@string/comment_form_email_cap"
         android:inputType="textEmailAddress"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -75,7 +75,7 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/comment_message_border"
         android:gravity="top"
-        android:hint="@string/comment_form_message_hint"
+        android:hint="@string/comment_form_message_cap"
         android:inputType="textCapSentences|textMultiLine"
         android:lines="6"
         android:maxLength="2000"
