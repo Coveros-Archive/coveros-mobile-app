@@ -23,7 +23,7 @@ public class BlogPostReadActivityAppiumTest {
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability("platformName", "Android");
         capabilities.setCapability("deviceName", "Genymotion 'Phone' version - 7.0");
-        capabilities.setCapability("platformVersion", "7.0.0");
+        capabilities.setCapability("platformVersion", "7.0");
         capabilities.setCapability("appPackage", "com.coveros.coverosmobileapp");
         capabilities.setCapability("appActivity", ".blogpost.BlogPostsListActivity");
 
