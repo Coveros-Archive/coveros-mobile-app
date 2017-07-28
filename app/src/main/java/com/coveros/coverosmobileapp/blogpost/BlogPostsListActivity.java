@@ -42,6 +42,7 @@ public class BlogPostsListActivity extends BlogListActivity {
     private static final String AUTHORS_URL = "https://www3.dev.secureci.com/wp-json/wp/v2/users?orderby=id&per_page=" + NUM_OF_AUTHORS;
     private static final String POSTS_URL = "https://www3.dev.secureci.com/wp-json/wp/v2/posts?per_page=" + POSTS_PER_PAGE + "&order=desc&orderby=date&fields=id,title,date,author&offset=%d";
     private static final String DEVSITE_URL = "https://www3.dev.secureci.com/";
+    private static final String RESPONSE_TAG = "response";
 
     private List<BlogPost> blogPosts = new ArrayList<>();
     private SparseArray<String> authors = new SparseArray<>();  // to aggregate the ids and names of the authors of displayed blog posts
@@ -54,8 +55,6 @@ public class BlogPostsListActivity extends BlogListActivity {
 
     private int currentListSize;
     private int postsOffset = 0;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,34 +88,39 @@ public class BlogPostsListActivity extends BlogListActivity {
         );
 
         requestQueue = Volley.newRequestQueue(this);
-        RestRequest authorsRequest = new RestRequest(AUTHORS_URL, null, null, new Response.Listener<JsonObject>() {
+        Thread requestsThread = new Thread(new Runnable() {
             @Override
-            public void onResponse(JsonObject response) {
-                for (JsonElement author : response.get("response").getAsJsonArray()) {
-                    JsonObject authorJson = (JsonObject) author;
-                    Integer id = authorJson.get("id").getAsInt();
-                    authors.put(id, authorJson.get("name").getAsString());
-                }
-                RestRequest blogPostsRequest = new RestRequest(String.format(Locale.US, POSTS_URL, postsOffset), null, null, new Response.Listener<JsonObject>() {
+            public void run() {
+                RestRequest authorsRequest = new RestRequest(AUTHORS_URL, null, null, new Response.Listener<JsonObject>() {
                     @Override
                     public void onResponse(JsonObject response) {
-                        JsonArray blogPostsJson = response.get("response").getAsJsonArray();
-                        List<BlogPost> newBlogPosts = new ArrayList<>();
-                        for (JsonElement blogPost : blogPostsJson) {
-                            newBlogPosts.add(new BlogPost((JsonObject) blogPost, authors));
+                        for (JsonElement author : response.get(RESPONSE_TAG).getAsJsonArray()) {
+                            JsonObject authorJson = (JsonObject) author;
+                            Integer id = authorJson.get("id").getAsInt();
+                            authors.put(id, authorJson.get("name").getAsString());
                         }
-                        blogPosts.addAll(newBlogPosts);
-                        postsAdapter = new BlogPostsListAdapter(BlogPostsListActivity.this, R.layout.post_list_text, blogPosts);
-                        blogPostsListView.setAdapter(postsAdapter);
-                        currentListSize = blogPostsListView.getAdapter().getCount();
-                        blogPostsListView.setOnScrollListener(new BlogPostsListOnScrollListener());
-                        postsOffset = postsOffset + POSTS_PER_PAGE;
+                        RestRequest blogPostsRequest = new RestRequest(String.format(Locale.US, POSTS_URL, postsOffset), null, null, new Response.Listener<JsonObject>() {
+                            @Override
+                            public void onResponse(JsonObject response) {
+                                JsonArray blogPostsJson = response.get(RESPONSE_TAG).getAsJsonArray();
+                                List<BlogPost> newBlogPosts = new ArrayList<>();
+                                for (JsonElement blogPost : blogPostsJson) {
+                                    newBlogPosts.add(new BlogPost((JsonObject) blogPost, authors));
+                                }
+                                blogPosts.addAll(newBlogPosts);
+                                postsAdapter = new BlogPostsListAdapter(BlogPostsListActivity.this, R.layout.post_list_text, blogPosts);
+                                blogPostsListView.setAdapter(postsAdapter);
+                                currentListSize = blogPostsListView.getAdapter().getCount();
+                                blogPostsListView.setOnScrollListener(new BlogPostsListOnScrollListener());
+                                postsOffset = postsOffset + POSTS_PER_PAGE;
+                            }
+                        }, networkErrorListener);
+                        requestQueue.add(blogPostsRequest);
                     }
                 }, networkErrorListener);
-                requestQueue.add(blogPostsRequest);
+                requestQueue.add(authorsRequest);
             }
-        }, networkErrorListener);
-        requestQueue.add(authorsRequest);
+        });
 
         // when a post is selected, feeds its associated data into a BlogPostReadActivity activity
         blogPostsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -140,7 +144,7 @@ public class BlogPostsListActivity extends BlogListActivity {
         RestRequest blogPostsRequest = new RestRequest(String.format(Locale.US, POSTS_URL, postsOffset), null, null, new Response.Listener<JsonObject>() {
             @Override
             public void onResponse(JsonObject response) {
-                JsonArray blogPostsJson = response.get("response").getAsJsonArray();
+                JsonArray blogPostsJson = response.get(RESPONSE_TAG).getAsJsonArray();
                 List<BlogPost> newBlogPosts = new ArrayList<>();
                 for (JsonElement blogPost : blogPostsJson) {
                     newBlogPosts.add(new BlogPost((JsonObject) blogPost, authors));
