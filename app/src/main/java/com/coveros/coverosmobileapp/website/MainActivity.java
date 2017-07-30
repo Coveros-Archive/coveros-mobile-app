@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         //Link WebView variable with activity_main_webview for Web View Access
         browser = (WebView) findViewById(R.id.activity_main_webview);
         setWebViewBrowser(browser);
+        browser.setWebContentsDebuggingEnabled(true);
         rQueue = Volley.newRequestQueue(MainActivity.this);
 
         //constructing the menu navigation drawer
