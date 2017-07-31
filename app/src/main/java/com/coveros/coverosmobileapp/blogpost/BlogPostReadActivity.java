@@ -45,7 +45,7 @@ public class BlogPostReadActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.post);
 
-        final int blogId = getIntent().getIntExtra("blogId", 7509);
+        final int blogId = getIntent().getIntExtra("blogId", 0);
         final String blogPostUrl = "https://www3.dev.secureci.com/wp-json/wp/v2/posts/" + blogId;
         final RequestQueue requestQueue = Volley.newRequestQueue(BlogPostReadActivity.this);
 
