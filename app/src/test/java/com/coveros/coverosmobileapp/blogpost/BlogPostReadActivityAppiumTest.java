@@ -18,21 +18,9 @@ import io.appium.java_client.android.AndroidDriver;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class BlogPostReadActivityAppiumTest extends Application {
+public class BlogPostReadActivityAppiumTest {
 
-    private static Context context;
     private static final String PROPERTIES_FILE = "appium.properties";
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        context = this;
-    }
-
-    public static Context getContext(){
-        return context;
-    };
-
     public AndroidDriver driver;
 
     @Before

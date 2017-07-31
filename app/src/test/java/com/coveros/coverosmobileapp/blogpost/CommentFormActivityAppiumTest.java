@@ -21,9 +21,9 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class CommentFormActivityAppiumTest {
-    public AndroidDriver driver;
 
     private static final String PROPERTIES_FILE = "appium.properties";
+    public AndroidDriver driver;
 
     @Before
     public void setUp() throws Exception {
