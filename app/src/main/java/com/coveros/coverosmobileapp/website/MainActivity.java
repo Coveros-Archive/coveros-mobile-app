@@ -22,8 +22,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
+import com.coveros.coverosmobileapp.blogpost.Bookmarks;
 import com.coveros.coverosmobileapp.dialog.AlertDialogFactory;
-
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
 public class MainActivity extends AppCompatActivity {
@@ -33,25 +33,53 @@ public class MainActivity extends AppCompatActivity {
     private AlertDialog dialog;
     private CustomWebViewClient customWebViewClient;
 
-    private String[] menuTitles;
     private DrawerLayout menu;
+
     RequestQueue rQueue;
 
-    public MainActivity(){ webName = "https://www3.dev.secureci.com"; }
-    public MainActivity(String specificUrl) { webName = specificUrl; }
+    //Create Strings for Title, message, and buttons
+    static final String DEVSITE = "https://www3.dev.secureci.com/";
 
-    public String getWebName(){ return webName; }
-    public void setWebName(String website){ webName = website; }
-    public void setWebViewBrowser(WebView br){ browser = br; }
-    public AlertDialog getDialog() { return dialog; }
-    public CustomWebViewClient getCustomClient() { return customWebViewClient; }
-    public void setCustomClient(CustomWebViewClient cc) { customWebViewClient = cc;}
+    public MainActivity() {
+        webName = "https://www3.dev.secureci.com";
+    }
+
+    public MainActivity(String specificUrl) {
+        webName = specificUrl;
+    }
+
+    public String getWebName() {
+        return webName;
+    }
+
+    public void setWebName(String website) {
+        webName = website;
+    }
+
+    public void setWebViewBrowser(WebView br) {
+        browser = br;
+    }
+
+    public AlertDialog getDialog() {
+        return dialog;
+    }
+
+    public CustomWebViewClient getCustomClient() {
+        return customWebViewClient;
+    }
+
+    public void setCustomClient(CustomWebViewClient cc) {
+        customWebViewClient = cc;
+    }
 
     /*
      * On Creation/Declaration of App/Activity
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // This method call loads existing bookmarks
+        Bookmarks.getInstance().loadExistingBookmarks(this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //Link WebView variable with activity_main_webview for Web View Access
@@ -62,29 +90,31 @@ public class MainActivity extends AppCompatActivity {
         //constructing the menu navigation drawer
         menu = (DrawerLayout) findViewById(R.id.drawer_layout);
         final ListView drawerList;
-        drawerList = (ListView)findViewById(R.id.left_drawer);
-        menuTitles = getResources().getStringArray(R.array.menu_Titles);
-        drawerList.setAdapter(new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1 , menuTitles));
+        drawerList = (ListView) findViewById(R.id.left_drawer);
+        String[] menuTitles = getResources().getStringArray(R.array.menu_Titles);
+        drawerList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, menuTitles));
         drawerList.setOnItemClickListener(new DrawerItemClickListener());
-        menu.addDrawerListener(new DrawerLayout.SimpleDrawerListener(){
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset){
-                browser.setTranslationX(slideOffset * drawerView.getWidth());
-                menu.bringChildToFront(drawerView);
-                menu.requestLayout();
-            }}
+        menu.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+                                   @Override
+                                   public void onDrawerSlide(View drawerView, float slideOffset) {
+                                       browser.setTranslationX(slideOffset * drawerView.getWidth());
+                                       menu.bringChildToFront(drawerView);
+                                       menu.requestLayout();
+                                   }
+                               }
         );
+
         //Links open in WebView with Coveros regex check
         customWebViewClient = new CustomWebViewClient(MainActivity.this);
         browser.setWebViewClient(customWebViewClient);
+        overridePendingTransition(0, 0);
         browser.setVerticalScrollBarEnabled(true);
         browser.setHorizontalScrollBarEnabled(true);
         //Javascript Call to open menu from hamburger menu click
         //Referenced in CustomWebViewClient onPageFinished()
-        browser.addJavascriptInterface(new Object(){
+        browser.addJavascriptInterface(new Object() {
             @JavascriptInterface
-            public void openMenu(){
+            public void openMenu() {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -93,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }, "android");
-        if(!isOnline()){
+        if (!isOnline()) {
             browser.loadUrl("file:///android_asset/sampleErrorPage.html");
         }
     }
@@ -102,29 +132,53 @@ public class MainActivity extends AppCompatActivity {
      * On App StartUp
      */
     @Override
-    protected void onStart(){
+    protected void onStart() {
         //Phone is online & Connected to a server
-        if(isOnline()){
+        if (isOnline()) {
             //JS settings enable/disable hamburger menu, videos, and other media
             browser.getSettings().setJavaScriptEnabled(true);
             //Can be changed by either using setWebName or changing value in constructor
             browser.loadUrl(webName);
-        }
-        else{
+        } else {
             alertView();
         }
         super.onStart();
+    }
+
+    //Accepting bundle from BlogPostListActivity
+    @Override
+    public void onResume() {
+        Bundle getBundle = this.getIntent().getExtras();
+        if (getBundle != null) {
+            String response = getBundle.getString("WEBSITE");
+            if (response != null) {
+                browser.loadUrl(response);
+            }
+        }
+        super.onResume();
+    }
+
+    //In case MainActivity is stopped while blog post list/read is executing
+    @Override
+    public void onRestart() {
+        Bundle getBundle = this.getIntent().getExtras();
+        if (getBundle != null) {
+            String response = getBundle.getString("WEBSITE");
+            if (response != null) {
+                browser.loadUrl(response);
+            }
+        }
+        super.onRestart();
     }
 
     /*
      * Back button is pressed in the app. Default implementation
      */
     @Override
-    public void onBackPressed(){
-        if(browser.canGoBack()){
+    public void onBackPressed() {
+        if (browser.canGoBack()) {
             browser.goBack();
-        }
-        else{
+        } else {
             super.onBackPressed();
         }
     }
@@ -132,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
     /*
      * Checks if the user is connected to the Internet
      */
-    public boolean isOnline(){
+    public boolean isOnline() {
         //Get Connectivity Manager and network info
         ConnectivityManager conMgr = (ConnectivityManager)
                 getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -151,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
      * OK option provided to immediately close the dialog box if the user's wifi loads
      *      the Coveros website in the background
      */
-    protected void alertView(){
+    protected void alertView() {
         //Init Alert Dialog menu & Cancel only if pressed on button
         final String dialogMessage = getString(R.string.webview_error_message);
         final String reloadButtonText = getString(R.string.reload_button);
@@ -170,17 +224,21 @@ public class MainActivity extends AppCompatActivity {
         dialog.setButton(AlertDialog.BUTTON_NEGATIVE, okayButtonText, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogs, int which) {
-                dialogs.dismiss(); }
+                dialogs.dismiss();
+            }
         });
-        dialog.setButton(AlertDialog.BUTTON_POSITIVE, exitButtonText, new DialogInterface.OnClickListener(){
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, exitButtonText, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogs, int which){
+            public void onClick(DialogInterface dialogs, int which) {
                 dialogs.dismiss();
                 finish();
             }
         });
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
+        //Setters (title, default message, button 1 -> Exit, button2 -> Reload)
+        dialog.setTitle(R.string.alert_title);
+        dialog.setMessage(getResources().getString(R.string.alert_message));
         //Show dialog and make text changes (font color, size, etc.)
         if (!isFinishing()) {
             dialog.show();
@@ -193,17 +251,21 @@ public class MainActivity extends AppCompatActivity {
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         /**
          * This method implements navigating to the corresponding activity when a position is selected on the navigation menu drawer
-         * @param parent the current placing of the adapter
-         * @param view the current layout shown
+         *
+         * @param parent   the current placing of the adapter
+         * @param view     the current layout shown
          * @param position the int the describes the placing in the list
-         * @param id the specified value of the layout
+         * @param id       the specified value of the layout
          */
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if (position == 0) {
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-            } else {
+            String[] stringsToAddLast = getResources().getStringArray(R.array.menuEndings);
+            //Start an activity ("BLOG-LIST" is a referenced to start Blog Post List Activity)
+            if (position == 12) {
                 startActivity(new Intent(getApplicationContext(), BlogPostsListActivity.class));
+            } else {
+                menu.closeDrawer(Gravity.START);
+                browser.loadUrl(DEVSITE + stringsToAddLast[position]);
             }
         }
     }

@@ -2,6 +2,24 @@
 <resources>
     <string-array name="menu_Titles">
         <item>Home</item>
-        <item>Blogs</item>
+        <item>Products</item>
+        <item>\t\t\t\t\t\t\t SecureCI</item>
+        <item>\t\t\t\t\t\t\t Selenified</item>
+        <item>Services</item>
+        <item>\t\t\t\t\t\t\t Agile Development</item>
+        <item>\t\t\t\t\t\t\t Agile Testing</item>
+        <item>\t\t\t\t\t\t\t Agile Transformation</item>
+        <item>\t\t\t\t\t\t\t DevOps</item>
+        <item>\t\t\t\t\t\t\t Software Security</item>
+        <item>\t\t\t\t\t\t\t Training</item>
+        <item>Thought Leadership</item>
+        <item>\t\t\t\t\t\t\t Blog</item>
+        <item>\t\t\t\t\t\t\t Presentations</item>
+        <item>\t\t\t\t\t\t\t Publications</item>
+        <item>\t\t\t\t\t\t\t Webinars and Videos</item>
+        <item>About Us</item>
+        <item>\t\t\t\t\t\t\t Our Team</item>
+        <item>\t\t\t\t\t\t\t Careers</item>
+        <item>\t\t\t\t\t\t\t Contact</item>
     </string-array>
 </resources>

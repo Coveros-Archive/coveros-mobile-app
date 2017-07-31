@@ -1,5 +1,6 @@
 package com.coveros.coverosmobileapp.blogpost;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -8,7 +9,7 @@ import android.util.SparseArray;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
-
+import android.widget.ImageButton;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
@@ -32,7 +33,6 @@ public class BlogPostReadActivity extends AppCompatActivity {
     private static final String AUTHORS_URL = "https://www3.dev.secureci.com/wp-json/wp/v2/users?orderby=id&per_page=" + NUM_OF_AUTHORS;
 
     private SparseArray<String> authors = new SparseArray<>();  // to aggregate the ids and names of the authors of displayed blog posts
-    private AlertDialog networkErrorAlertDialog;
     private NetworkErrorListener networkErrorListener;
 
     /**
@@ -50,6 +50,7 @@ public class BlogPostReadActivity extends AppCompatActivity {
         final RequestQueue requestQueue = Volley.newRequestQueue(BlogPostReadActivity.this);
 
         final String errorAlertDialogMessage = getString(R.string.blogpost_network_error_message);
+        AlertDialog networkErrorAlertDialog;
         networkErrorAlertDialog = AlertDialogFactory.createNetworkErrorAlertDialogFinishButton(BlogPostReadActivity.this, errorAlertDialogMessage);
         networkErrorListener = new NetworkErrorListener(BlogPostReadActivity.this, networkErrorAlertDialog);
 
@@ -75,8 +76,33 @@ public class BlogPostReadActivity extends AppCompatActivity {
         }, networkErrorListener);
         requestQueue.add(authorsRequest);
 
-        Button viewComments = (Button) findViewById(R.id.view_comments);
+        final ImageButton addBookmark = (ImageButton) findViewById(R.id.bookmark_button_unchecked);
+        final ImageButton removeBookmark = (ImageButton) findViewById(R.id.bookmark_button_checked);
 
+        if (Bookmarks.getInstance().contains(blogId)) {
+            removeBookmark.bringToFront();
+        }
+
+        final Context context = this;
+        //when user clicks on an unmarked bookmark button, then it marks it red and the id is added to the xml file
+        addBookmark.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Bookmarks.getInstance().addBookmark(context, blogId);
+                removeBookmark.bringToFront();
+
+            }
+        });
+        //when user clicks on a marked bookmark button, then it returns to unmarked and the id is removed from the xml file
+        removeBookmark.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Bookmarks.getInstance().removeBookmark(context, blogId);
+                addBookmark.bringToFront();
+            }
+        });
+
+        Button viewComments = (Button) findViewById(R.id.view_comments);
         // when user clicks on "View comments" button, open up CommentsListActivity to display comments for this post
         viewComments.setOnClickListener(new View.OnClickListener() {
             @Override

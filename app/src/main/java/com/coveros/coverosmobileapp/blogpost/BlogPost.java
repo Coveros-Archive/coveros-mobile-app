@@ -47,7 +47,7 @@ class BlogPost {
         authorDate = StringEscapeUtils.unescapeHtml4(author + "\n" + this.date);
 
         // to display in BlogPostReadActivity
-        this.content = "<h3>" + this.title + "</h3><h4>" + author + "</h4><h5>" + this.date + "</h5>" + StringEscapeUtils.unescapeHtml4(blogPostJson.get("content").getAsJsonObject().get("rendered").getAsString());
+        this.content = "<h3 style=\"padding-right:35px\">" + this.title + "</h3><h4>" + author + "</h4><h5>" + this.date + "</h5>" + StringEscapeUtils.unescapeHtml4(blogPostJson.get("content").getAsJsonObject().get("rendered").getAsString());
     }
 
     /**

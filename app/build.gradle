@@ -66,7 +66,6 @@ task aggregateTestData {
     dependsOn 'aggregateCoverageResults'
 }
 
-
 task fullSonarAnalysis {
     dependsOn 'installDebug'
     dependsOn 'jacocoTestReport'
@@ -143,6 +142,11 @@ dependencies {
 
     androidTestCompile 'org.mockito:mockito-core:1.10.19'
 
+    // for appium tests
+    testCompile ('io.appium:java-client:4.1.2', {
+        exclude group: 'org.apache.commons', module: 'commons-lang3'
+    })
+
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
@@ -157,6 +161,9 @@ dependencies {
     // handling OAuth for Wordpress
     compile 'com.automattic:wordpresscom-rest:1.+'
 
+    compile (group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.10-java7') {
+        exclude group: 'xmlpull'
+    }
     // required for local unit tests (JUnit 4 framework)
     testCompile 'junit:junit:4.12'
     // for testing error message
