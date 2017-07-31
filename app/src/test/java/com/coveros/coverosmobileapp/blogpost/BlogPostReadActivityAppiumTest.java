@@ -46,6 +46,10 @@ public class BlogPostReadActivityAppiumTest extends Application {
         final String deviceName = appiumProperties.getProperty("deviceName");
         final String platformVersion = appiumProperties.getProperty("platformVersion");
 
+        System.out.println("deviceName:" + deviceName);
+        System.out.println("platformVersion:" + platformVersion);
+
+
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability("platformName", "Android");
         capabilities.setCapability("deviceName", deviceName);

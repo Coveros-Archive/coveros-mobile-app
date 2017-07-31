@@ -36,10 +36,13 @@ public class CommentFormActivityAppiumTest {
         final String deviceName = appiumProperties.getProperty("deviceName");
         final String platformVersion = appiumProperties.getProperty("platformVersion");
 
+        System.out.println("deviceName:" + deviceName);
+        System.out.println("platformVersion:" + platformVersion);
+
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability("platformName", "Android");
-        capabilities.setCapability("DEVICE_NAME", deviceName);
-        capabilities.setCapability("PLATFORM_VERSION", platformVersion);
+        capabilities.setCapability("deviceName", deviceName);
+        capabilities.setCapability("platformVersion", platformVersion);
         capabilities.setCapability("appPackage", "com.coveros.coverosmobileapp");
         capabilities.setCapability("appActivity", ".blogpost.BlogPostsListActivity");
 
