@@ -3,22 +3,26 @@ package com.coveros.coverosmobileapp.blogpost;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
-
 import io.appium.java_client.android.AndroidDriver;
-
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertThat;
 
-public class BlogPostReadActivityAppiumTest {
+/**
+ * Tests that the List title is the same as the blog title
+ * Created by SRynestad on 7/31/2017.
+ */
 
-    private static final String PROPERTIES_FILE = "appium.properties";
+public class BlogPostListAppiumTest {
     public AndroidDriver driver;
+    private static final String PROPERTIES_FILE = "appium.properties";
 
     @Before
     public void setUp() throws Exception {
@@ -45,28 +49,20 @@ public class BlogPostReadActivityAppiumTest {
         driver = new AndroidDriver(new URL("http://0.0.0.0:4723/wd/hub"), capabilities);
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
     }
-
-    @Test
-    public void viewComments() {
-        // click on the first blog post in the list
-        driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.LinearLayout/android.widget.ListView/android.widget.RelativeLayout[1]").click();
-        driver.findElementById("com.coveros.coverosmobileapp:id/view_comments").click();
-
-        String expectedCommentLabel = "Comments";
-        String actualCommentLabel = driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.ListView/android.widget.TextView").getText();
-
-        assertThat(actualCommentLabel, equalTo(expectedCommentLabel));
-    }
-
-
-
     @After
     public void tearDown() throws Exception{
         if (driver != null) {
             driver.quit();
         }
     }
+    @Test
+    public void titlesMatch_listTitleToBlogTitle(){
+        WebElement listItem = driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.LinearLayout/android.widget.ListView/android.widget.RelativeLayout[1]");
+        String listTitle = listItem.findElement(By.id("com.coveros.coverosmobileapp:id/title")).getText();
+        listItem.click();
+        WebElement blogItem = driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.view.ViewGroup/android.widget.FrameLayout[1]/android.view.ViewGroup/android.widget.TextView");
+        String blogTitle = blogItem.getText();
+        assertThat(listTitle, equalTo(blogTitle));
 
-
+    }
 }
-
