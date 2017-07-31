@@ -9,7 +9,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import java.io.InputStream;
 import java.net.URL;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 import io.appium.java_client.android.AndroidDriver;
@@ -21,16 +23,23 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class CommentFormActivityAppiumTest {
     public AndroidDriver driver;
 
-    private static final String DEVICE_NAME = Resources.getSystem().getString(R.string.deviceName);
-    private static final String PLATFORM_VERSION = Resources.getSystem().getString(R.string.platformVersion);
+    private static final String PROPERTIES_FILE = "appium.properties";
 
     @Before
     public void setUp() throws Exception {
 
+        Properties appiumProperties = new Properties();
+        InputStream in = BlogPostReadActivityAppiumTest.class.getClassLoader().getResourceAsStream(PROPERTIES_FILE);
+        appiumProperties.load(in);
+        in.close();
+
+        final String deviceName = appiumProperties.getProperty("deviceName");
+        final String platformVersion = appiumProperties.getProperty("platformVersion");
+
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability("platformName", "Android");
-        capabilities.setCapability("DEVICE_NAME", DEVICE_NAME);
-        capabilities.setCapability("PLATFORM_VERSION", PLATFORM_VERSION);
+        capabilities.setCapability("DEVICE_NAME", deviceName);
+        capabilities.setCapability("PLATFORM_VERSION", platformVersion);
         capabilities.setCapability("appPackage", "com.coveros.coverosmobileapp");
         capabilities.setCapability("appActivity", ".blogpost.BlogPostsListActivity");
 

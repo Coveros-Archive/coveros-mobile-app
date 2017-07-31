@@ -3,14 +3,14 @@ package com.coveros.coverosmobileapp.blogpost;
 import android.app.Application;
 import android.content.Context;
 
-import com.coveros.coverosmobileapp.R;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import java.io.InputStream;
 import java.net.URL;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 import io.appium.java_client.android.AndroidDriver;
@@ -21,6 +21,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class BlogPostReadActivityAppiumTest extends Application {
 
     private static Context context;
+    private static final String PROPERTIES_FILE = "appium.properties";
 
     @Override
     public void onCreate() {
@@ -30,15 +31,20 @@ public class BlogPostReadActivityAppiumTest extends Application {
 
     public static Context getContext(){
         return context;
-    }
+    };
 
     public AndroidDriver driver;
 
     @Before
     public void setUp() throws Exception {
 
-        final String deviceName = getContext().getResources().getString(R.string.deviceName);
-        final String platformVersion = getContext().getResources().getString(R.string.platformVersion);
+        Properties appiumProperties = new Properties();
+        InputStream in = BlogPostReadActivityAppiumTest.class.getClassLoader().getResourceAsStream(PROPERTIES_FILE);
+        appiumProperties.load(in);
+        in.close();
+
+        final String deviceName = appiumProperties.getProperty("deviceName");
+        final String platformVersion = appiumProperties.getProperty("platformVersion");
 
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability("platformName", "Android");
@@ -62,6 +68,8 @@ public class BlogPostReadActivityAppiumTest extends Application {
 
         assertThat(actualCommentLabel, equalTo(expectedCommentLabel));
     }
+
+
 
     @After
     public void tearDown() throws Exception{
