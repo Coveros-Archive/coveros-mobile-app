@@ -1,5 +1,9 @@
 package com.coveros.coverosmobileapp.blogpost;
 
+import android.content.res.Resources;
+
+import com.coveros.coverosmobileapp.R;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,13 +21,16 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class CommentFormActivityAppiumTest {
     public AndroidDriver driver;
 
+    private static final String DEVICE_NAME = Resources.getSystem().getString(R.string.deviceName);
+    private static final String PLATFORM_VERSION = Resources.getSystem().getString(R.string.platformVersion);
+
     @Before
     public void setUp() throws Exception {
 
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability("platformName", "Android");
-        capabilities.setCapability("deviceName", "Genymotion 'Phone' version - 7.0");
-        capabilities.setCapability("platformVersion", "7.0");
+        capabilities.setCapability("DEVICE_NAME", DEVICE_NAME);
+        capabilities.setCapability("PLATFORM_VERSION", PLATFORM_VERSION);
         capabilities.setCapability("appPackage", "com.coveros.coverosmobileapp");
         capabilities.setCapability("appActivity", ".blogpost.BlogPostsListActivity");
 

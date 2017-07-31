@@ -1,5 +1,10 @@
 package com.coveros.coverosmobileapp.blogpost;
 
+import android.app.Application;
+import android.content.Context;
+
+import com.coveros.coverosmobileapp.R;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,20 +15,35 @@ import java.util.concurrent.TimeUnit;
 
 import io.appium.java_client.android.AndroidDriver;
 
-import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class BlogPostReadActivityAppiumTest {
+public class BlogPostReadActivityAppiumTest extends Application {
+
+    private static Context context;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        context = this;
+    }
+
+    public static Context getContext(){
+        return context;
+    }
+
     public AndroidDriver driver;
 
     @Before
     public void setUp() throws Exception {
 
+        final String deviceName = getContext().getResources().getString(R.string.deviceName);
+        final String platformVersion = getContext().getResources().getString(R.string.platformVersion);
+
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability("platformName", "Android");
-        capabilities.setCapability("deviceName", "Genymotion 'Phone' version - 7.0");
-        capabilities.setCapability("platformVersion", "7.0");
+        capabilities.setCapability("deviceName", deviceName);
+        capabilities.setCapability("platformVersion", platformVersion);
         capabilities.setCapability("appPackage", "com.coveros.coverosmobileapp");
         capabilities.setCapability("appActivity", ".blogpost.BlogPostsListActivity");
 
