@@ -106,8 +106,7 @@ public class MainActivity extends AppCompatActivity {
         overridePendingTransition(0, 0);
         browser.setVerticalScrollBarEnabled(true);
         browser.setHorizontalScrollBarEnabled(true);
-        //Javascript Call to open menu from hamburger menu click
-        //Referenced in CustomWebViewClient onPageFinished()
+        //Javascript Call to open menu from hamburger menu click (CustomWebViewClient onPageFinished())
         browser.addJavascriptInterface(new Object() {
             @JavascriptInterface
             public void openMenu() {
