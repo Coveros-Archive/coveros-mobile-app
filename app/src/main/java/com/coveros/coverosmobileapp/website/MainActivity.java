@@ -22,6 +22,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.coveros.coverosmobileapp.R;
 import com.coveros.coverosmobileapp.blogpost.BlogPostsListActivity;
+import com.coveros.coverosmobileapp.blogpost.Bookmarks;
 import com.coveros.coverosmobileapp.dialog.AlertDialogFactory;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private CustomWebViewClient customWebViewClient;
 
     private DrawerLayout menu;
+
     RequestQueue rQueue;
 
     //Create Strings for Title, message, and buttons
@@ -75,6 +77,9 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // This method call loads existing bookmarks
+        Bookmarks.getInstance().loadExistingBookmarks(this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //Link WebView variable with activity_main_webview for Web View Access
@@ -231,6 +236,9 @@ public class MainActivity extends AppCompatActivity {
         });
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
+        //Setters (title, default message, button 1 -> Exit, button2 -> Reload)
+        dialog.setTitle(R.string.alert_title);
+        dialog.setMessage(getResources().getString(R.string.alert_message));
         //Show dialog and make text changes (font color, size, etc.)
         if (!isFinishing()) {
             dialog.show();

@@ -26,7 +26,7 @@ public class BlogPostTest {
 
     private static final int EXPECTED_ID = 1234;
     private static final String EXPECTED_DATE = "Feb 3, 1911";
-    private static final String EXPECTED_CONTENT = "<h3>\u201CBlogPost</h3><h4>Ryan Kenney</h4><h5>Feb 3, 1911</h5><p>I like to make unfunny puns.\u2014</p>";
+    private static final String EXPECTED_CONTENT = "<h3 style=\"padding-right:35px\">\u201CBlogPost</h3><h4>Ryan Kenney</h4><h5>Feb 3, 1911</h5><p>I like to make unfunny puns.\u2014</p>";
 
     @Before
     public void setUp() {

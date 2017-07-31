@@ -1,3 +1,33 @@
 <resources>
     <string name="app_name">CoverosMobileApp</string>
+
+    <!-- text for error message displayed in blogpost feature -->
+    <string name="error_message_title">Error</string>
+    <string name="error_message_message">An error occurred.</string>
+    <string name="error_message_dismiss_button">Okay</string>
+
+    <!-- text for comment form -->
+    <string name="comment_form_label">Leave a comment</string>
+    <string name="comment_form_name_hint">Name</string>
+    <string name="comment_form_email_hint">Email</string>
+    <string name="comment_form_message_hint">Message</string>
+    <string name="empty_field_alert_dialog_title">Error</string>
+    <string name="empty_field_alert_dialog_message">All fields are required. Please provide your</string>
+    <string name="empty_field_alert_dialog_dismiss_message">Dismiss</string>
+
+    <!-- text for post update form -->
+    <string name="post_update_request_response_success_title">Success</string>
+    <string name="post_update_request_response_success_message">Post sucessfully updated.</string>
+    <string name="post_update_request_response_error_title">Error</string>
+    <string name="post_update_request_response_error_message">An error occured. Please try again.</string>
+    <string name="post_update_request_response_dismiss_button">Dismiss</string>
+
+    <!--text for MainActivity Alert Dialog-->
+    <string name="alert_title">Alert</string>
+    <string name="alert_message">Sorry, we cannot currently retrieve the requested information.</string>
+    <string name="alert_button_exit">Exit App</string>
+    <string name="alert_button_reload">Reload App</string>
+    <string name="alert_button_ok">OK</string>
+
 </resources>
+
