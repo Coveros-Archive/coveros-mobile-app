@@ -11,6 +11,7 @@ import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.android.AndroidKeyCode;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -47,6 +48,17 @@ public class BlogPostReadActivityAppiumTest {
     }
 
     @Test
+    public void viewMultipleBlogPosts(){
+        // click on the first three blog posts in the list
+        driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.LinearLayout/android.widget.ListView/android.widget.RelativeLayout[1]").click();
+        driver.navigate().back();
+        driver.navigate().back();
+        driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.LinearLayout/android.widget.ListView/android.widget.RelativeLayout[2]").click();
+        driver.navigate().back();
+        driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.LinearLayout/android.widget.ListView/android.widget.RelativeLayout[3]").click();
+    }
+
+    @Test
     public void viewComments() {
         // click on the first blog post in the list
         driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.LinearLayout/android.widget.ListView/android.widget.RelativeLayout[1]").click();
@@ -58,14 +70,13 @@ public class BlogPostReadActivityAppiumTest {
         assertThat(actualCommentLabel, equalTo(expectedCommentLabel));
     }
 
-
-
     @After
     public void tearDown() throws Exception{
         if (driver != null) {
             driver.quit();
         }
     }
+
 
 
 }
