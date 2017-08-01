@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //Link WebView variable with activity_main_webview for Web View Access
         browser = (WebView) findViewById(R.id.activity_main_webview);
+        browser.setWebContentsDebuggingEnabled(true);
         setWebViewBrowser(browser);
         rQueue = Volley.newRequestQueue(MainActivity.this);
 
@@ -110,8 +111,7 @@ public class MainActivity extends AppCompatActivity {
         overridePendingTransition(0, 0);
         browser.setVerticalScrollBarEnabled(true);
         browser.setHorizontalScrollBarEnabled(true);
-        //Javascript Call to open menu from hamburger menu click
-        //Referenced in CustomWebViewClient onPageFinished()
+        //Javascript Call to open menu from hamburger menu click (CustomWebViewClient onPageFinished())
         browser.addJavascriptInterface(new Object() {
             @JavascriptInterface
             public void openMenu() {
