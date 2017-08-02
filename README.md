@@ -1,7 +1,8 @@
 # The Coveros Mobile App
 ## Purpose
-The aim of this application is to brand and advertise Coveros and its services, demonstrate Coveros' competency in mobile application development, and facilitate the instruction of the Mobile Application Testing course.
+The aim of this application is to facilitate the instruction of the Mobile Application Testing course, brand and advertise Coveros and its services, and demonstrate Coveros' competency in mobile application development.
 ## Important Gradle tasks
+To run these following tasks, be sure to install the ADK, SonarQube, Appium, and have running an emulator with the APK installed. 
 - `fullSonarAnalysis` runs all tests (i.e. unit, instrumented, and Appium) with test coverage and SonarQube analysis
 
 - `connectedDebugAndroidTest` runs instrumented tests
