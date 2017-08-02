@@ -8,6 +8,6 @@ The aim of this application is to brand and advertise Coveros and its services, 
 
 - `testDebugUnitTest` runs unit and Appium tests
 
-- `aggregateTestData` gathers test results and coverage for unit, instrumented, and Appium tests
+- `aggregateTestData` gathers test results and coverage for unit, instrumented, and Appium tests; necessary for accurate SonarQube analysis
 
-- `installDebug` installs the debug version of the APK
+- `installDebug` installs the debug version of the APK on any running emulator that is connected to ADB
