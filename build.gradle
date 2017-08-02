@@ -16,7 +16,7 @@ buildscript {
 
 allprojects {
     group 'com.coveros'
-    version '1.0.0-SNAPSHOT'
+    version '1.0.0'
 
     repositories {
         jcenter()

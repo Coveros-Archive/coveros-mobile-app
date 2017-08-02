@@ -27,7 +27,8 @@ ext.nexus = {
         username nexusUser
         password nexusPass
     }
-    url nexusRepoURL
+    url nexusSnapshotRepoURL
+    url nexusReleaseRepoURL
 }
 
 repositories {
@@ -39,7 +40,10 @@ repositories {
 uploadArchives {
     repositories {
         mavenDeployer {
-            snapshotRepository(url: nexusRepoURL) {
+            snapshotRepository(url: nexusSnapshotRepoURL) {
+                authentication(userName: nexusUser, password: nexusPass);
+            }
+            repository(url: nexusReleaseRepoURL) {
                 authentication(userName: nexusUser, password: nexusPass);
             }
         }
