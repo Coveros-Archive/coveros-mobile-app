@@ -174,13 +174,6 @@ dependencies {
     testCompile 'org.mockito:mockito-core:2.1.0'
     // https://mvnrepository.com/artifact/org.jsoup/jsoup
     compile group: 'org.jsoup', name: 'jsoup', version: '1.8.3'
-
-    // for appium tests
-    testCompile ('io.appium:java-client:4.1.2', {
-        exclude group: 'org.apache.commons', module: 'commons-lang3'
-    })
-
-
 }
 
 //Defined reports generated
