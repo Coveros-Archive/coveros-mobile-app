@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         rQueue = Volley.newRequestQueue(MainActivity.this);
 
         //constructing the menu navigation drawer
-        menu = (DrawerLayout) findViewById(R.id.drawer_layout);
+        menu = findViewById(R.id.drawer_layout);
         final ListView drawerList;
         drawerList = (ListView) findViewById(R.id.left_drawer);
         String[] menuTitles = getResources().getStringArray(R.array.menu_Titles);

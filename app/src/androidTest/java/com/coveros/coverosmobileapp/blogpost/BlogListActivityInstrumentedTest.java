@@ -21,7 +21,6 @@ public class BlogListActivityInstrumentedTest extends LooperTestSuite {
 
     private static BlogListActivity blogListActivity;
 
-
     @Rule
     public ActivityTestRule<BlogListActivity> blogListRule = new ActivityTestRule<>(BlogListActivity.class);
 
